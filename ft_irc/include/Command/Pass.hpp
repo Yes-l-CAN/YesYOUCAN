@@ -5,10 +5,13 @@
 
 class Pass : public ICommand
 {
+	private:
+
 	public:
+		
 		void PassCmp(void);
 
-		class incorrectPass : public std::exception
+		class incorrectPassException : public std::exception
     	{
        		virtual const char* what() const throw();
 		};

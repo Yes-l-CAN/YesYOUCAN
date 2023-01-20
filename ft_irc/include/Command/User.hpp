@@ -3,13 +3,13 @@
 
 #include "Command.hpp"
 
-class USER : public ICommand
+class User : public ICommand
 {
 	private:
 		
 
 	public:
-		void	validCheck(void);
+		int		validCheck(void);
 		void	setClientUser(void);
 		void	noticeNameReplaced(void);
 		void	welcom2CanServ(void);

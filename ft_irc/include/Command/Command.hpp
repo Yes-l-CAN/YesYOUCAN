@@ -7,25 +7,40 @@
 #include <vector>
 #include <exception>
 #include "CanClient.hpp"
+#include "CanServer.hpp"
+
+#define ERROR -1 
+#define TRUE 1
+#define FALSE 0
 
 class ICommand
 {
-private:
+protected:
+	CanServer	*server;
+
 	int flag;
 	int size;
 
 	std::vector<std::string> cmd;
 
 public:
+	ICommand();
+	ICommand(CanServer	*serv);
+	~ICommand();
 	virtual int isValidFormat(void) = 0;
 	virtual int getClientLevel(CanClient *client) = 0;
 	virtual int determineFlag(void) = 0;
 
-	int setFlag(int flag);
-	int setSize(int size);
+	void setFlag(void);
+	void setSize(void);
 
 	const int getFlag(void) const;
 	const int getSize(void) const;
+
+	class invalidFormatException : public std::exception
+	{
+		virtual const char *what() const throw();
+	};
 };
 
 #endif

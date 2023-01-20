@@ -3,27 +3,25 @@
 
 #include "Command.hpp"
 
-class NICK : public ICommand
+
+class Nick : public ICommand
 {
 	private:
-		char	invalid[8];
+		char	invalid[8] = {' ', ',', '*', '?', '!', '@', '.', '#'};
 
 	public:
+		int validCheck(void);
+		int checkUsedNick(void);
+		void setClientNick(CanClient *client);
 		
-		void validCheck(void);
-		void setClientNick(void);
+	//	int	isValidFormat(void);
 
-		class containIvalidChar : public std::exception
-    	{
-       		virtual const char* what() const throw();
-		};
-
-		class invalidNick : public std::exception
+		class invalidNickException : public std::exception
 		{
 			virtual const char* what() const throw();
 		};
 
-		class usedNick: public std::exception
+		class usedNickException: public std::exception
 		{
 			virtual const char* what() const throw();
 		};
