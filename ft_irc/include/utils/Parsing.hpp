@@ -1,0 +1,28 @@
+#ifndef CAN_PARSING_HPP
+#define CAN_PARSING_HPP
+
+#include <cstddef>
+#include <string>
+#include <vector>
+
+class Parsing
+{
+  private:
+    std::vector<std::string> v;
+    std::string              buff;
+    std::string              word;
+    bool                     flag;
+
+  public:
+    Parsing();
+    ~Parsing();
+
+    std::vector<std::string> parseOn(char* bufferStr);
+
+    void giveFlag();
+    int  checkSpaceAndComma(int idx);
+    void makeBuffString(char* buffStr);
+    void checkColon(int idx);
+};
+
+#endif // CAN_PARSING_HPP

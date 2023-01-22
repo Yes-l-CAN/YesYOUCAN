@@ -1,10 +1,10 @@
 #include "Operation.hpp"
 #include "Utility.hpp"
-#include <iostream>
-#include <vector>
-#include <string>
 #include <exception>
+#include <iostream>
+#include <string>
 #include <sys/ioctl.h>
+#include <vector>
 
 Operation::Operation()
 {
@@ -12,21 +12,20 @@ Operation::Operation()
     this->server->s_On();
 }
 
-
-Operation::Operation(char *s1, char *s2)
+Operation::Operation(char* s1, char* s2)
 {
     this->server = new CanServer();
     this->server->setServer(s1, s2);
     this->server->s_On();
 }
 
-Operation::Operation(const Operation &obj)
+Operation::Operation(const Operation& obj)
 {
     *this = obj;
 }
 
 // deep copy
-Operation &Operation::operator=(const Operation &obj)
+Operation& Operation::operator=(const Operation& obj)
 {
     if (this != &obj)
     {
@@ -40,7 +39,7 @@ Operation &Operation::operator=(const Operation &obj)
         // deep copy
         Operation replica(obj);
 
-        CanServer *dummy = this->server;
+        CanServer* dummy = this->server;
         this->server = replica.server;
     }
     return *this;
@@ -65,12 +64,12 @@ void Operation::Transmission()
         try
         {
             cRecv(this->setFd);
-            CanClient   *targetClient = findClient(this->setFd);
+            CanClient*               targetClient = findClient(this->setFd);
             std::vector<std::string> cmd = util.splitArr(this->buffer);
             CommandChecker(cmd, targetClient);
             memset(this->buffer, 0, this->bufferSize);
         }
-        catch (std::exception &e)
+        catch (std::exception& e)
         {
             std::cout << e.what() << std::endl;
         }
@@ -79,8 +78,8 @@ void Operation::Transmission()
     // write 테스트
 }
 
-CanClient   *Operation::findClient(int fd)
-{   
+CanClient* Operation::findClient(int fd)
+{
     return (server->getClientList()->find(fd)->second);
 }
 
@@ -92,7 +91,7 @@ void Operation::CommandChecker(std::vector<std::string> argv, CanClient* targetC
     {
         if (argv.front() == cmd[i])
         {
-            
+
             switch (i)
             {
             case 0:
@@ -149,37 +148,35 @@ void Operation::Serv2ClientSend(int fd)
     // need to think about it more ...
 }
 
-
 void Operation::Pass(std::vector<std::string> argv, CanClient* targetClient)
 {
     // std::cout << "Pass Called!" << std::endl;
     std::vector<std::string>::iterator it;
     it = argv.end() - 1;
-   
-    if (targetClient->getMemberLevel() == USER_FIN 
-        || targetClient->getMemberLevel() == NICK_FIN
-        || targetClient->getMemberLevel() == CERTIFICATION_FIN)
-        return ;
+
+    if (targetClient->getMemberLevel() == USER_FIN || targetClient->getMemberLevel() == NICK_FIN ||
+        targetClient->getMemberLevel() == CERTIFICATION_FIN)
+        return;
     else if (server->getInputPasswordNum() == *it)
         targetClient->setMemberLevel(PASS_FIN);
     else
         throw(CanException::PasswordNotSameException());
-
 }
 
 int Operation::Nick(std::vector<std::string> argv, CanClient* targetClient)
 {
     std::string reply;
-    if(targetClient->getMemberLevel() < PASS_FIN)
+    if (targetClient->getMemberLevel() < PASS_FIN)
         throw(CanException::NotCertificatedException());
     std::vector<std::string>::iterator it;
     it = argv.end() - 1;
-    for(std::map<int, CanClient*>::iterator it2 = server->getClientList()->begin(); it2 != server->getClientList()->end(); ++it2)
+    for (std::map<int, CanClient*>::iterator it2 = server->getClientList()->begin();
+         it2 != server->getClientList()->end(); ++it2)
     {
-        if(it2->second->getNickname() == *it)
+        if (it2->second->getNickname() == *it)
             throw(CanException::existNickException());
     }
-    if(targetClient->getNickname().empty() != true)
+    if (targetClient->getNickname().empty() != true)
     {
         reply = *(argv.begin()) + " " + *(argv.end() - 1) + "\n";
         ioctl(targetClient->getSockFd(), TIOCFLUSH, 2);
@@ -195,14 +192,14 @@ int Operation::Nick(std::vector<std::string> argv, CanClient* targetClient)
 
 int Operation::User(std::vector<std::string> argv, CanClient* targetClient)
 {
-    if(targetClient->getMemberLevel() < PASS_FIN)
+    if (targetClient->getMemberLevel() < PASS_FIN)
         throw(CanException::NotCertificatedException());
     std::vector<std::string>::iterator it;
     it = argv.end() - 1;
     std::map<int, CanClient*>::iterator it2;
-    for(it2 = server->getClientList()->begin(); it2 != server->getClientList()->end(); it2++)
+    for (it2 = server->getClientList()->begin(); it2 != server->getClientList()->end(); it2++)
     {
-        if(it2->second->getUsername() == *it)
+        if (it2->second->getUsername() == *it)
             throw(CanException::existUserException());
     }
     targetClient->setUsername(*it);
@@ -225,7 +222,6 @@ void Operation::Ping(std::vector<std::string> argv, CanClient* targetClient)
 
 void Operation::Quit(std::vector<std::string> argv, CanClient* targetClient)
 {
-
 }
 
 // void    Pong(std::vector<std::string> argv, CanClient* targetClient);
