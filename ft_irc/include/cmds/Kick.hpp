@@ -6,35 +6,39 @@
 
 #define MAX_KICK_NUM 1
 
-
 class Kick : public ACommand
 {
-	private:
-		CanChannel *channel;
-		
-	public:
-		std::map<CanChannel *, int>	getChannel(CanClient *client); 
+private:
+	CanChannel *channel;
 
-		int		isOperator(CanClient *client);
-		void 	changeChannelStatus(CanClient *client);
-		void	snedMSG(CanClient *client);
+public:
+	Kick();
+	~Kick();
+	void kickOn();
+	std::map<CanChannel *, int> getChannel(CanClient *client);
 
-		class notOperatorException : public std::exception
-		{
-			virtual const char* what() const throw();
-		};
+	int isOperator(CanClient *client);
+	void changeChannelStatus(CanClient *client);
+	void snedMSG(CanClient *client);
 
-		class noSuchUSerException: public std::exception
-		{
-			virtual const char* what() const throw();
-		};
-		
-		class noSuchChannelException: public std::exception
-		{
-			virtual const char* what() const throw();
-		};
+	int isValidFormat(void);
+	int checkClientLevel(CanClient *client);
+	int determineFlag(void);
 
-		
+	class notOperatorException : public std::exception
+	{
+		virtual const char *what() const throw();
+	};
+
+	class noSuchUserException : public std::exception
+	{
+		virtual const char *what() const throw();
+	};
+
+	class noSuchChannelException : public std::exception
+	{
+		virtual const char *what() const throw();
+	};
 };
 
 #endif // COMMAND_KICK_HPP

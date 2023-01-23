@@ -1,40 +1,37 @@
-
-#ifndef COMMAND_NOTICE_HPP
-#define COMMAND_NOTICE_HPP
+#ifndef COMMAND_PART_HPP
+#define COMMAND_PART_HPP
 
 #include "ACommand.hpp"
 
-class Notice : public ACommand
+class Part : public ACommand
 {
-	private:
-		CanChannel *channel;
+private:
+	CanChannel *channel;
 
-	public:
-		std::map<CanChannel *, int>	getChannel(CanClient *client); 
+public:
+	Part();
+	~Part();
+	void partOn();
+	std::map<CanChannel *, int> getChannel(CanClient *client);
 
-		int		noticeToChannel(void);
+	int isLastMember(CanClient *client);
+	void eraseChannel(CanClient *client);
+	void channelClose(CanClient *client);
+	void operatorChanged(CanClient *client);
 
-		class noSuchNickException: public std::exception
-		{
-			virtual const char* what() const throw();
-		};
+	int isValidFormat(void);
+	int checkClientLevel(CanClient *client);
+	int determineFlag(void);
 
-		class noSuchChannelException : public std::exception
-		{
-			virtual const char* what() const throw();
-		};
+	class noSuchChannelException : public std::exception
+	{
+		virtual const char *what() const throw();
+	};
 
-		class replyAnywayException : public std::exception
-		{
-			virtual const char* what() const throw();
-		};
-		
-		class kickedUserException : public std::exception
-		{
-			virtual const char* what() const throw();
-		};
-
-		
+	class notOnChannelException : public std::exception
+	{
+		virtual const char *what() const throw();
+	};
 };
 
-#endif // COMMAND_NOTICE_HPP
+#endif // COMMAND_PART_HPP

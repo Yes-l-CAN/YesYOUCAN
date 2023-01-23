@@ -26,12 +26,17 @@ void	ACommand::setSize(void)
 	this->size = cmd.size() - 1;
 }
 
-const int ACommand::getFlag(void) const
+int ACommand::getFlag(void) const
 {
 	return (this->flag);
 }
 
-const int ACommand::getSize(void) const 
+int ACommand::getSize(void) const 
 {
 	return (this->size);
+}
+
+const char *ACommand::invalidFormatException::what() const throw()
+{
+	return "Invalid Command : Format error !";
 }

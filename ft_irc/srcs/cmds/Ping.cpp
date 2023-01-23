@@ -1,8 +1,21 @@
 #include "Ping.hpp"
+#include "Operation.hpp"
 
-void	Ping::pong(CanClient *client)
+Ping::Ping()
 {
-	if(this->cmd.size() < 3)
+}
+
+Ping::~Ping()
+{
+}
+
+void Ping::pingOn()
+{
+}
+
+void Ping::pong(CanClient *client)
+{
+	if (this->cmd.size() < 3)
 		throw(noTokenException());
 	std::vector<std::string>::iterator it;
 	it = cmd.begin() + 3;
@@ -14,12 +27,30 @@ void	Ping::pong(CanClient *client)
 	send(client->getSockFd(), buf.c_str(), buf.length(), 0);
 }
 
-const char *Ping::noTokenException::what() const throw()
+int Ping::isValidFormat(void)
 {
-    return ("Ping :  No Token");
 }
 
-const char	*Ping::maxLenException::what() const throw()
+int Ping::checkClientLevel(CanClient *client)
+{
+	if (client->getMemberLevel() & CERTIFICATION_FIN == 0)
+	{
+		return (false);
+	}
+	return (true);
+}
+
+int Ping::determineFlag(void)
+{
+	return (1);
+}
+
+const char *Ping::noTokenException::what() const throw()
+{
+	return ("Ping : No Token");
+}
+
+const char *Ping::maxLenException::what() const throw()
 {
 	return ("Ping : Max Buffer Length => 512");
 }

@@ -5,16 +5,21 @@
 
 class Pass : public ACommand
 {
-	private:
+private:
+public:
+	Pass();
+	~Pass();
+	void passOn(void);
+	void passCmp(void);
 
-	public:
-		
-		void PassCmp(void);
+	int isValidFormat(void);
+	int checkClientLevel(CanClient *client);
+	int determineFlag(void);
 
-		class incorrectPassException : public std::exception
-    	{
-       		virtual const char* what() const throw();
-		};
+	class incorrectPassException : public std::exception
+	{
+		virtual const char *what() const throw();
+	};
 };
 
 #endif // COMMAND_PASS_HPP

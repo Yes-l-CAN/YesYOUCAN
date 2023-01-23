@@ -6,16 +6,13 @@ ENDCOLOR	=	"\033[0;0m"
 LINE_CLEAR	=	"\x1b[1A\x1b[M"
 
 CXX = c++
-CXXFLAGS = -Wall -Wextra -Werror -std=c++98 #-g -fsanitize=address
+CXXFLAGS = -I./include -I./include/cmds -I./include/server -I./include/utils -Wall -Wextra -Werror -std=c++98 #-g -fsanitize=address
 RM = rm -rf
 NAME = canServ.out
-
-INCS 		=	-I./include/cmds -I./include/server -I./include/utils
 
 SRCS_DIR = ./srcs
 DIR_CMDS = $(SRCS_DIR)/cmds
 DIR_SERVER = $(SRCS_DIR)/server
-DIR_UTILS = $(SRCS_DIR)/utils
 
 SRCS_CMDS	:=	ACommand.cpp Join.cpp Kick.cpp Nick.cpp Notice.cpp \
 				Part.cpp Pass.cpp Ping.cpp Prvmsg.cpp \
@@ -23,21 +20,18 @@ SRCS_CMDS	:=	ACommand.cpp Join.cpp Kick.cpp Nick.cpp Notice.cpp \
 SRCS_CMDS	:=	$(addprefix $(DIR_CMDS)/, $(SRCS_CMDS))
 
 SRCS_SERVER	:=	CanChannel.cpp CanClient.cpp CanException.cpp CanServer.cpp \
-				Operation.cpp Utility.cpp
+				Operation.cpp Utility.cpp Parsing.cpp
 SRCS_SERVER	:=	$(addprefix $(DIR_SERVER)/, $(SRCS_SERVER))
 
-SRCS_UTILS	:=	Parsing.cpp
-SRCS_UTILS	:=	$(addprefix $(DIR_UTILS)/, $(SRCS_UTILS))
-
-SRCS		=	srcs/main.cpp $(SRCS_CMDS) $(SRCS_SERVER) $(SRCS_UTILS)
+SRCS		=	srcs/main.cpp $(SRCS_CMDS) $(SRCS_SERVER) 
 
 OBJS		=	$(SRCS:.cpp=.o)
 
 $(NAME) : $(OBJS) 
-	$(CXX) $(CXXFLAGS) -I./include/cmds -I./include/server -I./include/utils $(OBJS) -o $(NAME)
+	$(CXX) $(CXXFLAGS) $(OBJS) -o $(NAME)
 
 %.o		:	%.cpp
-	$(CXX) $(CXXFLAGS) -I./include/cmds -I./include/server -I./include/utils -c $<  -o $@
+	$(CXX) $(CXXFLAGS) -c $<  -o $@
 
 all : $(NAME)
 

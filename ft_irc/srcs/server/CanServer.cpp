@@ -69,7 +69,6 @@ void CanServer::s_On(){
  	} catch(std::exception &e){
 		std::cout << e.what() << std::endl;
 	}
-    // implement server logic here
 }
 
 void CanServer::setServAddr()

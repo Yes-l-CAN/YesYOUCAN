@@ -19,6 +19,7 @@ private:
 	std::string realname;
 	struct sockaddr_in addr;
 	int isMember;
+	bool isKicked;
 
 	std::map<std::string, CanChannel *> channelList; // channelList which the client belongs
 
@@ -43,6 +44,8 @@ public:
 	std::string getRealname(void) const;
 	int getSockFd(void) const;
 	int getMemberLevel(void) const;
+	int CanClient::getisMember(void) const;
+	bool CanClient::getisKicked(void) const;
 
 	void addChannelElement(std::string key, CanChannel *pNewChannel); // join channel
 	void deleteChannelElement(std::string key);						  // come outside channel

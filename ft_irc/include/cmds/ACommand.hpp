@@ -10,20 +10,14 @@
 #include "CanServer.hpp"
 #include "CanChannel.hpp"
 
-#define ERROR -1 
-#define TRUE 1
-#define FALSE 0
+#define MAXBUFLEN 512
 
-#define MAXBUFLEN 512 
 
-// #deifine PASS_FIN (1 << 3) // 00000000 00000000 00000000 00000100
-// #deifine NAME_FIN (1 << 2) // 00000000 00000000 00000000 00000010
-#define NICK_FIN (1 << 1) // // 00000000 00000000 00000000 00000001
 
 class ACommand
 {
 protected:
-	CanServer	*server;
+	CanServer *server;
 
 	int flag;
 	int size;
@@ -32,17 +26,17 @@ protected:
 
 public:
 	ACommand();
-	ACommand(CanServer	*serv);
+	ACommand(CanServer *serv);
 	virtual ~ACommand();
 	virtual int isValidFormat(void) = 0;
-	virtual int getClientLevel(CanClient *client) = 0;
+	virtual int checkClientLevel(CanClient *client) = 0;
 	virtual int determineFlag(void) = 0;
 
 	void setFlag(void);
 	void setSize(void);
 
-	const int getFlag(void) const;
-	const int getSize(void) const;
+	int getFlag(void) const;
+	int getSize(void) const;
 
 	class invalidFormatException : public std::exception
 	{

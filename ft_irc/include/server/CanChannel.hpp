@@ -14,6 +14,8 @@ class CanChannel
     std::string               channelName;
     std::map<int, CanClient*> clientList;
 
+    std::map<int, CanClient*> kickedList;
+
   public:
     CanChannel();
     ~CanChannel();
