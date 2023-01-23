@@ -13,8 +13,8 @@ private:
 	static char invalid[8];
 
 public:
-Nick();
-~Nick();
+	Nick();
+	~Nick();
 	void nickOn();
 	int validCheck(void);
 	int checkUsedNick(void);

@@ -7,11 +7,14 @@
 
 class Bot
 {
-	private:
-		std::string	word;
-	public:
-		void findWord();
-		void sendMessage(CanChannel *channel);
+private:
+	std::string word;
+
+public:
+	Bot();
+	~Bot();
+	void findWord();
+	void sendMessage(CanChannel *channel);
 };
 
 #endif

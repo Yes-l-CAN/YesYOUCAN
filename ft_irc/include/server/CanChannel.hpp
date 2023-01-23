@@ -9,12 +9,11 @@
 
 class CanChannel
 {
-
   private:
     std::string               channelName;
     std::map<int, CanClient*> clientList;
 
-    std::map<int, CanClient*> kickedList;
+    std::map<std::string, CanClient*> kickedList;
 
   public:
     CanChannel();

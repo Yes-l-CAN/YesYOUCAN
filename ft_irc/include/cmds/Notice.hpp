@@ -10,6 +10,8 @@ private:
 	CanChannel *channel;
 
 public:
+	Notice();
+	~Notice();
 	void noticeOn();
 	std::map<CanChannel *, int> getChannel(CanClient *client);
 
