@@ -112,11 +112,6 @@ int User::determineFlag(void)
 	return (1);
 }
 
-const char *User::noAuthorityException::what() const throw()
-{
-	return ("USER: Password authentication required");
-}
-
 const char *User::alreadyRegisteredException::what() const throw()
 {
 	return ("USER : You already registered");

@@ -6,7 +6,10 @@ Ping::Ping() {}
 
 Ping::~Ping() {}
 
-void Ping::pingOn(CanClient *client) {}
+void Ping::pingOn(CanClient *client)
+{
+  
+}
 
 void Ping::pong(CanClient *client) {
   if (this->cmd.size() < 3) throw(noTokenException());
@@ -21,7 +24,10 @@ void Ping::pong(CanClient *client) {
   send(client->getSockFd(), buf.c_str(), buf.length(), 0);
 }
 
-int Ping::isValidFormat(void) {}
+int Ping::isValidFormat(void)
+{
+
+}
 
 int Ping::checkClientLevel(CanClient *client) {
   if (client->getMemberLevel() & CERTIFICATION_FIN == 0) {

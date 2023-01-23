@@ -40,3 +40,8 @@ const char *ACommand::invalidFormatException::what() const throw()
 {
 	return "Invalid Command : Format error !";
 }
+
+const char *ACommand::noAuthorityException::what() const throw()
+{
+	return ("No Authority : Register PASS, USER, NICK");
+}

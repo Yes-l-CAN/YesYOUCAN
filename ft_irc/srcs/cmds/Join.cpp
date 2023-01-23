@@ -11,6 +11,7 @@ void Join::joinOn(CanClient *client)
   try
   {
     isValidFormat();
+    checkClientLevel(client);
 
     std::vector<std::string>::iterator it;
     for (it = cmd.begin() + 2;it != cmd.end();it++)
@@ -146,9 +147,9 @@ int Join::isValidFormat(void)
 
 int Join::checkClientLevel(CanClient *client) {
   if (client->getMemberLevel() & CERTIFICATION_FIN == 0) {
-    return (FALSE);
+    throw noAuthorityException();
   }
-  return (true);
+  return (TRUE);
 }
 
 int Join::determineFlag(void) { return (0); }

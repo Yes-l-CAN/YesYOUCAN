@@ -13,9 +13,11 @@ public:
 	Notice();
 	~Notice();
 	void noticeOn(CanClient *client);
-	std::map<CanChannel *, int> getChannel(CanClient *client);
+	// std::map<CanChannel *, int> getChannel(CanClient *client);
 
 	int noticeToChannel(void);
+	int isExistChannelName(std::string name);
+	std::map<int, CanClient *>::iterator isExistNickname(std::string name);
 
 	int isValidFormat(void);
 	int checkClientLevel(CanClient *client);

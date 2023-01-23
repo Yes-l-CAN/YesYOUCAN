@@ -11,6 +11,8 @@ void Kick::kickOn(CanClient *client)
   try
   {
     isValidFormat();
+    checkClientLevel(client);
+
     if (isOperator(client) == FALSE)
     {
       throw notOperatorException();
@@ -62,11 +64,11 @@ int Kick::isValidFormat(void)
 {
   // flag KICK <channel> <user> [<comment>]
 
-  if (getSize() < 3)
+  if (getSize() < 3 || getSize() > 4)
   {
     throw invalidFormatException();
   }
-  else if (!(getSize() == 3 && getFlag() == 0) && \
+  else if (!(getSize() == 3 && getFlag() == 0) || \
            !(getSize() == 4 && getFlag() == 1))
   {
     throw invalidFormatException();
@@ -97,7 +99,7 @@ int Kick::isValidFormat(void)
 
 int Kick::checkClientLevel(CanClient *client) {
   if (client->getMemberLevel() & CERTIFICATION_FIN) {
-    return (FALSE);
+    throw noAuthorityException();
   }
   return (TRUE);
 }

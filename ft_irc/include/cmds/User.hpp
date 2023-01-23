@@ -21,10 +21,10 @@ public:
 	int checkClientLevel(CanClient *client);
 	int determineFlag(void);
 
-	class noAuthorityException : public std::exception
-	{
-		virtual const char *what() const throw();
-	};
+	// class noAuthorityException : public std::exception
+	// {
+	// 	virtual const char *what() const throw();
+	// };  => ACommand로 옮김
 
 	class alreadyRegisteredException : public std::exception
 	{

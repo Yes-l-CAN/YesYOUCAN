@@ -72,7 +72,7 @@ void CanChannel::broadcast(const std::string& msg)
     for (it = clientList.begin(); it != clientList.end(); it++)
     {
         it->second->setSendBuff(msg);
-        it->second
+        it->second->cSend(it->first);
     }
 }
 

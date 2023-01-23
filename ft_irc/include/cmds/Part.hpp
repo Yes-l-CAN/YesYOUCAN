@@ -12,11 +12,11 @@ public:
 	Part();
 	~Part();
 	void partOn(CanClient *client);
-	std::map<CanChannel *, int> getChannel(CanClient *client);
+	// std::map<CanChannel *, int> getChannel(CanClient *client);
 
-	int isLastMember(CanClient *client);
+	int isLastMember(void);
 	void eraseChannel(CanClient *client);
-	void channelClose(CanClient *client);
+	void channelClose(void);
 	void operatorChanged(CanClient *client);
 
 	int isValidFormat(void);
