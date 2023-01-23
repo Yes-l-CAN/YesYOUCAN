@@ -11,7 +11,7 @@ private:
 public:
 	Part();
 	~Part();
-	void partOn();
+	void partOn(CanClient *client);
 	std::map<CanChannel *, int> getChannel(CanClient *client);
 
 	int isLastMember(CanClient *client);

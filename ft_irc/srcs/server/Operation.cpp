@@ -153,31 +153,31 @@ void Operation::CommandChecker(std::vector<std::string> argv, CanClient *targetC
 			switch (i)
 			{
 			case 0:
-				this->cmdPass->passOn();
+				this->cmdPass->passOn(targetClient);
 				return;
 			case 1:
-				this->cmdNick->nickOn();
+				this->cmdNick->nickOn(targetClient);
 				return;
 			case 2:
-				this->cmdUser->userOn();
+				this->cmdUser->userOn(targetClient);
 				return;
 			case 3:
-				this->cmdPing->pingOn();
+				this->cmdPing->pingOn(targetClient);
 				return;
 			case 4:
-				this->cmdJoin->joinOn();
+				this->cmdJoin->joinOn(targetClient);
 				return;
 			case 5:
-				this->cmdPart->partOn();
+				this->cmdPart->partOn(targetClient);
 				return;
 			case 6:
-				this->cmdKick->kickOn();
+				this->cmdKick->kickOn(targetClient);
 				return;
 			case 7:
-				this->cmdNotice->noticeOn();
+				this->cmdNotice->noticeOn(targetClient);
 				return;
 			case 8:
-				this->cmdPrvmsg->prvMSGOn();
+				this->cmdPrvmsg->prvMSGOn(targetClient);
 				return;
 			default:;
 			}

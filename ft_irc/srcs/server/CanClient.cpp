@@ -89,12 +89,7 @@ int CanClient::getisMember(void) const
 	return (this->isMember);
 }
 
-bool CanClient::getisKicked(void) const
-{
-	return (this->isKicked);
-}
-
-void CanClient::addChannelElement(std::string key, CanChannel *pNewChannel)
+void CanClient::addChannelElement(const std::string &key, CanChannel *pNewChannel)
 {
 
 	// if (ret.second == false)
@@ -104,7 +99,62 @@ void CanClient::addChannelElement(std::string key, CanChannel *pNewChannel)
 	}
 }
 
+void CanClient::cSend(int fd)
+{
+    try
+    {
+		if (this->sendBuff.length() == 0)
+			return ;
+
+        int ret = send(fd, this->sendBuff.c_str(), this->sendBuff.length(), 0);
+        if (ret < 0)
+        {
+            throw CanClient::cSendException();
+        }
+		this->sendBuff = "";
+    }
+    catch(const std::exception& e)
+    {
+        std::cerr << e.what() << '\n';
+    }
+}
+
+void CanClient::cRecv(std::string msg)
+{
+    setrecvBuff(msg);
+}
+
+void CanClient::setSendBuff(const std::string &msg)
+{
+    this->sendBuff = msg;
+}
+
+void CanClient::setrecvBuff(const std::string &msg)
+{
+    this->recvBuff = msg;
+}
+
+std::string& CanClient::getsendBuff(void)
+{
+    return (this->sendBuff);
+}
+
+std::string& CanClient::getrecvBuff(void)
+{
+    return (this->recvBuff);
+}
+
+std::map<std::string, CanChannel *>& CanClient::getChannelList(void) const
+{
+	return (this->channelList);
+}
+
 const char *CanClient::addChannelException::what() const throw()
 {
 	return "";
+}
+
+const char* CanClient::cSendException::what() const throw()
+{
+    return "CanClient cSend : couldn't send socket !";
 }

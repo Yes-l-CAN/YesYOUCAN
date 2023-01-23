@@ -9,7 +9,7 @@ private:
 public:
 	Quit();
 	~Quit();
-	void quitOn();
+	void quitOn(CanClient *client);
 	int isValidFormat(void);
 	int checkClientLevel(CanClient *client);
 	int determineFlag(void);

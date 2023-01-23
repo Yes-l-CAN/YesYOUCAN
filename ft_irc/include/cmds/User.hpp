@@ -3,13 +3,15 @@
 
 #include "ACommand.hpp"
 
+#define USERNAME_MAXLEN 30;
+
 class User : public ACommand
 {
 private:
 public:
 	User();
 	~User();
-	void userOn();
+	void userOn(CanClient *client);
 	int validCheck(void);
 	void setClientUser(CanClient *client);
 	void noticeNameReplaced(void);
@@ -19,7 +21,7 @@ public:
 	int checkClientLevel(CanClient *client);
 	int determineFlag(void);
 
-	class noNickExistException : public std::exception
+	class noAuthorityException : public std::exception
 	{
 		virtual const char *what() const throw();
 	};

@@ -14,14 +14,16 @@ private:
 public:
 	Join();
 	~Join();
-	void joinOn();
+	void joinOn(CanClient *client);
 
 	int isKicked(CanClient *client);
+	int isExistChannel(std::string channelName);
 	void leaveAll(CanClient *client);
 	void addClient(CanClient *client);
-	void addChannel(CanClient *client);
+	void addChannel(std::string channelName);
 	void sendMSG(CanClient *client);
-
+	int isAlreadyJoined(CanClient *client);
+	
 	int isValidFormat(void);
 	int checkClientLevel(CanClient *client);
 	int determineFlag(void);
@@ -37,6 +39,11 @@ public:
 	};
 
 	class channelOverflowException : public std::exception
+	{
+		virtual const char *what() const throw();
+	};
+
+	class kickedException : public std::exception
 	{
 		virtual const char *what() const throw();
 	};

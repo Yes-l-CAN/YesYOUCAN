@@ -9,7 +9,7 @@ private:
 public:
 	Ping();
 	~Ping();
-	void pingOn();
+	void pingOn(CanClient *client);
 	void pong(CanClient *client);
 
 	int isValidFormat(void);

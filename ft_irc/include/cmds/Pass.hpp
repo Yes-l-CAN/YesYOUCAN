@@ -9,8 +9,8 @@ private:
 public:
 	Pass();
 	~Pass();
-	void passOn(void);
-	void passCmp(void);
+	void passOn(CanClient *client);
+	void passCmp(CanClient *client);
 
 	int isValidFormat(void);
 	int checkClientLevel(CanClient *client);
@@ -20,6 +20,11 @@ public:
 	{
 		virtual const char *what() const throw();
 	};
+
+	class alreadyRegisteredException :public std::exception
+	{
+		virtual const char *what() const throw();
+	}
 };
 
 #endif // COMMAND_PASS_HPP

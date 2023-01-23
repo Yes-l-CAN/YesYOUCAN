@@ -14,12 +14,12 @@ private:
 public:
 	Kick();
 	~Kick();
-	void kickOn();
-	std::map<CanChannel *, int> getChannel(CanClient *client);
+	void kickOn(CanClient *client);
+	// std::map<CanChannel *, int> getChannel(CanClient *client);
 
 	int isOperator(CanClient *client);
 	void changeChannelStatus(CanClient *client);
-	void snedMSG(CanClient *client);
+	void sendMSG(CanClient *client);
 
 	int isValidFormat(void);
 	int checkClientLevel(CanClient *client);

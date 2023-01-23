@@ -19,7 +19,9 @@ private:
 	std::string realname;
 	struct sockaddr_in addr;
 	int isMember;
-	bool isKicked;
+
+	std::string sendBuff;
+	std::string recvBuff;
 
 	std::map<std::string, CanChannel *> channelList; // channelList which the client belongs
 
@@ -37,6 +39,8 @@ public:
 	void setUsername(const std::string name);
 	void setRealname(const std::string name);
 	void setMemberLevel(int lev);
+	void setSendBuff(const std::string &msg);
+	void setrecvBuff(const std::string &msg);
 
 	// getter
 	std::string getNickname(void) const;
@@ -44,18 +48,27 @@ public:
 	std::string getRealname(void) const;
 	int getSockFd(void) const;
 	int getMemberLevel(void) const;
-	int CanClient::getisMember(void) const;
-	bool CanClient::getisKicked(void) const;
+	int getisMember(void) const;
+	std::map<std::string, CanChannel *>& getChannelList(void) const;
+	std::string& getsendBuff(void);
+	std::string& getrecvBuff(void);
 
-	void addChannelElement(std::string key, CanChannel *pNewChannel); // join channel
+	void addChannelElement(const std::string &key, CanChannel *pNewChannel); // join channel
 	void deleteChannelElement(std::string key);						  // come outside channel
 
 	void cSend(int fd);
+	void cRecv(std::string msg);
+
 
 	class addChannelException : public std::exception
 	{
 		virtual const char *what() const throw();
 	};
+
+	class cSendException : public std::exception
+    {
+        virtual const char* what() const throw();
+    };
 };
 
 // std::ostream    &operator<<(std::ostream &os, CanClient& client)

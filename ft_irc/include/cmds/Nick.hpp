@@ -15,16 +15,14 @@ private:
 public:
 	Nick();
 	~Nick();
-	void nickOn();
+	void nickOn(CanClient *client);
 	int validCheck(void);
 	int checkUsedNick(void);
-	int isValidFormat(void);
 	void setClientNick(CanClient *client);
 
+	int isValidFormat(void);
 	int checkClientLevel(CanClient *client);
 	int determineFlag(void);
-
-	//	int	isValidFormat(void);
 
 	class invalidNickException : public std::exception
 	{

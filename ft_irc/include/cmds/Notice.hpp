@@ -12,7 +12,7 @@ private:
 public:
 	Notice();
 	~Notice();
-	void noticeOn();
+	void noticeOn(CanClient *client);
 	std::map<CanChannel *, int> getChannel(CanClient *client);
 
 	int noticeToChannel(void);
