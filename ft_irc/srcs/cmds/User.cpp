@@ -1,6 +1,6 @@
 #include "User.hpp"
 
-int	User::validCheck(void)
-{
-	
-}
+// int	User::validCheck(void)
+// {
+
+// }

@@ -20,9 +20,9 @@ class Parsing
     std::vector<std::string> parseOn(char* bufferStr);
 
     void giveFlag();
-    int  checkSpaceAndComma(int idx);
+    int  checkSpaceAndComma(size_t idx);
     void makeBuffString(char* buffStr);
-    void checkColon(int idx);
+    void checkColon(size_t idx);
 };
 
 #endif // CAN_PARSING_HPP

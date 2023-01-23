@@ -19,7 +19,6 @@ class Operation
     int          result;
     CanServer*   server;
     Utility      util;
-    CanException except;
 
   protected:
     static const int bufferSize = 300;

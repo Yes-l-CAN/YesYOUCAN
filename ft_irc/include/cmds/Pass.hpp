@@ -1,9 +1,9 @@
 #ifndef COMMAND_PASS_HPP
 #define COMMAND_PASS_HPP
 
-#include "Command.hpp"
+#include "ACommand.hpp"
 
-class Pass : public ICommand
+class Pass : public ACommand
 {
 	private:
 

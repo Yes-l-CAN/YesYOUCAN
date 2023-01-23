@@ -34,7 +34,7 @@ CanClient::CanClient(const struct sockaddr_in addr) : addr(addr)
 {
 }
 
-CanClient::CanClient(const struct sockaddr_in addr, const int fd) : addr(addr), socketFd(fd)
+CanClient::CanClient(const struct sockaddr_in addr, const int fd) : socketFd(fd), addr(addr)
 {
 }
 

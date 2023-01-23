@@ -8,6 +8,8 @@
 #include <sys/socket.h>
 #include <iostream>
 
+class CanChannel;
+
 class CanClient
 {
 private:

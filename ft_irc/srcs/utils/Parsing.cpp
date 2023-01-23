@@ -40,14 +40,14 @@ void Parsing::giveFlag()
         v.push_back("0");
 }
 
-int Parsing::checkSpaceAndComma(int i)
+int Parsing::checkSpaceAndComma(size_t i)
 {
     while (buff[i] == ' ' || buff[i] == ',')
     {
         flag = true;
         i++;
     }
-    if (!word.empty() && flag || i == buff.size())
+    if ((!word.empty() && flag) || i == buff.size())
     {
         v.push_back(word);
         word.clear();
@@ -62,7 +62,7 @@ int Parsing::checkSpaceAndComma(int i)
     return (i);
 }
 
-void Parsing::checkColon(int i)
+void Parsing::checkColon(size_t i)
 {
 
     if (!word.empty())

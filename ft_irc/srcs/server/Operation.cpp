@@ -41,6 +41,7 @@ Operation& Operation::operator=(const Operation& obj)
 
         CanServer* dummy = this->server;
         this->server = replica.server;
+		(void) dummy;
     }
     return *this;
 }
@@ -87,7 +88,7 @@ void Operation::CommandChecker(std::vector<std::string> argv, CanClient* targetC
 {
     std::string cmd[] = {"PASS", "NICK", "USER", "PING", "JOIN", "PART", "KICK", "NOTICE", "PRIVMSG"};
 
-    for (int i = 0; i < sizeof(cmd) / sizeof(std::string); i++)
+    for (size_t i = 0; i < sizeof(cmd) / sizeof(std::string); i++)
     {
         if (argv.front() == cmd[i])
         {
@@ -140,11 +141,13 @@ void Operation::cRecv(int fd)
 
 void Operation::Client2ServSend(int fd)
 {
+	(void) fd;
     // need to think about it more ...
 }
 
 void Operation::Serv2ClientSend(int fd)
 {
+	(void) fd;
     // need to think about it more ...
 }
 
@@ -218,10 +221,13 @@ void Operation::Ping(std::vector<std::string> argv, CanClient* targetClient)
     ioctl(targetClient->getSockFd(), TIOCFLUSH, 2);
     send(targetClient->getSockFd(), &reply, sizeof(reply), 0);
     // send 'pong'
+	(void) argv;
 }
 
 void Operation::Quit(std::vector<std::string> argv, CanClient* targetClient)
 {
+	(void) argv;
+	(void) targetClient;
 }
 
 // void    Pong(std::vector<std::string> argv, CanClient* targetClient);
@@ -230,6 +236,8 @@ void Operation::Join(std::vector<std::string> argv, CanClient* targetClient)
     if (targetClient->getMemberLevel() != CERTIFICATION_FIN)
         throw(CanException::NotCertificatedException());
     std::cout << "join Called!" << std::endl;
+	(void) argv;
+	(void) targetClient;
 }
 
 void Operation::Part(std::vector<std::string> argv, CanClient* targetClient)
@@ -237,6 +245,8 @@ void Operation::Part(std::vector<std::string> argv, CanClient* targetClient)
     if (targetClient->getMemberLevel() != CERTIFICATION_FIN)
         throw(CanException::NotCertificatedException());
     std::cout << "part Called!" << std::endl;
+	(void) argv;
+	(void) targetClient;
 }
 
 void Operation::Kick(std::vector<std::string> argv, CanClient* targetClient)
@@ -244,6 +254,8 @@ void Operation::Kick(std::vector<std::string> argv, CanClient* targetClient)
     if (targetClient->getMemberLevel() != CERTIFICATION_FIN)
         throw(CanException::NotCertificatedException());
     std::cout << "kick Called!" << std::endl;
+	(void) argv;
+	(void) targetClient;
 }
 
 void Operation::Notice(std::vector<std::string> argv, CanClient* targetClient)
@@ -251,6 +263,8 @@ void Operation::Notice(std::vector<std::string> argv, CanClient* targetClient)
     if (targetClient->getMemberLevel() != CERTIFICATION_FIN)
         throw(CanException::NotCertificatedException());
     std::cout << "notice Called!" << std::endl;
+	(void) argv;
+	(void) targetClient;
 }
 
 void Operation::PrivateMSG(std::vector<std::string> argv, CanClient* targetClient)
@@ -258,4 +272,6 @@ void Operation::PrivateMSG(std::vector<std::string> argv, CanClient* targetClien
     if (targetClient->getMemberLevel() != CERTIFICATION_FIN)
         throw(CanException::NotCertificatedException());
     std::cout << "privatemsg Called!" << std::endl;
+	(void) argv;
+	(void) targetClient;
 }
