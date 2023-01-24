@@ -26,6 +26,7 @@
 
 #define MAX_FD 1000
 #define MAXBUF 10
+#define SERVERNAME "CanServer"
 
 class CanServer
 {
@@ -40,6 +41,8 @@ private:
 
 	fd_set reads;
 	fd_set copyReads;
+	fd_set writes;
+	fd_set copyWrites;
 
 	int maxFd;
 
@@ -84,8 +87,10 @@ public:
 	std::string getPassWord() const;
 	int getSocketFd() const;
 	struct sockaddr_in getAddr() const;
-	fd_set getReads() const;
-	fd_set getCopyReads() const;
+	fd_set *getReads();
+	fd_set *getWrites();
+	fd_set *getCopyReads();
+	fd_set *getCopyWrites();
 	std::map<int, CanClient *> *getClientList() const;
 	std::map<std::string, CanChannel *> getChannelList() const;
 };

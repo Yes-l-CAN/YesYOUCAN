@@ -6,16 +6,16 @@ Part::Part() {}
 
 Part::~Part() {}
 
-Part::Part(const Part &obj)
-{
-	// Deprecated.
-}
+// Part::Part(const Part &obj)
+// {
+// 	// Deprecated.
+// }
 
-Part &Part::operator=(const Part &obj)
-{
-	// Deprecated.
-	return (*this);
-}
+// Part &Part::operator=(const Part &obj)
+// {
+// 	// Deprecated.
+// 	return (*this);
+// }
 
 void Part::partOn(CanClient *client)
 {
@@ -28,7 +28,7 @@ void Part::partOn(CanClient *client)
   }
   catch(const std::exception& e)
   {
-    send(client->getSockFd(), e.what(), strlen(e.what()), 0);
+      client->addSendBuff(e.what());
   }
 }
 
@@ -75,11 +75,6 @@ int Part::isValidFormat(void)
   {
     throw invalidFormatException();
   }
-  if (!(getSize() == 2 && getFlag() == 0) || \
-      !(getSize() == 3 && getFlag() == 1))
-  {
-    throw invalidFormatException();
-  }
 
   if (server->getChannelList().find(cmd[2]) == server->getChannelList().end())
   {
@@ -89,7 +84,7 @@ int Part::isValidFormat(void)
 }
 
 int Part::checkClientLevel(CanClient *client) {
-  if (client->getMemberLevel() & CERTIFICATION_FIN == 0) {
+  if ((client->getMemberLevel() & CERTIFICATION_FIN) == 0) {
     throw noAuthorityException();
   }
   return (TRUE);
@@ -97,10 +92,11 @@ int Part::checkClientLevel(CanClient *client) {
 
 int Part::determineFlag(void) { return (1); }
 
-const char *Part::noSuchChannelException::what() const throw() {
-  return ("Part : No such channel !");
+const char *Part::noSuchChannelException::what() const throw() 
+{
+  return ("Part : No such channel! \n");
 }
 
 const char *Part::notOnChannelException::what() const throw() {
-  return ("Part : Not on channel !");
+  return ("Part : Not on channel !\n");
 }

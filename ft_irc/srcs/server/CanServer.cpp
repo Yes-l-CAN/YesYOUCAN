@@ -6,6 +6,8 @@ CanServer::CanServer() : socketFd(-1), maxFd(1000)
     setServAddr();
     FD_ZERO(&reads);
     FD_ZERO(&copyReads);
+	FD_ZERO(&writes);
+	FD_ZERO(&copyWrites);
 
 	this->clientList = new std::map<int, CanClient *>;
 }
@@ -43,6 +45,19 @@ CanServer& CanServer::operator=(const CanServer& obj){
 	}
 	return (*this);
 }
+
+
+void	CanServer::addChannelElement(const std::string channelName, CanChannel *pNewChannel)
+{
+	(void)channelName;
+	(void)pNewChannel;
+}
+
+void 	CanServer::deleteChannelElement(const std::string channelName)
+{
+	(void)channelName;
+}						// delete channel List
+
 
 // setter
 void CanServer::setServer(char *port, char *pw){
@@ -112,8 +127,9 @@ void CanServer::s_Select()
 		timeout.tv_sec = 5;
 		timeout.tv_usec = 500;
 		this->copyReads = this->reads;
+		this->copyWrites = this->writes;
 
-		res = select(this->maxFd + 1, &(this->copyReads), NULL, NULL, &timeout);
+		res = select(this->maxFd + 1, &(this->copyReads), &(this->copyWrites), NULL, &timeout);
 		if(res < 0)
 			throw (CanException::selectException());
 		else if(res == 0)
@@ -136,6 +152,7 @@ void CanServer::s_Accept()
 		throw (CanException::acceptException());
 	}
 	FD_SET(clientSockFd, &reads);
+	FD_SET(clientSockFd, &writes);
 
 	CanClient *temp = new CanClient(clientAddr, clientSockFd);
 	clientList->insert(std::make_pair(clientSockFd, temp));
@@ -170,6 +187,8 @@ void CanServer::findFd(){
 // socket transmission
 int CanServer::Transmission()
 {
+	int receivedFd = - 1;
+	CanClient *pClient = NULL;
 	for(int i = 0; i < this->maxFd; i++)
 	{
 		if(FD_ISSET(i, &(this->copyReads)))
@@ -179,10 +198,21 @@ int CanServer::Transmission()
 				s_Accept();
 				std::cout << "Accepted socket fd!\n";
 			}
-			return (i);
+			// return (i);
+			receivedFd = i;
 		} 
+		if (FD_ISSET(i, &(this->copyWrites)))
+		{
+			pClient = clientList->find(i)->second;
+			if (pClient->getsendBuff().size() != 0)
+			{
+				pClient->sendToClient();
+			}
+		}
 	}
-	return (-1);
+
+	return (receivedFd);
+	// return (-1);
 }
 
 //getter
@@ -215,13 +245,22 @@ struct sockaddr_in CanServer::getAddr() const{
 	return(this->addr);
 }
 
-fd_set CanServer::getReads() const{
-	return(this->reads);
+fd_set *CanServer::getReads(){
+	return (&(this->reads));
 }
 
-fd_set CanServer::getCopyReads() const{
-	return(this->copyReads);
+fd_set *CanServer::getCopyReads(){
+	return (&(this->copyReads));
 }
+
+fd_set *CanServer::getWrites(){
+	return (&(this->writes));
+}
+
+fd_set *CanServer::getCopyWrites(){
+	return (&(this->copyWrites));
+}
+
 
 
 std::map<int, CanClient*> *CanServer::getClientList() const{

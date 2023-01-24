@@ -21,7 +21,6 @@ private:
 	int isMember;
 
 	std::string sendBuff;
-	std::string recvBuff;
 
 	std::map<std::string, CanChannel *> channelList; // channelList which the client belongs
 
@@ -40,7 +39,6 @@ public:
 	void setRealname(const std::string name);
 	void setMemberLevel(int lev);
 	void setSendBuff(const std::string &msg);
-	void setrecvBuff(const std::string &msg);
 
 	// getter
 	std::string getNickname(void) const;
@@ -49,22 +47,22 @@ public:
 	int getSockFd(void) const;
 	int getMemberLevel(void) const;
 	int getisMember(void) const;
-	std::map<std::string, CanChannel *> &getChannelList(void) const;
+	std::map<std::string, CanChannel *> &getChannelList(void);
 	std::string &getsendBuff(void);
-	std::string &getrecvBuff(void);
 
 	void addChannelElement(const std::string &key, CanChannel *pNewChannel); // join channel
 	void deleteChannelElement(std::string key);								 // come outside channel
 
-	void cSend(int fd);
-	void cRecv(std::string msg);
+	void sendToClient();
+
+	void addSendBuff(std::string message);
 
 	class addChannelException : public std::exception
 	{
 		virtual const char *what() const throw();
 	};
 
-	class cSendException : public std::exception
+	class sendToClientException : public std::exception
 	{
 		virtual const char *what() const throw();
 	};

@@ -5,16 +5,16 @@ Join::Join() {}
 
 Join::~Join() {}
 
-Join::Join(const Join &obj)
-{
-	// Deprecated.
-}
+// Join::Join(const Join &obj)
+// {
+// 	// Deprecated.
+// }
 
-Join &Join::operator=(const Join &obj)
-{
-	// Deprecated.
-	return (*this);
-}
+// Join &Join::operator=(const Join &obj)
+// {
+// 	// Deprecated.
+// 	return (*this);
+// }
 
 void Join::joinOn(CanClient *client)
 {
@@ -28,7 +28,7 @@ void Join::joinOn(CanClient *client)
     for (it = cmd.begin() + 2;it != cmd.end();it++)
     {
       if (*it == "0")
-      {// JOIN 0 => channel PART 시 메시지 첨부 기능까지 고려할 것인지 의논 필요
+      {
         leaveAll(client);
         continue;
       }
@@ -45,7 +45,7 @@ void Join::joinOn(CanClient *client)
       {
         addClient(client);
         sendMSG(client);
-        }
+      }
       else
       {
         throw channelOverflowException();
@@ -54,7 +54,8 @@ void Join::joinOn(CanClient *client)
   }
   catch(const std::exception& e)
   {
-    send(client->getSockFd(), e.what(), strlen(e.what()), 0);
+    std::string msgBuf = e.what();
+    client->addSendBuff(msgBuf);
   }
 }
 
@@ -81,17 +82,20 @@ void Join::leaveAll(CanClient *client)
 {
   if (client != NULL)
   {
-    std::map<std::string, CanChannel *>::iterator it;
+    std::map<std::string, CanChannel *>::iterator it = client->getChannelList().begin();
     std::string msgBuf;
-    for(it = client->getChannelList().begin(); it != client->getChannelList().end(); it++)
+    // for(it = client->getChannelList().begin(); it != client->getChannelList().end(); it++)
+    while (client->getChannelList().size() != 0)
     {
-      msgBuf = ":" + client->getUsername() + " PART " + it->second->getChannelName() + "\r\n";
+      it = client->getChannelList().begin();
+      msgBuf = ":" + client->getUsername() + " PART " + it->second->getChannelName() + "\n";
       it->second->broadcast(msgBuf);
       it->second->deleteClientElement(client->getSockFd());
       if (it->second->getClientList().size() == 0)
       {
         server->deleteChannelElement(it->second->getChannelName());
       }
+      client->deleteChannelElement(it->second->getChannelName());
     }
   }
 }
@@ -119,7 +123,7 @@ void Join::sendMSG(CanClient *client)
   std::string msgBuff;
   // :<source> JOIN <channel>
 
-  msgBuff = ":" + client->getUsername() + " JOIN #" + channel->getChannelName() + "\r\n";
+  msgBuff = ":" + client->getUsername() + " JOIN #" + channel->getChannelName() + "\n";
   channel->broadcast(msgBuff);
 }
 
@@ -148,7 +152,6 @@ int Join::isValidFormat(void)
     throw invalidFormatException();
   }
 
-  // JOIN 0 => channel PART 시 메시지 첨부 기능까지 고려할 것인지 의논 필요
   if (getFlag() != determineFlag())
   {
     throw invalidFormatException();
@@ -157,27 +160,26 @@ int Join::isValidFormat(void)
 }
 
 int Join::checkClientLevel(CanClient *client) {
-  if (client->getMemberLevel() & CERTIFICATION_FIN == 0) {
+  if ((client->getMemberLevel() & CERTIFICATION_FIN) == 0) {
     throw noAuthorityException();
   }
   return (TRUE);
 }
 
 int Join::determineFlag(void) { return (0); }
-// JOIN 0 => channel PART 시 메시지 첨부 기능까지 고려할 것인지 의논 필요
 
 const char *Join::invalidChannelException::what() const throw() {
-  return "Join : Invalid Channel !";
+  return "Join : Invalid Channel !\n";
 }
 
 const char *Join::alreadyJoinedException::what() const throw() {
-  return "Join : Already joined !";
+  return "Join : Already joined !\n";
 }
 
 const char *Join::channelOverflowException::what() const throw() {
-  return "Join : channel Overflow";
+  return "Join : channel Overflow\n";
 }
 
 const char *Join::kickedException::what() const throw() {
-  return "Join : cannot join channels that have been kicked. ";
+  return "Join : cannot join channels that have been kicked. \n";
 }

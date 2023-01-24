@@ -1,27 +1,43 @@
 #include "Bot.hpp"
 #include "Operation.hpp"
 
-Bot::Bot(): word("42Seoul") {}
+Bot::Bot(): word("42Seoul"), botMessage("weLove42Seoul") {}
 
 Bot::~Bot() {}
 
-Bot::Bot(const Bot &obj)
+// Bot::Bot(const Bot &obj)
+// {
+// 	// Deprecated.
+// }
+
+// Bot &Bot::operator=(const Bot &obj)
+// {
+// 	// Deprecated.
+// 	return (*this);
+// }
+
+int Bot::findWord(std::string message)
 {
-	// Deprecated.
+	if(message.find(this->word) != std::string::npos)
+		return (TRUE);	
+	return (FALSE);
 }
 
-Bot &Bot::operator=(const Bot &obj)
+
+void Bot::executeBot(std::string message, CanClient *client)
 {
-	// Deprecated.
-	return (*this);
+	if(findWord(message) == TRUE)
+		client->addSendBuff(botMessage);
 }
 
-void Bot::findWord()
+void Bot::executeBot(std::string message, CanChannel *channel)
 {
-
-}
-
-void Bot::sendMessage(CanChannel *channel)
-{
-
+	if(findWord(message) == TRUE)
+	{
+		std::map<int, CanClient *>::iterator it;
+		for(it = channel->getClientList().begin(); it != channel->getClientList().end(); it++)
+		{
+			it->second->addSendBuff(botMessage);
+		}
+	}
 }

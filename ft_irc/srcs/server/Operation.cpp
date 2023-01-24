@@ -44,17 +44,17 @@ Operation::Operation(char *s1, char *s2)
 	this->cmdJoin = new Join();
 }
 
-Operation::Operation(const Operation &obj)
-{
-	// Deprecated.
-}
+// Operation::Operation(const Operation &obj)
+// {
+// 	// Deprecated.
+// }
 
-// deep copy
-Operation &Operation::operator=(const Operation &obj)
-{
-	// Deprecated.
-	return (*this);
-}
+// // deep copy
+// Operation &Operation::operator=(const Operation &obj)
+// {
+// 	// Deprecated.
+// 	return (*this);
+// }
 
 Operation::~Operation()
 {
@@ -74,7 +74,7 @@ void Operation::Transmission()
 {
 
 	server->s_Select();
-	this->setFd = server->Transmission(); // return i(fd)
+	this->setFd = server->Transmission(); // return i(fd) // reads fd
 	if (this->setFd == server->getSocketFd())
 	{
 		std::cout << "accept client " << std::endl;
@@ -85,7 +85,7 @@ void Operation::Transmission()
 		{
 			cRecv(this->setFd);
 			CanClient *targetClient = findClient(this->setFd);
-
+							
 			// parsing
 			std::vector<std::string> cmd = parser.parseOn(this->buffer);
 
@@ -98,6 +98,8 @@ void Operation::Transmission()
 			std::cout << e.what() << std::endl;
 		}
 	}
+
+	// write set
 }
 
 CanClient *Operation::findClient(int fd)

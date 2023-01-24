@@ -65,21 +65,21 @@ void CanChannel::delKickedListElement(CanClient* client)
 void CanChannel::broadcast(const std::string& msg)
 {
     // 채널에서 바로 send를 사용하여 전송하면 안된다고 함
+    // 클라이언트가 write불가능한 상황일 수 있기 때문
     // 클라이언트의 버퍼에 msg를 저장한 뒤
-    // 클라이언트에서 send호출 => select함수 실행시 순서대로 전송됨
+    // select함수에서, write가능한 상황인지 확인 후 fd들을 순차적으로 전송
     std::map<int, CanClient *>::iterator it;
     
     for (it = clientList.begin(); it != clientList.end(); it++)
     {
-        it->second->setSendBuff(msg);
-        it->second->cSend(it->first);
+        it->second->addSendBuff(msg);
     }
 }
 
 
 const char* CanChannel::addClientException::what() const throw()
 {
-    return "";
+    return "CanChannel add Client : Failed ! \n";
 }
 
 // virtual const char*	CanChannel::deleteClientException::what() const throw()

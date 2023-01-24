@@ -18,17 +18,11 @@ public:
 	void userOn(CanClient *client);
 	int validCheck(void);
 	void setClientUser(CanClient *client);
-	void noticeNameReplaced(void);
-	void welcome2CanServ(void);
+	void welcome2CanServ(CanClient *client);
 
 	int isValidFormat(void);
 	int checkClientLevel(CanClient *client);
 	int determineFlag(void);
-
-	// class noAuthorityException : public std::exception
-	// {
-	// 	virtual const char *what() const throw();
-	// };  => ACommand로 옮김
 
 	class alreadyRegisteredException : public std::exception
 	{

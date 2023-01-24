@@ -4,11 +4,11 @@
 #include <map>
 #include <utility>
 
-CanClient::CanClient() : socketFd(-1), nickname(), username(), realname(), addr(), isMember(0), isKicked(false)
+CanClient::CanClient() : socketFd(-1), nickname(), username(), realname(), addr(), isMember(0)
 {
 }
 
-CanClient::CanClient(int fd) : socketFd(fd), nickname(), username(), realname(), addr(), isMember(0), isKicked(false)
+CanClient::CanClient(int fd) : socketFd(fd), nickname(), username(), realname(), addr(), isMember(0)
 {
 	memset(&this->addr, 0, sizeof(this->addr));
 }
@@ -99,17 +99,22 @@ void CanClient::addChannelElement(const std::string &key, CanChannel *pNewChanne
 	}
 }
 
-void CanClient::cSend(int fd)
+void CanClient::deleteChannelElement(std::string key)
+{
+	(void)key;
+}
+
+void CanClient::sendToClient()
 {
     try
     {
 		if (this->sendBuff.length() == 0)
 			return ;
 
-        int ret = send(fd, this->sendBuff.c_str(), this->sendBuff.length(), 0);
+        int ret = send(socketFd, this->sendBuff.c_str(), this->sendBuff.length(), 0);
         if (ret < 0)
         {
-            throw CanClient::cSendException();
+            throw CanClient::sendToClientException();
         }
 		this->sendBuff = "";
     }
@@ -119,42 +124,47 @@ void CanClient::cSend(int fd)
     }
 }
 
-void CanClient::cRecv(std::string msg)
+void CanClient::addSendBuff(std::string message)
 {
-    setrecvBuff(msg);
+	this->sendBuff += message;
 }
+
+// void CanClient::cRecv(std::string msg)
+// {
+//     setrecvBuff(msg);
+// }
 
 void CanClient::setSendBuff(const std::string &msg)
 {
     this->sendBuff = msg;
 }
 
-void CanClient::setrecvBuff(const std::string &msg)
-{
-    this->recvBuff = msg;
-}
+// void CanClient::setrecvBuff(const std::string &msg)
+// {
+//     this->recvBuff += msg;
+// }
 
 std::string& CanClient::getsendBuff(void)
 {
     return (this->sendBuff);
 }
 
-std::string& CanClient::getrecvBuff(void)
-{
-    return (this->recvBuff);
-}
+// std::string& CanClient::getrecvBuff(void)
+// {
+//     return (this->recvBuff);
+// }
 
-std::map<std::string, CanChannel *>& CanClient::getChannelList(void) const
+std::map<std::string, CanChannel *> &CanClient::getChannelList(void)
 {
 	return (this->channelList);
 }
 
 const char *CanClient::addChannelException::what() const throw()
 {
-	return "";
+	return "CanClient addChhannel : Failed !\n";
 }
 
-const char* CanClient::cSendException::what() const throw()
+const char* CanClient::sendToClientException::what() const throw()
 {
-    return "CanClient cSend : couldn't send socket !";
+    return "CanClient sendToClient : couldn't send socket !\n";
 }

@@ -7,16 +7,16 @@ ACommand::ACommand(CanServer *serv) : flag(-1), size(-1)
 	this->server = serv;
 };
 
-ACommand::ACommand(const ACommand &obj)
-{
-	// Deprecated.
-}
+// ACommand::ACommand(const ACommand &obj)
+// {
+// 	// Deprecated.
+// }
 
-ACommand &ACommand::operator=(const ACommand &obj)
-{
-	// Deprecated.
-	return (*this);
-}
+// ACommand &ACommand::operator=(const ACommand &obj)
+// {
+// 	// Deprecated.
+// 	return (*this);
+// }
 
 ACommand::~ACommand(){};
 
@@ -45,10 +45,10 @@ int ACommand::getSize(void) const
 
 const char *ACommand::invalidFormatException::what() const throw()
 {
-	return "Invalid Command : Format error !";
+	return "Invalid Command : Format error ! \n";
 }
 
 const char *ACommand::noAuthorityException::what() const throw()
 {
-	return ("No Authority : Register PASS, USER, NICK");
+	return ("No Authority : Register PASS, USER, NICK \n");
 }

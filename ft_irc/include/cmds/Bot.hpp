@@ -9,13 +9,16 @@ class Bot
 {
 private:
 	std::string word;
+	std::string botMessage;
 	Bot(const Bot &obj); // Deprecated.
 	Bot& operator=(const Bot &obj); // Deprecated.
 public:
 	Bot();
 	~Bot();
-	void findWord();
+	int	 findWord(std::string message);
 	void sendMessage(CanChannel *channel);
+	void executeBot(std::string message, CanClient *client);
+	void executeBot(std::string message, CanChannel *channel);
 };
 
 #endif

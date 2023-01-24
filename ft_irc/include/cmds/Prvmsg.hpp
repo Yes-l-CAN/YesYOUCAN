@@ -8,6 +8,7 @@
 class Prvmsg : public Notice
 {
 private:
+	void *target;
 	Bot *bot;
 	Prvmsg(const Prvmsg &obj); // Deprecated.
 	Prvmsg& operator=(const Prvmsg &obj); // Deprecated.
@@ -19,6 +20,11 @@ public:
 	int isValidFormat(void);
 	int checkClientLevel(CanClient *client);
 	int determineFlag(void);
+	void executePrvmsg(CanClient *client);
+
+	void	*getTarget(CanClient *client);
+	
+	
 };
 
 #endif // COMMAND_PRVMSG_HPP

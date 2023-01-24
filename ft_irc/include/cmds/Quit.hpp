@@ -12,6 +12,9 @@ public:
 	Quit();
 	~Quit();
 	void quitOn(CanClient *client);
+	void eraseFromList(CanClient *client);
+	void msgToAllJoinedChannel(CanClient *client);
+
 	int isValidFormat(void);
 	int checkClientLevel(CanClient *client);
 	int determineFlag(void);

@@ -6,16 +6,16 @@ Kick::Kick() {}
 
 Kick::~Kick() {}
 
-Kick::Kick(const Kick &obj)
-{
-	// Deprecated.
-}
+// Kick::Kick(const Kick &obj)
+// {
+// 	// Deprecated.
+// }
 
-Kick &Kick::operator=(const Kick &obj)
-{
-	// Deprecated.
-	return (*this);
-}
+// Kick &Kick::operator=(const Kick &obj)
+// {
+// 	// Deprecated.
+// 	return (*this);
+// }
 
 void Kick::kickOn(CanClient *client)
 {
@@ -33,9 +33,9 @@ void Kick::kickOn(CanClient *client)
   }
   catch(const std::exception& e)
   {
-    send(client->getSockFd(), e.what(), strlen(e.what()), 0);
+    std::string msgBuf = e.what();
+    client->addSendBuff(msgBuf);  
   }
-  
 }
 
 // std::map<CanChannel *, int> Kick::getChannel(CanClient *client)
@@ -79,11 +79,6 @@ int Kick::isValidFormat(void)
   {
     throw invalidFormatException();
   }
-  else if (!(getSize() == 3 && getFlag() == 0) || \
-           !(getSize() == 4 && getFlag() == 1))
-  {
-    throw invalidFormatException();
-  }
 
   if (server->getChannelList().find(cmd[2]) == server->getChannelList().end())
   {
@@ -106,10 +101,11 @@ int Kick::isValidFormat(void)
   {
     throw noSuchUserException();
   }
+  return (FALSE);
 }
 
 int Kick::checkClientLevel(CanClient *client) {
-  if (client->getMemberLevel() & CERTIFICATION_FIN) {
+  if ((client->getMemberLevel() & CERTIFICATION_FIN) == 0) {
     throw noAuthorityException();
   }
   return (TRUE);
@@ -118,13 +114,13 @@ int Kick::checkClientLevel(CanClient *client) {
 int Kick::determineFlag(void) { return (1); }
 
 const char *Kick::notOperatorException::what() const throw() {
-  return "Kick : not Operator ! No authority ";
+  return "Kick : not Operator ! No authority !\n";
 }
 
 const char *Kick::noSuchUserException::what() const throw() {
-  return "Kick : No such user !";
+  return "Kick : No such user !\n";
 }
 
 const char *Kick::noSuchChannelException::what() const throw() {
-  return "Kick : No such channel !";
+  return "Kick : No such channel !\n";
 }

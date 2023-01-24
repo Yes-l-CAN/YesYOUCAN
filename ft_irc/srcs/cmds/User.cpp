@@ -5,16 +5,16 @@ User::User() {}
 
 User::~User() {}
 
-User::User(const User &obj)
-{
-	// Deprecated.
-}
+// User::User(const User &obj)
+// {
+// 	// Deprecated.
+// }
 
-User &User::operator=(const User &obj)
-{
-	// Deprecated.
-	return (*this);
-}
+// User &User::operator=(const User &obj)
+// {
+// 	// Deprecated.
+// 	return (*this);
+// }
 
 void User::userOn(CanClient *client)
 {
@@ -24,10 +24,12 @@ void User::userOn(CanClient *client)
 		checkClientLevel(client);
 		validCheck();
 		setClientUser(client);
+		welcome2CanServ(client);
 	}
 	catch (const std::exception &e)
 	{
-		send(client->getSockFd(), e.what(), strlen(e.what()), 0);
+		std::string msgBuf = e.what() ;
+		client->addSendBuff(msgBuf);
 	}
 }
 
@@ -41,24 +43,6 @@ int User::validCheck(void)
 		throw minUserLenException();
 	}
 
-	/* => username과 realname은 중복이 가능하다고 함
-	  // check used name
-	  std::map<int, CanClient *>::iterator cit;
-	  std::vector<std::string>::iterator sit_username;
-	  std::vector<std::string>::iterator sit_realname;
-
-	  for (cit = server->getClientList()->begin(); cit != server->getClientList()->end(); cit++)
-	  {
-		if (cit->second->getUsername() == *sit_username)
-		{
-
-		}
-			  if (cit->second->getRealname() == *sit_Realname)
-		{
-
-		}
-	  }
-	*/
 	if (cmd[5].find(" ") != std::string::npos && getFlag() == 0)
 	{
 		throw spaceWithoutColonException();
@@ -74,18 +58,19 @@ void User::setClientUser(CanClient *client)
 	client->setUsername(cmd[2]);
 	client->setRealname(cmd[5]);
 	client->setMemberLevel(USER_FIN);
-	if (client->getMemberLevel() & (PASS_FIN | NICK_FIN | USER_FIN) == (PASS_FIN | NICK_FIN | USER_FIN))
+	if ((client->getMemberLevel() & (PASS_FIN | NICK_FIN | USER_FIN)) == (PASS_FIN | NICK_FIN | USER_FIN))
 	{
 		client->setMemberLevel(CERTIFICATION_FIN);
 	}
 }
 
-void User::noticeNameReplaced(void)
+void User::welcome2CanServ(CanClient *client)
 {
-}
-
-void User::welcome2CanServ(void)
-{
+    // 001 :<client> :<msg>
+	std::string userName = cmd[2];
+	std::string serverName = static_cast<std::string>(SERVERNAME);
+	std::string msgBuf = "001 :" + userName + " :Welcome, " + userName + "! Your host is " + serverName + "\n"; 
+	client->addSendBuff(msgBuf);	
 }
 
 int User::isValidFormat(void)
@@ -97,11 +82,11 @@ int User::isValidFormat(void)
 
 int User::checkClientLevel(CanClient *client)
 {
-	if (client->getMemberLevel() & PASS_FIN == 0)
+	if ((client->getMemberLevel() & PASS_FIN) == 0)
 	{
 		throw noAuthorityException();
 	}
-	else if (client->getMemberLevel() & USER_FIN == 1)
+	else if ((client->getMemberLevel() & USER_FIN) != 0)
 	{
 		throw alreadyRegisteredException();
 	}
@@ -115,15 +100,15 @@ int User::determineFlag(void)
 
 const char *User::alreadyRegisteredException::what() const throw()
 {
-	return ("USER : You already registered");
+	return ("USER : You already registered \n");
 }
 
 const char *User::minUserLenException::what() const throw()
 {
-	return ("USER : Minimum name Length = 1 ");
+	return ("USER : Minimum name Length = 1 \n");
 }
 
 const char *User::spaceWithoutColonException::what() const throw()
 {
-	return ("USER : Space withcout colon");
+	return ("USER : Space without colon \n");
 }

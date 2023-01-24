@@ -6,7 +6,7 @@
 
 class Notice : public ACommand
 {
-private:
+protected:
 	CanChannel *channel;
 	Notice(const Notice &obj); // Deprecated.
 	Notice& operator=(const Notice &obj); // Deprecated.
@@ -17,9 +17,12 @@ public:
 	void noticeOn(CanClient *client);
 	// std::map<CanChannel *, int> getChannel(CanClient *client);
 
-	int noticeToChannel(void);
-	int isExistChannelName(std::string name);
-	std::map<int, CanClient *>::iterator isExistNickname(std::string name);
+	void noticeToChannel(void);
+	CanChannel *isExistChannelName(std::string name);
+	CanClient *isExistNickname(std::string name);
+	int isKicked(CanClient *clinet, CanChannel *channel);
+
+	void executeNotice(CanClient *client);
 
 	int isValidFormat(void);
 	int checkClientLevel(CanClient *client);

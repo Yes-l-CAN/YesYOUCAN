@@ -5,16 +5,16 @@ Pass::Pass() {}
 
 Pass::~Pass() {}
 
-Pass::Pass(const Pass &obj)
-{
-	// Deprecated.
-}
+// Pass::Pass(const Pass &obj)
+// {
+// 	// Deprecated.
+// }
 
-Pass &Pass::operator=(const Pass &obj)
-{
-	// Deprecated.
-	return (*this);
-}
+// Pass &Pass::operator=(const Pass &obj)
+// {
+// 	// Deprecated.
+// 	return (*this);
+// }
 
 void Pass::passOn(CanClient *client)
 {
@@ -26,7 +26,8 @@ void Pass::passOn(CanClient *client)
   }
   catch(const std::exception& e)
   {
-      send(client->getSockFd(), e.what(), strlen(e.what()), 0);
+    std::string msgBuf = e.what();
+    client->addSendBuff(msgBuf);
   }
 }
 
@@ -51,7 +52,7 @@ int Pass::isValidFormat(void)
 }
 
 int Pass::checkClientLevel(CanClient *client) {
-  if (client->getMemberLevel() & PASS_FIN != 0) {
+  if ((client->getMemberLevel() & PASS_FIN) != 0) {
     throw alreadyRegisteredException();
   }
   return (TRUE);
@@ -60,10 +61,10 @@ int Pass::checkClientLevel(CanClient *client) {
 int Pass::determineFlag(void) { return (-1); }
 
 const char *Pass::incorrectPassException::what() const throw() {
-  return ("Pass : Incorrect Password !");
+  return ("Pass : Incorrect Password ! \n");
 }
 
 const char *Pass::alreadyRegisteredException::what() const throw() {
-  return ("Pass : Password already registered !");
+  return ("Pass : Password already registered ! \n");
 }
 

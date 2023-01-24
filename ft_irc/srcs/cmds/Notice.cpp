@@ -6,16 +6,16 @@ Notice::Notice() {}
 
 Notice::~Notice() {}
 
-Notice::Notice(const Notice &obj)
-{
-	// Deprecated.
-}
+// Notice::Notice(const Notice &obj)
+// {
+// 	// Deprecated.
+// }
 
-Notice &Notice::operator=(const Notice &obj)
-{
-	// Deprecated.
-	return (*this);
-}
+// Notice &Notice::operator=(const Notice &obj)
+// {
+// 	// Deprecated.
+// 	return (*this);
+// }
 
 void Notice::noticeOn(CanClient *client) 
 {
@@ -24,57 +24,69 @@ void Notice::noticeOn(CanClient *client)
   {
     isValidFormat();
     checkClientLevel(client);
-
-    std::string target = cmd[2];
-    std::string msgBuf = "NOTICE " + target + " :" + cmd[3] + "\r\n";
-    if (target.begin()[0] == '#') // channel
-    {
-      isExistChannelName(target);
-      channel = server->getChannelList().find(target)->second;
-      channel->broadcast(msgBuf);
-    }
-    else  // client's nickname
-    {
-      std::map<int, CanClient *>::iterator it = isExistNickname(target);
-      it->second->setSendBuff(msgBuf);
-      it->second->cSend
-    }
+	executeNotice(client);
   }
   catch(const std::exception& e)
   {
-    send(client->getSockFd(), e.what(), strlen(e.what()), 0);
+    std::string msgBuf = e.what();
+    client->addSendBuff(msgBuf);
   }
   
 }
 
+void Notice::executeNotice(CanClient *client)
+{
+  	std::string targetName = this->cmd[2];
+	std::string message = "Notice " + targetName + " : " + this->cmd[3] + "\n";
+	if (targetName[0] == '#')
+	{
+		channel = isExistChannelName(targetName);
+		if (isKicked(client, channel) == TRUE)
+			throw(kickedUserException());
+		channel->broadcast(message);
+	} else {
+				// send to Client ? 보다는 buffer에 저장이 더 맞을 듯...?=
+		CanClient *pClient = isExistNickname(targetName);
+		pClient->addSendBuff(message);
+	}
+}
+
 // std::map<CanChannel *, int> Notice::getChannel(CanClient *client) {}
 
-int Notice::noticeToChannel(void) {}
+void Notice::noticeToChannel(void) {}
 
-int Notice::isExistChannelName(std::string name)
+CanChannel *Notice::isExistChannelName(std::string name)
 {
-  if (server->getChannelList().find(name) == server->getChannelList().end())
+  std::map<std::string, CanChannel *>::iterator it;
+  it = server->getChannelList().find(name);
+  if (it == server->getChannelList().end())
   {
     throw noSuchChannelException();
   }
-  return (TRUE);
+  return (it->second);
 }
 
-std::map<int, CanClient *>::iterator Notice::isExistNickname(std::string name)
+CanClient *Notice::isExistNickname(std::string name)
 {
   std::map<int, CanClient *>::iterator it;
   for (it = server->getClientList()->begin(); it != server->getClientList()->end(); it++)
   {
     if (it->second->getNickname() == name)
     {
-      break ;
+      return (it->second);
     }
   }
-  if (it == server->getClientList()->end())
+  throw noSuchNickException();
+}
+
+int Notice::isKicked(CanClient *client, CanChannel *channel)
+{
+  int clientFd = client->getSockFd();
+  if (channel->getKickedList().find(clientFd) != channel->getKickedList().end())
   {
-    throw noSuchNickException();
+      return (TRUE);
   }
-  return (it);
+  return (FALSE);
 }
 
 int Notice::isValidFormat(void)
@@ -84,12 +96,11 @@ int Notice::isValidFormat(void)
   {
     throw invalidFormatException();
   }
-
   return (TRUE);
 }
 
 int Notice::checkClientLevel(CanClient *client) {
-  if (client->getMemberLevel() & CERTIFICATION_FIN == 0) {
+  if ((client->getMemberLevel() & CERTIFICATION_FIN) == 0) {
     throw noAuthorityException();
   }
   return (TRUE);
@@ -98,17 +109,17 @@ int Notice::checkClientLevel(CanClient *client) {
 int Notice::determineFlag(void) { return (1); }
 
 const char *Notice::noSuchNickException::what() const throw() {
-  return ("Notice Error! : Threre's no such nick!");
+  return ("Notice Error! : Threre's no such nick! \n");
 }
 
 const char *Notice::noSuchChannelException::what() const throw() {
-  return ("Notice Error! : Threre's no such channel!");
+  return ("Notice Error! : Threre's no such channel! \n");
 }
 
 const char *Notice::replyAnywayException::what() const throw() {
-  return ("Notice Error! : replied anyway!");
+  return ("Notice Error! : replied anyway! \n");
 }
 
 const char *Notice::kickedUserException::what() const throw() {
-  return ("Notice Error! : Already kicked user!");
+  return ("Notice Error! : Already kicked user! \n");
 }

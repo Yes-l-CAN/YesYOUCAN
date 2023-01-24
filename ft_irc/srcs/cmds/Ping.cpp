@@ -6,42 +6,55 @@ Ping::Ping() {}
 
 Ping::~Ping() {}
 
-Ping::Ping(const Ping &obj)
-{
-	// Deprecated.
-}
+// Ping::Ping(const Ping &obj)
+// {
+// 	// Deprecated.
+// }
 
-Ping &Ping::operator=(const Ping &obj)
-{
-	// Deprecated.
-	return (*this);
-}
+// Ping &Ping::operator=(const Ping &obj)
+// {
+// 	// Deprecated.
+// 	return (*this);
+// }
 
 void Ping::pingOn(CanClient *client)
 {
+  try
+  {
+    isValidFormat();
+    pong(client);
+  }
+  catch(const std::exception& e)
+  {
+    std::string msgBuf = e.what() ;
+    client->addSendBuff(msgBuf);
+  }
   
 }
 
 void Ping::pong(CanClient *client) {
-  if (this->cmd.size() < 3) throw(noTokenException());
-  std::vector<std::string>::iterator it;
-  it = cmd.begin() + 3;
-  std::string buf = "PONG: " + (*it);
-  /*
-          std::string에서 char * 로의 현변환이 자꾸 안 도ㅑ요...이제 그만
-     받고싶은데....
-  */
+  // flag PING <token>
 
-  send(client->getSockFd(), buf.c_str(), buf.length(), 0);
+  // PONG <servername> <token>
+  std::string msgBuf = "PONG " + static_cast<std::string>(SERVERNAME) + " " + cmd[2];
+  client->addSendBuff(msgBuf);
 }
 
 int Ping::isValidFormat(void)
 {
-
+  if (getSize() < 2) 
+  {
+    throw noTokenException();
+  }
+  else if (getSize() > 2)
+  {
+    throw invalidFormatException();
+  }
+  return (TRUE);
 }
 
 int Ping::checkClientLevel(CanClient *client) {
-  if (client->getMemberLevel() & CERTIFICATION_FIN == 0) {
+  if ((client->getMemberLevel() & CERTIFICATION_FIN) == 0) {
     return (FALSE);
   }
   return (TRUE);
@@ -50,9 +63,9 @@ int Ping::checkClientLevel(CanClient *client) {
 int Ping::determineFlag(void) { return (1); }
 
 const char *Ping::noTokenException::what() const throw() {
-  return ("Ping : No Token");
+  return ("Ping : No Token \n");
 }
 
 const char *Ping::maxLenException::what() const throw() {
-  return ("Ping : Max Buffer Length => 512");
+  return ("Ping : Max Buffer Length => 512 \n");
 }

@@ -14,16 +14,18 @@ SRCS_DIR = ./srcs
 DIR_CMDS = $(SRCS_DIR)/cmds
 DIR_SERVER = $(SRCS_DIR)/server
 
+#$(wildcard ./srcs/cmds/*.cpp)
 SRCS_CMDS	:=	ACommand.cpp Join.cpp Kick.cpp Nick.cpp Notice.cpp \
 				Part.cpp Pass.cpp Ping.cpp Prvmsg.cpp \
-				Quit.cpp User.cpp
+				Quit.cpp User.cpp Bot.cpp
 SRCS_CMDS	:=	$(addprefix $(DIR_CMDS)/, $(SRCS_CMDS))
 
+# $(wildcard ./srcs/server/*.cpp)
 SRCS_SERVER	:=	CanChannel.cpp CanClient.cpp CanException.cpp CanServer.cpp \
 				Operation.cpp Utility.cpp Parsing.cpp
 SRCS_SERVER	:=	$(addprefix $(DIR_SERVER)/, $(SRCS_SERVER))
 
-SRCS		=	srcs/main.cpp $(SRCS_CMDS) $(SRCS_SERVER) 
+SRCS		=	./srcs/main.cpp $(SRCS_CMDS) $(SRCS_SERVER) 
 
 OBJS		=	$(SRCS:.cpp=.o)
 
