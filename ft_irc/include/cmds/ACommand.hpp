@@ -34,9 +34,11 @@ public:
 
 	void setFlag(void);
 	void setSize(void);
+	void setCmd(std::vector<std::string> cmd);
 
 	int getFlag(void) const;
 	int getSize(void) const;
+	
 
 	class invalidFormatException : public std::exception
 	{

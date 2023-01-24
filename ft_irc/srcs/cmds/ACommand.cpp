@@ -33,6 +33,11 @@ void ACommand::setSize(void)
 	this->size = cmd.size() - 1;
 }
 
+void ACommand::setCmd(std::vector<std::string> cmd)
+{
+	this->cmd = cmd;
+}
+
 int ACommand::getFlag(void) const
 {
 	return (this->flag);
@@ -43,7 +48,8 @@ int ACommand::getSize(void) const
 	return (this->size);
 }
 
-const char *ACommand::invalidFormatException::what() const throw()
+
+	const char *ACommand::invalidFormatException::what() const throw()
 {
 	return "Invalid Command : Format error ! \n";
 }

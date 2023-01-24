@@ -8,7 +8,7 @@ LINE_CLEAR	=	"\x1b[1A\x1b[M"
 CXX = c++
 CXXFLAGS = -I./include -I./include/cmds -I./include/server -I./include/utils -Wall -Wextra -Werror -std=c++98 #-g -fsanitize=address
 RM = rm -rf
-NAME = canServ.out
+NAME = ircserv
 
 SRCS_DIR = ./srcs
 DIR_CMDS = $(SRCS_DIR)/cmds

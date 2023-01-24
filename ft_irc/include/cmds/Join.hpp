@@ -24,7 +24,7 @@ public:
 	void addChannel(std::string channelName);
 	void sendMSG(CanClient *client);
 	int isAlreadyJoined(CanClient *client);
-	
+
 	int isValidFormat(void);
 	int checkClientLevel(CanClient *client);
 	int determineFlag(void);

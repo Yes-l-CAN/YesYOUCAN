@@ -30,6 +30,7 @@ CanServer::~CanServer()
 		}
 	}
 	this->clientList->clear();
+	// channel clear
 }
 
 CanServer::CanServer(const CanServer& obj){
@@ -58,6 +59,11 @@ void 	CanServer::deleteChannelElement(const std::string channelName)
 	(void)channelName;
 }						// delete channel List
 
+void 	CanServer::deleteClientElement(const int fd)
+{
+	(void)fd;
+	// 시그널 종료시 , quit명령어 사용시 호출되어야 함
+}						// delete CanClient => memory 해제 필요!
 
 // setter
 void CanServer::setServer(char *port, char *pw){
@@ -79,7 +85,8 @@ void CanServer::s_On(){
 		setServAddr();
 		s_Bind();
 		s_Listen();
-		setFdSet();
+		FD_SET(this->socketFd, &reads);
+		// setFdSet();
 		std::cout << "server on!" << std::endl;
  	} catch(std::exception &e){
 		std::cout << e.what() << std::endl;
@@ -144,35 +151,43 @@ void CanServer::s_Accept()
 	int clientSockFd = -1;
 	struct sockaddr_in clientAddr;
 	unsigned int size = sizeof(clientAddr);
-
 	
 	clientSockFd = accept(this->socketFd, (struct sockaddr*)&clientAddr, &size);
 	if (clientSockFd < 0)
 	{
 		throw (CanException::acceptException());
 	}
+	fcntl(clientSockFd, F_SETFL, O_NONBLOCK);
+
 	FD_SET(clientSockFd, &reads);
 	FD_SET(clientSockFd, &writes);
 
 	CanClient *temp = new CanClient(clientAddr, clientSockFd);
+
 	clientList->insert(std::make_pair(clientSockFd, temp));
+	if (clientSockFd > MAX_FD)
+	{
+		throw(CanException::tooManyClientFDException());
+	}
 }
 
 // utils
 void CanServer::setFdSet()
 {
     fd_set* reads_addr = &this->reads;
+	fd_set* writes_addr = &this->writes;
     FD_ZERO(reads_addr);
+	FD_ZERO(writes_addr);
     FD_SET(this->socketFd, reads_addr);
 }
 
 void CanServer::findFd(){
 	//너무...너무... 안 이쁜.... 넣고나니 빼는게 나을 듯 한....
-	// for(int i = 0; i < this->maxFd + 1; i++)
-	for(int i = 3; i < this->maxFd + 1; i++)
+	for(int i = 0; i < this->maxFd + 1; i++)
+	// for(int i = 3; i < this->maxFd + 1; i++)
 	{
-		// if(FD_ISSET(i, &this->copyReads) && i == this->socketFd)
-		if(FD_ISSET(i, &this->copyReads) == this->socketFd)
+		if(FD_ISSET(i, &this->copyReads) && i == this->socketFd)
+		// if(FD_ISSET(i, &this->copyReads) == this->socketFd)
 		{
 			try {
 				s_Accept();
@@ -187,9 +202,8 @@ void CanServer::findFd(){
 // socket transmission
 int CanServer::Transmission()
 {
-	int receivedFd = - 1;
-	CanClient *pClient = NULL;
-	for(int i = 0; i < this->maxFd; i++)
+	// for(int i = 0; i < this->maxFd; i++)
+	for(int i = 0; i < this->maxFd + 1; i++)
 	{
 		if(FD_ISSET(i, &(this->copyReads)))
 		{
@@ -198,21 +212,10 @@ int CanServer::Transmission()
 				s_Accept();
 				std::cout << "Accepted socket fd!\n";
 			}
-			// return (i);
-			receivedFd = i;
+			return (i);
 		} 
-		if (FD_ISSET(i, &(this->copyWrites)))
-		{
-			pClient = clientList->find(i)->second;
-			if (pClient->getsendBuff().size() != 0)
-			{
-				pClient->sendToClient();
-			}
-		}
 	}
-
-	return (receivedFd);
-	// return (-1);
+	return (-1);
 }
 
 //getter
@@ -269,4 +272,9 @@ std::map<int, CanClient*> *CanServer::getClientList() const{
 
 std::map<std::string, CanChannel*> CanServer::getChannelList() const{
 	return(this->channelList);
+}
+
+int CanServer::getCurrentMaxFd() const
+{
+	return (this->maxFd);
 }

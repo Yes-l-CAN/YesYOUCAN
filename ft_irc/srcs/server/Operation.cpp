@@ -75,6 +75,8 @@ void Operation::Transmission()
 
 	server->s_Select();
 	this->setFd = server->Transmission(); // return i(fd) // reads fd
+	std::cout << "setFd :: " << this->setFd << std::endl;
+	std::cout << "getSocketFd :: " << server->getSocketFd() << std::endl;
 	if (this->setFd == server->getSocketFd())
 	{
 		std::cout << "accept client " << std::endl;
@@ -83,15 +85,45 @@ void Operation::Transmission()
 	{
 		try
 		{
-			cRecv(this->setFd);
-			CanClient *targetClient = findClient(this->setFd);
-							
-			// parsing
-			std::vector<std::string> cmd = parser.parseOn(this->buffer);
+			CanClient * pClient = NULL;
+			for (int i = 3; i < server->getCurrentMaxFd() + 1; i++)
+			{
+				if (FD_ISSET(i, server->getCopyWrites()))
+				{
+					std::cout << "send !!!!!!!" << std::endl;
+					if(i == server->getSocketFd())
+					{
+						continue;
+					}
+					pClient = server->getClientList()->find(i)->second;
+					if (pClient->getsendBuff().size() != 0)
+					{
+						pClient->sendToClient();
+					}
+				}
+			}
+			if(FD_ISSET(this->setFd, server->getCopyReads()) && this->setFd != server->getSocketFd())
+			{
+				cRecv(this->setFd);
+				CanClient *targetClient = findClient(this->setFd);
+								
+				// parsing
+				std::vector<std::string> cmd = parser.parseOn(this->buffer);
 
-			// check command
-			CommandChecker(cmd, targetClient);
-			memset(this->buffer, 0, this->bufferSize);
+				// check command
+				CommandChecker(cmd, targetClient);
+				memset(this->buffer, 0, this->bufferSize);
+			}
+			
+			// cRecv(this->setFd);
+			// CanClient *targetClient = findClient(this->setFd);
+							
+			// // parsing
+			// std::vector<std::string> cmd = parser.parseOn(this->buffer);
+
+			// // check command
+			// CommandChecker(cmd, targetClient);
+			// memset(this->buffer, 0, this->bufferSize);
 		}
 		catch (std::exception &e)
 		{
@@ -119,30 +151,57 @@ void Operation::CommandChecker(std::vector<std::string> argv, CanClient *targetC
 			switch (i)
 			{
 			case 0:
+				this->cmdPass->setCmd(argv);
+				this->cmdPass->setSize();
+				this->cmdPass->setFlag();
 				this->cmdPass->passOn(targetClient);
 				return;
 			case 1:
+				this->cmdNick->setCmd(argv);
+				this->cmdNick->setSize();
+				this->cmdNick->setFlag();
 				this->cmdNick->nickOn(targetClient);
 				return;
 			case 2:
+				this->cmdUser->setCmd(argv);
+				this->cmdUser->setSize();
+				this->cmdUser->setFlag();
 				this->cmdUser->userOn(targetClient);
 				return;
 			case 3:
+				this->cmdPing->setCmd(argv);
+				this->cmdPing->setSize();
+				this->cmdPing->setFlag();
 				this->cmdPing->pingOn(targetClient);
 				return;
 			case 4:
+				this->cmdJoin->setCmd(argv);
+				this->cmdJoin->setSize();
+				this->cmdJoin->setFlag();
 				this->cmdJoin->joinOn(targetClient);
 				return;
 			case 5:
+				this->cmdPart->setCmd(argv);
+				this->cmdPart->setSize();
+				this->cmdPart->setFlag();
 				this->cmdPart->partOn(targetClient);
 				return;
 			case 6:
+				this->cmdKick->setCmd(argv);
+				this->cmdKick->setSize();
+				this->cmdKick->setFlag();
 				this->cmdKick->kickOn(targetClient);
 				return;
 			case 7:
+				this->cmdNotice->setCmd(argv);
+				this->cmdNotice->setSize();
+				this->cmdNotice->setFlag();
 				this->cmdNotice->noticeOn(targetClient);
 				return;
 			case 8:
+				this->cmdPrvmsg->setCmd(argv);
+				this->cmdPrvmsg->setSize();
+				this->cmdPrvmsg->setFlag();
 				this->cmdPrvmsg->prvMSGOn(targetClient);
 				return;
 			default:;
@@ -155,10 +214,12 @@ void Operation::CommandChecker(std::vector<std::string> argv, CanClient *targetC
 void Operation::cRecv(int fd)
 {
 	int ret = recv(fd, buffer, bufferSize, 0);
-	if (ret < 0)
-		throw(CanException::recvSocketErrorException());
-	if (ret == 0)
-		throw(CanException::recvSocketClosedException());
+	std::cout << "fd : " << fd << std::endl;
+	std::cout << "ret : " << ret << std::endl;
+	// if (ret < 0)
+	// 	throw(CanException::recvSocketErrorException());
+	// if (ret == 0)
+	// 	throw(CanException::recvSocketClosedException());
 }
 
 void Operation::Client2ServSend(int fd)

@@ -26,6 +26,11 @@ const char *CanException::acceptException::what() const throw()
     return ("Accept error \n");
 }
 
+const char *CanException::tooManyClientFDException::what() const throw()
+{
+    return ("There are too many client exception \n");
+}
+
 const char *CanException::invalidPortException::what() const throw()
 {
     return ("Error! Port Num invalid. \n");

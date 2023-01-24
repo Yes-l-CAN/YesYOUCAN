@@ -9,7 +9,7 @@ int main(int argc, char *argv[])
 	static_cast<void>(argv);
 	if (argc != 3)
 	{
-		std::cout << "./CanIRC [PORT] [PASSWORD]";
+		std::cout << "./ircserv [PORT] [PASSWORD]";
 		return (1);
 	}
 

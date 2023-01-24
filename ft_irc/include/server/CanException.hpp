@@ -32,6 +32,11 @@ public:
 		virtual const char *what() const throw();
 	};
 
+	class tooManyClientFDException : public std::exception
+	{
+		virtual const char *what() const throw();
+	};
+
 	class invalidPortException : public std::exception
 	{
 		virtual const char *what() const throw();

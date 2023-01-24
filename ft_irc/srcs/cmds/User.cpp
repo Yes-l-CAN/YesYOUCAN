@@ -75,6 +75,16 @@ void User::welcome2CanServ(CanClient *client)
 
 int User::isValidFormat(void)
 {
+	  std::vector<std::string>::iterator it;
+  for(it = cmd.begin(); it != cmd.end(); it ++)
+  {
+    std::cout << "cmd:: " << *it << std::endl;
+    sleep(1);
+  }
+  sleep(1);
+  std::cout << "get Size :: " << getSize() << std::endl;
+  sleep(10);
+	// flag USER <username> 0 * <realname>
 	if (getSize() != 5)
 		throw invalidFormatException();
 	return (TRUE);

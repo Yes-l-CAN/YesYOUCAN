@@ -72,6 +72,7 @@ public:
 	void findFd();
 	void addChannelElement(const std::string channelName, CanChannel *pNewChannel); // add channel List
 	void deleteChannelElement(const std::string channelName);						// delete channel List
+	void deleteClientElement(const int fd);
 
 	// setter
 	void setServer(char *port, char *pw);
@@ -93,6 +94,7 @@ public:
 	fd_set *getCopyWrites();
 	std::map<int, CanClient *> *getClientList() const;
 	std::map<std::string, CanChannel *> getChannelList() const;
+	int getCurrentMaxFd(void) const;
 };
 
 #endif // CAN_SERVER_HPP
