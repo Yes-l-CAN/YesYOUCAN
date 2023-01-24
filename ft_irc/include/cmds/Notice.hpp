@@ -8,6 +8,8 @@ class Notice : public ACommand
 {
 private:
 	CanChannel *channel;
+	Notice(const Notice &obj); // Deprecated.
+	Notice& operator=(const Notice &obj); // Deprecated.
 
 public:
 	Notice();

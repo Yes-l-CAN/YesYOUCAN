@@ -49,16 +49,15 @@ public:
 	int getSockFd(void) const;
 	int getMemberLevel(void) const;
 	int getisMember(void) const;
-	std::map<std::string, CanChannel *>& getChannelList(void) const;
-	std::string& getsendBuff(void);
-	std::string& getrecvBuff(void);
+	std::map<std::string, CanChannel *> &getChannelList(void) const;
+	std::string &getsendBuff(void);
+	std::string &getrecvBuff(void);
 
 	void addChannelElement(const std::string &key, CanChannel *pNewChannel); // join channel
-	void deleteChannelElement(std::string key);						  // come outside channel
+	void deleteChannelElement(std::string key);								 // come outside channel
 
 	void cSend(int fd);
 	void cRecv(std::string msg);
-
 
 	class addChannelException : public std::exception
 	{
@@ -66,9 +65,9 @@ public:
 	};
 
 	class cSendException : public std::exception
-    {
-        virtual const char* what() const throw();
-    };
+	{
+		virtual const char *what() const throw();
+	};
 };
 
 // std::ostream    &operator<<(std::ostream &os, CanClient& client)

@@ -2,6 +2,21 @@
 
 #include "Operation.hpp"
 
+Quit::Quit() {}
+
+Quit::~Quit() {}
+
+Quit::Quit(const Quit &obj)
+{
+	// Deprecated.
+}
+
+Quit &Quit::operator=(const Quit &obj)
+{
+	// Deprecated.
+	return (*this);
+}
+
 int Quit::isValidFormat(void) {}
 
 int Quit::checkClientLevel(CanClient *client) {

@@ -8,6 +8,17 @@ Nick::Nick() {}
 
 Nick::~Nick() {}
 
+Nick::Nick(const Nick &obj)
+{
+	// Deprecated.
+}
+
+Nick &Nick::operator=(const Nick &obj)
+{
+	// Deprecated.
+	return (*this);
+}
+
 int Nick::validCheck(void) {
   std::vector<std::string>::iterator it;
 

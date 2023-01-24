@@ -6,6 +6,9 @@
 class Ping : public ACommand
 {
 private:
+	Ping(const Ping &obj);			  // Deprecated.
+	Ping &operator=(const Ping &obj); // Deprecated.
+	
 public:
 	Ping();
 	~Ping();

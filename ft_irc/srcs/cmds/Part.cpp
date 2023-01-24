@@ -6,6 +6,17 @@ Part::Part() {}
 
 Part::~Part() {}
 
+Part::Part(const Part &obj)
+{
+	// Deprecated.
+}
+
+Part &Part::operator=(const Part &obj)
+{
+	// Deprecated.
+	return (*this);
+}
+
 void Part::partOn(CanClient *client)
 {
   try
@@ -17,7 +28,7 @@ void Part::partOn(CanClient *client)
   }
   catch(const std::exception& e)
   {
-    throw e;
+    send(client->getSockFd(), e.what(), strlen(e.what()), 0);
   }
 }
 

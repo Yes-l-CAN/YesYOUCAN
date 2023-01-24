@@ -10,7 +10,8 @@ class Kick : public ACommand
 {
 private:
 	CanChannel *channel;
-
+	Kick(const Kick &obj); // Deprecated.
+	Kick& operator=(const Kick &obj); // Deprecated.
 public:
 	Kick();
 	~Kick();

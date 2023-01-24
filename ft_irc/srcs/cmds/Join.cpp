@@ -5,6 +5,17 @@ Join::Join() {}
 
 Join::~Join() {}
 
+Join::Join(const Join &obj)
+{
+	// Deprecated.
+}
+
+Join &Join::operator=(const Join &obj)
+{
+	// Deprecated.
+	return (*this);
+}
+
 void Join::joinOn(CanClient *client)
 {
   // flag JOIN <channel>
@@ -43,7 +54,7 @@ void Join::joinOn(CanClient *client)
   }
   catch(const std::exception& e)
   {
-    throw e;
+    send(client->getSockFd(), e.what(), strlen(e.what()), 0);
   }
 }
 

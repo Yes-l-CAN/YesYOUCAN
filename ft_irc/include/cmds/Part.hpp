@@ -7,6 +7,8 @@ class Part : public ACommand
 {
 private:
 	CanChannel *channel;
+	Part(const Part &obj); // Deprecated.
+	Part& operator=(const Part &obj); // Deprecated.
 
 public:
 	Part();

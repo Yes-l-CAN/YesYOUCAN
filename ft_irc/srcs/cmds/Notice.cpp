@@ -6,6 +6,17 @@ Notice::Notice() {}
 
 Notice::~Notice() {}
 
+Notice::Notice(const Notice &obj)
+{
+	// Deprecated.
+}
+
+Notice &Notice::operator=(const Notice &obj)
+{
+	// Deprecated.
+	return (*this);
+}
+
 void Notice::noticeOn(CanClient *client) 
 {
   // flag NOTICE <target> <text to be sent>
@@ -31,7 +42,7 @@ void Notice::noticeOn(CanClient *client)
   }
   catch(const std::exception& e)
   {
-    throw e;
+    send(client->getSockFd(), e.what(), strlen(e.what()), 0);
   }
   
 }

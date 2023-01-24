@@ -9,7 +9,8 @@ class Prvmsg : public Notice
 {
 private:
 	Bot *bot;
-
+	Prvmsg(const Prvmsg &obj); // Deprecated.
+	Prvmsg& operator=(const Prvmsg &obj); // Deprecated.
 public:
 
 	Prvmsg();

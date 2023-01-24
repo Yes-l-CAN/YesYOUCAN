@@ -46,64 +46,28 @@ Operation::Operation(char *s1, char *s2)
 
 Operation::Operation(const Operation &obj)
 {
-	*this = obj;
+	// Deprecated.
 }
 
 // deep copy
 Operation &Operation::operator=(const Operation &obj)
 {
-	if (this != &obj)
-	{
-		this->setFd = obj.setFd;
-		this->result = obj.result;
-		this->parser = obj.parser;
-		for (int i = 0; i < bufferSize; i++)
-		{
-			this->buffer[i] = obj.buffer[i];
-		}
-
-		// deep copy
-		Operation replica(obj);
-
-		CanServer *dummy = this->server;
-		this->server = replica.server;
-		delete dummy;
-
-		User *tempCmdUser = this->cmdUser;
-		this->cmdUser = replica.cmdUser;
-		Quit *tempCmdQuit = this->cmdQuit;
-		this->cmdQuit = replica.cmdQuit;
-		Prvmsg *tempCmdPrvmsg = this->cmdPrvmsg;
-		this->cmdPrvmsg = replica.cmdPrvmsg;
-		Ping *tempCmdPing = this->cmdPing;
-		this->cmdPing = replica.cmdPing;
-		Pass *tempCmdPass = this->cmdPass;
-		this->cmdPass = replica.cmdPass;
-		Part *tempCmdPart = this->cmdPart;
-		this->cmdPart = replica.cmdPart;
-		Notice *tempCmdNotice = this->cmdNotice;
-		this->cmdNotice = replica.cmdNotice;
-		Nick *tempCmdNick = this->cmdNick;
-		this->cmdNick = replica.cmdNick;
-		Join *tempCmdJoin = this->cmdJoin;
-		this->cmdJoin = replica.cmdJoin;
-
-		delete tempCmdUser;
-		delete tempCmdQuit;
-		delete tempCmdPrvmsg;
-		delete tempCmdPing;
-		delete tempCmdPass;
-		delete tempCmdPart;
-		delete tempCmdNotice;
-		delete tempCmdNick;
-		delete tempCmdJoin;
-	}
+	// Deprecated.
 	return (*this);
 }
 
 Operation::~Operation()
 {
 	delete server;
+	delete cmdUser;
+	delete cmdQuit;
+	delete cmdPrvmsg;
+	delete cmdPing;
+	delete cmdPass;
+	delete cmdPart;
+	delete cmdNotice;
+	delete cmdNick;
+	delete cmdJoin;
 }
 
 void Operation::Transmission()
@@ -192,7 +156,7 @@ void Operation::cRecv(int fd)
 	if (ret < 0)
 		throw(CanException::recvSocketErrorException());
 	if (ret == 0)
-		throw(CanException::recvSocketClosedException()); // TODO: make exception more specifically.
+		throw(CanException::recvSocketClosedException());
 }
 
 void Operation::Client2ServSend(int fd)

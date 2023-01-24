@@ -9,7 +9,7 @@ class Utility
 {
   private:
   public:
-    std::vector<std::string> splitArr(char* str);
+    // std::vector<std::string> splitArr(char* str);
 	std::vector<std::string> splitArrWithColon(char* s);
 	
     class commandArgvException : public std::exception

@@ -2,6 +2,21 @@
 
 #include "Operation.hpp"
 
+Prvmsg::Prvmsg() {}
+
+Prvmsg::~Prvmsg() {}
+
+Prvmsg::Prvmsg(const Prvmsg &obj)
+{
+	// Deprecated.
+}
+
+Prvmsg &Prvmsg::operator=(const Prvmsg &obj)
+{
+	// Deprecated.
+	return (*this);
+}
+
 Prvmsg::Prvmsg() { this->bot = new Bot(); }
 
 Prvmsg::~Prvmsg() { delete this->bot; }

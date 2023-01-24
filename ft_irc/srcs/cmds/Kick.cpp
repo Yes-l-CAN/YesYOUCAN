@@ -6,6 +6,17 @@ Kick::Kick() {}
 
 Kick::~Kick() {}
 
+Kick::Kick(const Kick &obj)
+{
+	// Deprecated.
+}
+
+Kick &Kick::operator=(const Kick &obj)
+{
+	// Deprecated.
+	return (*this);
+}
+
 void Kick::kickOn(CanClient *client)
 {
   try
@@ -22,7 +33,7 @@ void Kick::kickOn(CanClient *client)
   }
   catch(const std::exception& e)
   {
-    throw e;
+    send(client->getSockFd(), e.what(), strlen(e.what()), 0);
   }
   
 }

@@ -6,6 +6,8 @@
 class Quit : public ACommand
 {
 private:
+	Quit(const Quit &obj); // Deprecated.
+	Quit& operator=(const Quit &obj); // Deprecated.
 public:
 	Quit();
 	~Quit();

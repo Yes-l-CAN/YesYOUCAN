@@ -51,6 +51,9 @@ private:
 	Kick* cmdKick;
 	Join* cmdJoin;
 
+	Operation(const Operation &obj); // Deprecated.
+	Operation &operator=(const Operation &obj); // Deprecated.
+
 protected:
 	static const int bufferSize = 512;
 	char buffer[bufferSize];
@@ -66,8 +69,6 @@ public:
 
 	Operation();
 	Operation(char *s1, char *s2);
-	Operation(const Operation &obj);
-	Operation &operator=(const Operation &obj);
 	~Operation();
 
 	// socket transmission

@@ -5,6 +5,17 @@ Pass::Pass() {}
 
 Pass::~Pass() {}
 
+Pass::Pass(const Pass &obj)
+{
+	// Deprecated.
+}
+
+Pass &Pass::operator=(const Pass &obj)
+{
+	// Deprecated.
+	return (*this);
+}
+
 void Pass::passOn(CanClient *client)
 {
   try
@@ -15,7 +26,7 @@ void Pass::passOn(CanClient *client)
   }
   catch(const std::exception& e)
   {
-    throw e;
+      send(client->getSockFd(), e.what(), strlen(e.what()), 0);
   }
 }
 

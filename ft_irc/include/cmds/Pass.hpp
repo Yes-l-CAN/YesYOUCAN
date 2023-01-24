@@ -6,6 +6,9 @@
 class Pass : public ACommand
 {
 private:
+	Pass(const Pass &obj);			  // Deprecated.
+	Pass &operator=(const Pass &obj); // Deprecated.
+
 public:
 	Pass();
 	~Pass();
@@ -21,10 +24,10 @@ public:
 		virtual const char *what() const throw();
 	};
 
-	class alreadyRegisteredException :public std::exception
+	class alreadyRegisteredException : public std::exception
 	{
 		virtual const char *what() const throw();
-	}
+	};
 };
 
 #endif // COMMAND_PASS_HPP

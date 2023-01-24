@@ -11,6 +11,8 @@ class Nick : public ACommand
 private:
 	int flag;
 	static char invalid[8];
+	Nick(const Nick &obj); // Deprecated.
+	Nick& operator=(const Nick &obj); // Deprecated.
 
 public:
 	Nick();

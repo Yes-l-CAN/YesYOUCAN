@@ -10,7 +10,8 @@ class Join : public ACommand
 {
 private:
 	CanChannel *channel;
-
+	Join(const Join &obj); // Deprecated.
+	Join& operator=(const Join &obj); // Deprecated.
 public:
 	Join();
 	~Join();

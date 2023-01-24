@@ -1,14 +1,19 @@
 #include "User.hpp"
 #include "Operation.hpp"
 
-User::User()
-{
+User::User() {}
 
+User::~User() {}
+
+User::User(const User &obj)
+{
+	// Deprecated.
 }
 
-User::~User()
+User &User::operator=(const User &obj)
 {
-
+	// Deprecated.
+	return (*this);
 }
 
 void User::userOn(CanClient *client)
@@ -20,45 +25,45 @@ void User::userOn(CanClient *client)
 		validCheck();
 		setClientUser(client);
 	}
-	catch(const std::exception& e)
+	catch (const std::exception &e)
 	{
-		std::cerr << e.what() << '\n';
+		send(client->getSockFd(), e.what(), strlen(e.what()), 0);
 	}
 }
 
 int User::validCheck(void)
 {
-// flag USER <username> 0 * <realname>
-//  0   1     2         3 4  5
+	// flag USER <username> 0 * <realname>
+	//  0   1     2         3 4  5
 
-  if (cmd[2].length() < 1 || cmd[5].length() < 1)
-  {
-	  throw minUserLenException();
-  }
-
-/* => username과 realname은 중복이 가능하다고 함
-  // check used name 
-  std::map<int, CanClient *>::iterator cit;
-  std::vector<std::string>::iterator sit_username;
-  std::vector<std::string>::iterator sit_realname;
-
-  for (cit = server->getClientList()->begin(); cit != server->getClientList()->end(); cit++)
-  {
-	if (cit->second->getUsername() == *sit_username)
+	if (cmd[2].length() < 1 || cmd[5].length() < 1)
 	{
-
+		throw minUserLenException();
 	}
-		  if (cit->second->getRealname() == *sit_Realname)
-	{
 
-	}
-  }
-*/
+	/* => username과 realname은 중복이 가능하다고 함
+	  // check used name
+	  std::map<int, CanClient *>::iterator cit;
+	  std::vector<std::string>::iterator sit_username;
+	  std::vector<std::string>::iterator sit_realname;
+
+	  for (cit = server->getClientList()->begin(); cit != server->getClientList()->end(); cit++)
+	  {
+		if (cit->second->getUsername() == *sit_username)
+		{
+
+		}
+			  if (cit->second->getRealname() == *sit_Realname)
+		{
+
+		}
+	  }
+	*/
 	if (cmd[5].find(" ") != std::string::npos && getFlag() == 0)
 	{
 		throw spaceWithoutColonException();
 	}
-  return (TRUE);
+	return (TRUE);
 }
 
 void User::setClientUser(CanClient *client)
@@ -73,18 +78,14 @@ void User::setClientUser(CanClient *client)
 	{
 		client->setMemberLevel(CERTIFICATION_FIN);
 	}
-
 }
 
 void User::noticeNameReplaced(void)
 {
-
-
 }
 
 void User::welcome2CanServ(void)
 {
-
 }
 
 int User::isValidFormat(void)

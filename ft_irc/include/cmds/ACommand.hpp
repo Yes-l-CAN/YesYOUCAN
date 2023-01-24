@@ -12,8 +12,6 @@
 
 #define MAXBUFLEN 512
 
-
-
 class ACommand
 {
 protected:
@@ -23,6 +21,8 @@ protected:
 	int size;
 
 	std::vector<std::string> cmd;
+	ACommand(const ACommand &obj);			  // Deprecated.
+	ACommand &operator=(const ACommand &obj); // Deprecated.
 
 public:
 	ACommand();
@@ -46,7 +46,7 @@ public:
 	class noAuthorityException : public std::exception
 	{
 		virtual const char *what() const throw();
-	}
+	};
 };
 
 #endif
