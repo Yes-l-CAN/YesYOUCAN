@@ -1,4 +1,5 @@
 #include "CanServer.hpp"
+#include "CanChannel.hpp"
 
 CanServer::CanServer() : socketFd(-1), maxFd(1000)
 {
@@ -55,12 +56,18 @@ void	CanServer::addChannelElement(const std::string channelName, CanChannel *pNe
 
 void 	CanServer::deleteChannelElement(const std::string channelName)
 {
+	CanChannel *pDel = this->getChannelList().find(channelName)->second;
 	this->getChannelList().erase(channelName);
+
+	delete pDel;
 }						// delete channel List
 
 void 	CanServer::deleteClientElement(const int fd)
 {
+	CanClient *pDel = this->getClientList().find(fd)->second;
 	this->getClientList().erase(fd);
+
+	delete pDel;
 	// 시그널 종료시 , quit명령어 사용시 호출되어야 함
 }						// delete CanClient => memory 해제 필요!
 

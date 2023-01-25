@@ -49,7 +49,7 @@ void Nick::welcome2CanServ(CanClient *client)
     // 001 :<client> :<msg>
 	std::string userName = cmd[2];
 	std::string serverName = static_cast<std::string>(SERVERNAME);
-	std::string msgBuf = "001 :" + userName + " :Welcome, " + userName + "! Your host is " + serverName + "\n"; 
+	std::string msgBuf = "001 :" + userName + " :Welcome, " + userName + "! Your host is " + serverName + "\r\n"; 
 	client->addSendBuff(msgBuf);	
 }
 
@@ -121,9 +121,9 @@ int Nick::checkClientLevel(CanClient *client) {
 int Nick::determineFlag(void) { return (0); }
 
 const char *Nick::invalidNickException::what() const throw() {
-  return ("Nick Error : invalid nick! \n");
+  return ("Nick Error : invalid nick! \r\n");
 }
 
 const char *Nick::usedNickException::what() const throw() {
-  return ("Nick Error : already used nick! \n");
+  return ("Nick Error : already used nick! \r\n");
 }

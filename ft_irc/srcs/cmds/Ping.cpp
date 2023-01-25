@@ -38,7 +38,7 @@ void Ping::pong(CanClient *client) {
   // flag PING <token>
 
   // PONG <servername> <token>
-  std::string msgBuf = "PONG " + static_cast<std::string>(SERVERNAME) + " " + cmd[2];
+  std::string msgBuf = "PONG " + static_cast<std::string>(SERVERNAME) + " " + cmd[2] + "\r\n";
   client->addSendBuff(msgBuf);
 }
 
@@ -65,9 +65,9 @@ int Ping::checkClientLevel(CanClient *client) {
 int Ping::determineFlag(void) { return (1); }
 
 const char *Ping::noTokenException::what() const throw() {
-  return ("Ping : No Token \n");
+  return ("Ping : No Token \r\n");
 }
 
 const char *Ping::maxLenException::what() const throw() {
-  return ("Ping : Max Buffer Length => 512 \n");
+  return ("Ping : Max Buffer Length => 512 \r\n");
 }

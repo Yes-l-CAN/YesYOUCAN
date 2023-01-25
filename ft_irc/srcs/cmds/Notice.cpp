@@ -39,7 +39,7 @@ void Notice::noticeOn(CanClient *client)
 void Notice::executeNotice(CanClient *client)
 {
   	std::string targetName = this->cmd[2];
-	std::string message = "Notice " + targetName + " : " + this->cmd[3] + "\n";
+	std::string message = "Notice " + targetName + " : " + this->cmd[3] + "\r\n";
 	if (targetName[0] == '#')
 	{
 		channel = isExistChannelName(targetName);
@@ -111,17 +111,17 @@ int Notice::checkClientLevel(CanClient *client) {
 int Notice::determineFlag(void) { return (1); }
 
 const char *Notice::noSuchNickException::what() const throw() {
-  return ("Notice Error! : Threre's no such nick! \n");
+  return ("Notice Error! : Threre's no such nick! \r\n");
 }
 
 const char *Notice::noSuchChannelException::what() const throw() {
-  return ("Notice Error! : Threre's no such channel! \n");
+  return ("Notice Error! : Threre's no such channel! \r\n");
 }
 
 const char *Notice::replyAnywayException::what() const throw() {
-  return ("Notice Error! : replied anyway! \n");
+  return ("Notice Error! : replied anyway! \r\n");
 }
 
 const char *Notice::kickedUserException::what() const throw() {
-  return ("Notice Error! : Already kicked user! \n");
+  return ("Notice Error! : Already kicked user! \r\n");
 }

@@ -81,10 +81,10 @@ int Pass::checkClientLevel(CanClient *client) {
 int Pass::determineFlag(void) { return (-1); }
 
 const char *Pass::incorrectPassException::what() const throw() {
-  return ("Pass : Incorrect Password ! \n");
+  return ("Pass : Incorrect Password ! \r\n");
 }
 
 const char *Pass::alreadyRegisteredException::what() const throw() {
-  return ("Pass : Password already registered ! \n");
+  return ("Pass : Password already registered ! \r\n");
 }
 
