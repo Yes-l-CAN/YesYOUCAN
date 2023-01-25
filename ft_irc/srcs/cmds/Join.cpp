@@ -63,6 +63,8 @@ void Join::joinOn(CanClient *client)
 
 int Join::isKicked(CanClient *client)
 {
+  if(channel->getKickedList().empty())
+    return (FALSE);
   if (channel->getKickedList().find(client->getSockFd()) != channel->getKickedList().end()) 
   {
     throw kickedException();

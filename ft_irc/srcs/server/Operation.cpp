@@ -108,11 +108,14 @@ void Operation::Transmission()
             {
                 continue;
             }
-            pClient = server->getClientList()->find(i)->second;
-            if (pClient->getsendBuff().size() != 0)
-            {
-                pClient->sendToClient();
-            }
+			if(server->getClientList()->find(i) != server->getClientList()->end())
+			{
+				pClient = server->getClientList()->find(i)->second;
+				if (pClient->getsendBuff().size() != 0)
+				{
+					pClient->sendToClient();
+				}
+			}
         }
     }
 
@@ -126,7 +129,7 @@ CanClient *Operation::findClient(int fd)
 
 void Operation::CommandChecker(std::vector<std::string> argv, CanClient *targetClient)
 {
-	std::string cmd[] = {"PASS", "NICK", "USER", "PING", "JOIN", "PART", "KICK", "NOTICE", "PRIVMSG"};
+	std::string cmd[] = {"PASS", "NICK", "USER", "PING", "JOIN", "PART", "KICK", "NOTICE", "PRIVMSG", "QUIT"};
 
 	for (size_t i = 0; i < sizeof(cmd) / sizeof(std::string); i++)
 	{
@@ -174,6 +177,10 @@ void Operation::CommandChecker(std::vector<std::string> argv, CanClient *targetC
 			case 8:
 				this->cmdPrvmsg->setCmd(argv);
 				this->cmdPrvmsg->prvMSGOn(targetClient);
+				return;
+			case 9:
+				this->cmdQuit->setCmd(argv);
+				this->cmdQuit->quitOn(targetClient);
 				return;
 			default:;
 			}
