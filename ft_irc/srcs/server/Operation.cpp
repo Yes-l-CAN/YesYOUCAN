@@ -16,7 +16,7 @@ Operation::Operation()
 	// new commands
 	this->cmdUser = new User(this->server);
 	this->cmdQuit = new Quit(this->server);
-	this->cmdPrvmsg = new Prvmsg();
+	this->cmdPrvmsg = new Prvmsg(this->server);
 	this->cmdPing = new Ping(this->server);
 	this->cmdPass = new Pass(this->server);
 	this->cmdPart = new Part(this->server);
@@ -35,7 +35,7 @@ Operation::Operation(char *s1, char *s2)
 	// new commands
 	this->cmdUser = new User(this->server);
 	this->cmdQuit = new Quit(this->server);
-	this->cmdPrvmsg = new Prvmsg();
+	this->cmdPrvmsg = new Prvmsg(this->server);
 	this->cmdPing = new Ping(this->server);
 	this->cmdPass = new Pass(this->server);
 	this->cmdPart = new Part(this->server);

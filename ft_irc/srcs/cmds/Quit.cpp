@@ -43,9 +43,17 @@ void Quit::eraseFromList(CanClient *client)
 	std::map<std::string, CanChannel *>::iterator it;
 	for(it = client->getChannelList().begin(); it != client->getChannelList().end(); it++)
 	{	
-		it->second->getClientList().erase(clientFd);
+		it->second->deleteClientElement(clientFd);
 	}
-	server->getClientList().erase(clientFd);
+
+	for(it = server->getChannelList().begin(); it != server->getChannelList().end(); it++)
+	{
+		if (it->second->getKickedList().find(clientFd) != it->second->getKickedList().end())
+		{
+			it->second->delKickedListElement(client);
+		}
+	}
+	server->deleteClientElement(clientFd);
 }
 
 void Quit::msgToAllJoinedChannel(CanClient *client)

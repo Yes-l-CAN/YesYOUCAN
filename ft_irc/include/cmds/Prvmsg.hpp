@@ -15,6 +15,7 @@ private:
 public:
 
 	Prvmsg();
+	Prvmsg(CanServer *serv);
 	~Prvmsg();
 	void prvMSGOn(CanClient *client);
 	int isValidFormat(void);
