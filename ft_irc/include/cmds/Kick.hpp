@@ -9,7 +9,8 @@
 class Kick : public ACommand
 {
 private:
-	CanChannel *channel;
+	CanClient *user;
+
 	Kick(const Kick &obj); // Deprecated.
 	Kick& operator=(const Kick &obj); // Deprecated.
 public:
@@ -18,6 +19,8 @@ public:
 	~Kick();
 	void kickOn(CanClient *client);
 	// std::map<CanChannel *, int> getChannel(CanClient *client);
+
+	void isMemberInChannel(CanClient *client);
 
 	int isOperator(CanClient *client);
 	void changeChannelStatus(CanClient *client);

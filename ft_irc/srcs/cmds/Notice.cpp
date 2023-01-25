@@ -39,7 +39,7 @@ void Notice::noticeOn(CanClient *client)
 void Notice::executeNotice(CanClient *client)
 {
   	std::string targetName = this->cmd[2];
-	std::string message = "Notice " + targetName + " : " + this->cmd[3] + "\r\n";
+	std::string message = "Notice " + targetName + " : " + this->cmd[3] + "\n";
 	if (targetName[0] == '#')
 	{
 		channel = isExistChannelName(targetName);

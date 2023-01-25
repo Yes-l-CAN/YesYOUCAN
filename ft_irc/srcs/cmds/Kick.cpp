@@ -23,21 +23,46 @@ void Kick::kickOn(CanClient *client)
 {
   try
   {
-    isValidFormat();
-    checkClientLevel(client);
 
+  	if (getSize() != 3)
+  	{
+   		throw invalidFormatException();
+  	}
+ 	if ((client->getMemberLevel() & CERTIFICATION_FIN) == 0) 
+	{
+   		throw noAuthorityException();
+  	}
+
+    isMemberInChannel(client);
     if (isOperator(client) == FALSE)
     {
       throw notOperatorException();
     }
     sendMSG(client);
-    changeChannelStatus(client);
+    changeChannelStatus(this->user);
   }
   catch(const std::exception& e)
   {
     std::string msgBuf = e.what();
     client->addSendBuff(msgBuf);  
   }
+}
+
+void Kick::isMemberInChannel(CanClient *client)
+{
+	if(client->getChannelList().find(cmd[2]) == client->getChannelList().end())
+		throw(noSuchChannelException());
+	this->channel = client->getChannelList().find(cmd[2])->second;
+	std::map<int, CanClient *>::iterator it;
+	for(it = channel->getClientList().begin(); it != channel->getClientList().end(); it++)
+	{
+		if(it->second->getNickname() == cmd[3])
+		{
+			this->user = it->second;
+			return ;
+		}
+	}
+	throw(noSuchUserException());
 }
 
 // std::map<CanChannel *, int> Kick::getChannel(CanClient *client)
@@ -75,35 +100,11 @@ void Kick::sendMSG(CanClient *client)
 
 int Kick::isValidFormat(void)
 {
-  // flag KICK <channel> <user> [<comment>]
-
-  if (getSize() < 3 || getSize() > 4)
+  if (getSize() != 3)
   {
     throw invalidFormatException();
   }
-
-  if (server->getChannelList().find(cmd[2]) == server->getChannelList().end())
-  {
-    throw noSuchChannelException();
-  }
-  else
-  {
-    channel = server->getChannelList().find(cmd[2])->second;
-  }
-
-  std::map<int, CanClient *>::iterator it ; 
-  for (it = channel->getClientList().begin();it != channel->getClientList().end();it++)
-  {
-    if (it->second->getNickname() == cmd[3])
-    {
-      return (TRUE);
-    }
-  }
-  if (it == channel->getClientList().end())
-  {
-    throw noSuchUserException();
-  }
-  return (FALSE);
+  return (TRUE);
 }
 
 int Kick::checkClientLevel(CanClient *client) {

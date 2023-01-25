@@ -1,7 +1,7 @@
 #include "Bot.hpp"
 #include "Operation.hpp"
 
-Bot::Bot(): word("42Seoul"), botMessage("weLove42Seoul") {}
+Bot::Bot(): word("42Seoul"), botMessage("Thanks for visiting CanServ! weLove42Seoul!\n") {}
 
 Bot::~Bot() {}
 

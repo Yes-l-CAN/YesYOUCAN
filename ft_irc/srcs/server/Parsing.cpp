@@ -40,7 +40,6 @@ std::vector<std::string> Parsing::parseOn(char* bufferStr)
     }
     //  && ((*(*(v->begin() + 1)).end() - 1) == '\n')
     std::string::iterator it = (*(v->end() - 1)).end() - 1;
-    std::cout << "string iterator :: " << *it << std::endl;
     (v->end() - 1)->erase(it); 
  
     return (*v);

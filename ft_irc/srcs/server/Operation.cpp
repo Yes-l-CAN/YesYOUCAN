@@ -202,12 +202,10 @@ void Operation::CommandChecker(std::vector<std::string> argv, CanClient *targetC
 void Operation::cRecv(int fd)
 {
 	int ret = recv(fd, buffer, bufferSize, 0);
-	std::cout << "fd : " << fd << std::endl;
-	std::cout << "ret : " << ret << std::endl;
-	// if (ret < 0)
-	// 	throw(CanException::recvSocketErrorException());
-	// if (ret == 0)
-	// 	throw(CanException::recvSocketClosedException());
+	if (ret < 0)
+		throw(CanException::recvSocketErrorException());
+	if (ret == 0)
+		throw(CanException::recvSocketClosedException());
 }
 
 void Operation::Client2ServSend(int fd)

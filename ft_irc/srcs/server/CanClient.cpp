@@ -105,7 +105,8 @@ void CanClient::addChannelElement(const std::string &key, CanChannel *pNewChanne
 
 void CanClient::deleteChannelElement(std::string key)
 {
-	(void)key;
+	if(this->getChannelList().find(key) != this->getChannelList().end())
+		this->getChannelList().erase(key);
 }
 
 void CanClient::sendToClient()

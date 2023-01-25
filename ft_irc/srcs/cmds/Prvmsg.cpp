@@ -3,7 +3,7 @@
 #include "Operation.hpp"
 
 Prvmsg::Prvmsg(CanServer *serv): Notice(serv) {this->bot = new Bot();}
-Prvmsg::~Prvmsg() { this->bot = new Bot();}
+Prvmsg::Prvmsg() { this->bot = new Bot();}
 Prvmsg::~Prvmsg() { delete this->bot;}
 
 // Prvmsg::Prvmsg(const Prvmsg &obj)

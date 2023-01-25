@@ -7,7 +7,6 @@
 class Notice : public ACommand
 {
 protected:
-	CanChannel *channel;
 	Notice(const Notice &obj); // Deprecated.
 	Notice& operator=(const Notice &obj); // Deprecated.
 

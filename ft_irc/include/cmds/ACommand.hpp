@@ -16,6 +16,7 @@ class ACommand
 {
 protected:
 	CanServer *server;
+	CanChannel *channel;
 
 	int flag;
 	int size;

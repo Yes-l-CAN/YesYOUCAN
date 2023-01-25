@@ -61,6 +61,7 @@ void Part::channelClose(void)
 
 void Part::operatorChanged(CanClient *client)
 {
+  this->channel = client->getChannelList().find(cmd[2])->second;
   std::string msgBuf = ":" + client->getUsername() + " PART " + channel->getChannelName();
   if (getFlag() == 1)
   {
