@@ -23,12 +23,14 @@ void Quit::quitOn(CanClient *client)
 {
 	try
 	{
+		int clientFd = client->getSockFd();
+
 		isValidFormat();
 		msgToAllJoinedChannel(client);
 		eraseFromList(client);
-		FD_CLR(client->getSockFd(), server->getReads());
-		FD_CLR(client->getSockFd(), server->getWrites());
-		close(client->getSockFd());
+		FD_CLR(clientFd, server->getReads());
+		FD_CLR(clientFd, server->getWrites());
+		close(clientFd);
 	}
 	catch(const std::exception& e)
 	{
@@ -40,6 +42,7 @@ void Quit::quitOn(CanClient *client)
 void Quit::eraseFromList(CanClient *client)
 {
 	int clientFd = client->getSockFd();
+
 	std::map<std::string, CanChannel *>::iterator it;
 	for(it = client->getChannelList().begin(); it != client->getChannelList().end(); it++)
 	{	

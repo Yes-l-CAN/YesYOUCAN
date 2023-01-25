@@ -82,10 +82,10 @@ void CanChannel::broadcast(const std::string& msg)
 
 const char* CanChannel::addClientException::what() const throw()
 {
-    return "CanChannel add Client : Failed ! \n";
+    return "CanChannel add Client : Failed ! \r\n";
 }
 
 // virtual const char*	CanChannel::deleteClientException::what() const throw()
 // {
-// 	return "";
+// 	return " \r\n";
 // }

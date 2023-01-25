@@ -116,13 +116,13 @@ int Kick::checkClientLevel(CanClient *client) {
 int Kick::determineFlag(void) { return (1); }
 
 const char *Kick::notOperatorException::what() const throw() {
-  return "Kick : not Operator ! No authority !\n";
+  return "Kick : not Operator ! No authority !\r\n";
 }
 
 const char *Kick::noSuchUserException::what() const throw() {
-  return "Kick : No such user !\n";
+  return "Kick : No such user !\r\n";
 }
 
 const char *Kick::noSuchChannelException::what() const throw() {
-  return "Kick : No such channel !\n";
+  return "Kick : No such channel !\r\n";
 }

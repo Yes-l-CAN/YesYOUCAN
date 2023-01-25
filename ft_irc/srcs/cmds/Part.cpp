@@ -96,9 +96,9 @@ int Part::determineFlag(void) { return (1); }
 
 const char *Part::noSuchChannelException::what() const throw() 
 {
-  return ("Part : No such channel! \n");
+  return ("Part : No such channel! \r\n");
 }
 
 const char *Part::notOnChannelException::what() const throw() {
-  return ("Part : Not on channel !\n");
+  return ("Part : Not on channel !\r\n");
 }

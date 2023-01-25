@@ -102,5 +102,5 @@
 
 const char* Utility::commandArgvException::what() const throw()
 {
-    return ("Command Acception error during spliting. \n");
+    return ("Command Acception error during spliting. \r\n");
 }

@@ -124,7 +124,7 @@ void CanClient::sendToClient()
     }
     catch(const std::exception& e)
     {
-        std::cerr << e.what() << '\n';
+        std::cerr << e.what() << "\n";
     }
 }
 
@@ -165,10 +165,10 @@ std::map<std::string, CanChannel *> &CanClient::getChannelList(void)
 
 const char *CanClient::addChannelException::what() const throw()
 {
-	return "CanClient addChhannel : Failed !\n";
+	return "CanClient addChhannel : Failed ! \r\n";
 }
 
 const char* CanClient::sendToClientException::what() const throw()
 {
-    return "CanClient sendToClient : couldn't send socket !\n";
+    return "CanClient sendToClient : couldn't send socket ! \r\n";
 }

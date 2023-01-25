@@ -72,7 +72,7 @@ void User::welcome2CanServ(CanClient *client)
     // 001 :<client> :<msg>
 	std::string userName = cmd[2];
 	std::string serverName = static_cast<std::string>(SERVERNAME);
-	std::string msgBuf = "001 :" + userName + " :Welcome, " + userName + "! Your host is " + serverName + "\n"; 
+	std::string msgBuf = "001 :" + userName + " :Welcome, " + userName + "! Your host is " + serverName + "\r\n"; 
 	client->addSendBuff(msgBuf);	
 }
 
@@ -104,15 +104,15 @@ int User::determineFlag(void)
 
 const char *User::alreadyRegisteredException::what() const throw()
 {
-	return ("USER : You already registered \n");
+	return ("USER : You already registered \r\n");
 }
 
 const char *User::minUserLenException::what() const throw()
 {
-	return ("USER : Minimum name Length = 1 \n");
+	return ("USER : Minimum name Length = 1 \r\n");
 }
 
 const char *User::spaceWithoutColonException::what() const throw()
 {
-	return ("USER : Space without colon \n");
+	return ("USER : Space without colon \r\n");
 }

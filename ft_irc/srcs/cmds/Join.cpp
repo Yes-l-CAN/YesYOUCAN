@@ -28,8 +28,8 @@ void Join::joinOn(CanClient *client)
 
       if (cmd[2] == "0")
       {
-      
         leaveAll(client);
+        return ;
       }
 
       if (isExistChannel(cmd[2]) == FALSE)
@@ -95,7 +95,7 @@ void Join::leaveAll(CanClient *client)
     while (client->getChannelList().size() != 0)
     {
       it = client->getChannelList().begin();
-      msgBuf = ":" + client->getUsername() + " PART " + it->second->getChannelName() + "\n";
+      msgBuf = ":" + client->getUsername() + " PART " + it->second->getChannelName() + "\r\n";
       it->second->broadcast(msgBuf);
       it->second->deleteClientElement(client->getSockFd());
       if (it->second->getClientList().size() == 0)
@@ -173,17 +173,17 @@ int Join::checkClientLevel(CanClient *client) {
 int Join::determineFlag(void) { return (0); }
 
 const char *Join::invalidChannelException::what() const throw() {
-  return "Join : Invalid Channel !\n";
+  return "Join : Invalid Channel !\r\n";
 }
 
 const char *Join::alreadyJoinedException::what() const throw() {
-  return "Join : Already joined !\n";
+  return "Join : Already joined !\r\n";
 }
 
 const char *Join::channelOverflowException::what() const throw() {
-  return "Join : channel Overflow\n";
+  return "Join : channel Overflow\r\n";
 }
 
 const char *Join::kickedException::what() const throw() {
-  return "Join : cannot join channels that have been kicked. \n";
+  return "Join : cannot join channels that have been kicked. \r\n";
 }

@@ -53,10 +53,10 @@ int ACommand::getSize(void) const
 
 	const char *ACommand::invalidFormatException::what() const throw()
 {
-	return "Invalid Command : Format error ! \n";
+	return "Invalid Command : Format error ! \r\n";
 }
 
 const char *ACommand::noAuthorityException::what() const throw()
 {
-	return ("No Authority : Register PASS, USER, NICK \n");
+	return ("No Authority : Register PASS, USER, NICK \r\n");
 }
