@@ -27,7 +27,8 @@ void User::userOn(CanClient *client)
 		checkClientLevel(client);
 		validCheck();
 		setClientUser(client);
-		welcome2CanServ(client);
+		if((client->getMemberLevel() & CERTIFICATION_FIN) == CERTIFICATION_FIN)
+				welcome2CanServ(client);
 	}
 	catch (const std::exception &e)
 	{
@@ -60,11 +61,10 @@ void User::setClientUser(CanClient *client)
 
 	client->setUsername(cmd[2]);
 	client->setRealname(cmd[5]);
-	client->setMemberLevel(USER_FIN);
-	if ((client->getMemberLevel() & (PASS_FIN | NICK_FIN | USER_FIN)) == (PASS_FIN | NICK_FIN | USER_FIN))
-	{
-		client->setMemberLevel(CERTIFICATION_FIN);
-	}
+	if((client->getMemberLevel() & (PASS_FIN | NICK_FIN)) ==  (PASS_FIN | NICK_FIN))
+      	client->setMemberLevel(CERTIFICATION_FIN);
+	else
+		client->setMemberLevel(USER_FIN);
 }
 
 void User::welcome2CanServ(CanClient *client)
@@ -78,15 +78,6 @@ void User::welcome2CanServ(CanClient *client)
 
 int User::isValidFormat(void)
 {
-	  std::vector<std::string>::iterator it;
-  for(it = cmd.begin(); it != cmd.end(); it ++)
-  {
-    std::cout << "cmd:: " << *it << std::endl;
-    sleep(1);
-  }
-  sleep(1);
-  std::cout << "get Size :: " << getSize() << std::endl;
-  sleep(10);
 	// flag USER <username> 0 * <realname>
 	if (getSize() != 5)
 		throw invalidFormatException();

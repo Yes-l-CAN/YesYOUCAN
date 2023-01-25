@@ -27,6 +27,8 @@ public:
 	int checkClientLevel(CanClient *client);
 	int determineFlag(void);
 
+	void welcome2CanServ(CanClient *client);
+
 	class invalidNickException : public std::exception
 	{
 		virtual const char *what() const throw();

@@ -33,6 +33,8 @@ void Nick::nickOn(CanClient *client)
     validCheck();
     checkUsedNick();
     setClientNick(client);
+	if((client->getMemberLevel() & CERTIFICATION_FIN) == CERTIFICATION_FIN)
+		welcome2CanServ(client);
   }
   catch(const std::exception& e)
   {
@@ -40,6 +42,15 @@ void Nick::nickOn(CanClient *client)
     client->addSendBuff(msgBuf);
   }
   
+}
+
+void Nick::welcome2CanServ(CanClient *client)
+{
+    // 001 :<client> :<msg>
+	std::string userName = cmd[2];
+	std::string serverName = static_cast<std::string>(SERVERNAME);
+	std::string msgBuf = "001 :" + userName + " :Welcome, " + userName + "! Your host is " + serverName + "\n"; 
+	client->addSendBuff(msgBuf);	
 }
 
 int Nick::validCheck(void) 
@@ -91,13 +102,12 @@ void Nick::setClientNick(CanClient *client)
 {
   // flag NICK <nickname>
 
-  std::string nickName = cmd[2];
-  client->setNickname(nickName);
-  client->setMemberLevel(NICK_FIN);
-	if ((client->getMemberLevel() & (PASS_FIN | NICK_FIN | USER_FIN)) == (PASS_FIN | NICK_FIN | USER_FIN))
-	{
-		client->setMemberLevel(CERTIFICATION_FIN);
-	}
+ 	std::string nickName = cmd[2];
+	client->setNickname(nickName);
+	if((client->getMemberLevel() & (PASS_FIN | USER_FIN)) ==  (PASS_FIN | USER_FIN))
+      	client->setMemberLevel(CERTIFICATION_FIN);
+	else
+		client->setMemberLevel(NICK_FIN);
 }
 
 int Nick::checkClientLevel(CanClient *client) {
