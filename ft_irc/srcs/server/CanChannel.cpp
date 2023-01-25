@@ -38,7 +38,6 @@ void CanChannel::addClientElement(const int fd, CanClient* pNewClient)
     this->getClientList().insert(std::make_pair(fd, pNewClient));
     int ret = 12;
 
-    std::cout << "clientList size :: " << this->getClientList().size() << std::endl;
     if (ret == false)
     {
         throw(CanChannel::addClientException());

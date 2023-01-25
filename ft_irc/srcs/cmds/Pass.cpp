@@ -24,7 +24,6 @@ void Pass::passOn(CanClient *client)
 {
   try
   {
-	std::cout << "inside PASS" << std::endl;
     isValidFormat();
     checkClientLevel(client);
     passCmp(client);
@@ -39,12 +38,10 @@ void Pass::passOn(CanClient *client)
 void Pass::passCmp(CanClient *client) 
 {
   // flag PASS <password> 
-    std::cout << "server password"  << server->getPassWord() << std::endl;
     int serverPW = atoi(server->getPassWord().c_str());
     int clientPW = atoi(cmd[2].c_str());
     if (serverPW == clientPW)
     {
-      std::cout << "hi" << std::endl;
       client->setMemberLevel(PASS_FIN);
     }
     else
@@ -55,15 +52,6 @@ void Pass::passCmp(CanClient *client)
 
 int Pass::isValidFormat(void)
 {
-  // std::vector<std::string>::iterator it;
-  // for(it = cmd.begin(); it != cmd.end(); ++it)
-  // {
-  //   std::cout << "cmd:: " << *it << std::endl;
-  //   sleep(1);
-  // }
-  // sleep(1);
-  // std::cout << "get Size :: " << getSize() << std::endl;
-  // sleep(10);
   if (getSize() < 2)
     throw invalidFormatException();
   return (TRUE);

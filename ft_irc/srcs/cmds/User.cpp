@@ -22,7 +22,6 @@ void User::userOn(CanClient *client)
 {
 	try
 	{
-		std::cout << "inside USER" << std::endl;
 		isValidFormat();
 		checkClientLevel(client);
 		validCheck();
@@ -61,10 +60,9 @@ void User::setClientUser(CanClient *client)
 
 	client->setUsername(cmd[2]);
 	client->setRealname(cmd[5]);
+	client->setMemberLevel(USER_FIN);
 	if((client->getMemberLevel() & (PASS_FIN | NICK_FIN)) ==  (PASS_FIN | NICK_FIN))
       	client->setMemberLevel(CERTIFICATION_FIN);
-	else
-		client->setMemberLevel(USER_FIN);
 }
 
 void User::welcome2CanServ(CanClient *client)
@@ -90,7 +88,7 @@ int User::checkClientLevel(CanClient *client)
 	{
 		throw noAuthorityException();
 	}
-	else if ((client->getMemberLevel() & USER_FIN) != 0)
+	else if ((client->getMemberLevel() & CERTIFICATION_FIN) != 0)
 	{
 		throw alreadyRegisteredException();
 	}

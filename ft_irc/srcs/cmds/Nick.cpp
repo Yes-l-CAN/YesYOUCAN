@@ -26,15 +26,26 @@ void Nick::nickOn(CanClient *client)
 {
   try
   {
-	std::cout << "inside NICK" << std::endl;
-  std::cout << "hasdfasdfasdf" << std::endl;
     isValidFormat(); 
     checkClientLevel(client);
     validCheck();
     checkUsedNick();
     setClientNick(client);
-	if((client->getMemberLevel() & CERTIFICATION_FIN) == CERTIFICATION_FIN)
-		welcome2CanServ(client);
+    if(((client->getMemberLevel() & CERTIFICATION_FIN) == CERTIFICATION_FIN)
+        && flag == 0)
+    {
+      welcome2CanServ(client);
+      flag = 1;
+    } 
+    else if ((client->getMemberLevel() & CERTIFICATION_FIN) == CERTIFICATION_FIN)
+    {
+      std::string msg =  "NICK : " + client->getUsername() + " " + "changed NICK => " + cmd[2] + "\n";
+      std::map<std::string, CanChannel *>::iterator it;
+      for(it = client->getChannelList().begin() ; it != client->getChannelList().end(); it++)
+      {
+        it->second->broadcast(msg);
+      }
+    }
   }
   catch(const std::exception& e)
   {
@@ -89,7 +100,6 @@ int Nick::checkUsedNick(void)
 
 int Nick::isValidFormat(void) 
 {
-  std::cout << "getsize() [Nick] :: " << getSize() << std::endl;
   // flag NICK <nickname>
   if (getSize() != 2)
   {
@@ -104,10 +114,10 @@ void Nick::setClientNick(CanClient *client)
 
  	std::string nickName = cmd[2];
 	client->setNickname(nickName);
+  client->setMemberLevel(NICK_FIN);
+
 	if((client->getMemberLevel() & (PASS_FIN | USER_FIN)) ==  (PASS_FIN | USER_FIN))
       	client->setMemberLevel(CERTIFICATION_FIN);
-	else
-		client->setMemberLevel(NICK_FIN);
 }
 
 int Nick::checkClientLevel(CanClient *client) {

@@ -89,7 +89,14 @@ void Operation::Transmission()
             {
                 cRecv(this->setFd);
                 CanClient *targetClient = findClient(this->setFd);
-                                
+				/*
+				1. /r/n이 있는지 확인하고
+				만약에 있으면
+				 /r/n 까지 newStr 넣어주고
+				 buffer -> /r/n 뒤부터 남아있고
+				 return true
+				 false;
+				*/
                 // parsing
 				/*
 				todo 
@@ -106,8 +113,8 @@ void Operation::Transmission()
                 // check command
                 CommandChecker(cmd, targetClient);
                 memset(this->buffer, 0, this->bufferSize);
+				}
             }
-        } 
     }
     CanClient * pClient = NULL;
     for (int i = 0; i < MAX_FD;i++)
@@ -150,15 +157,11 @@ void Operation::CommandChecker(std::vector<std::string> argv, CanClient *targetC
 			{
 			case 0:
 				this->cmdPass->setCmd(argv);
-				std::cout << "before pass on" << std::endl;
 				this->cmdPass->passOn(targetClient);
-				std::cout << "after pass on" << std::endl;
 				return;
 			case 1:
 				this->cmdNick->setCmd(argv);
-				std::cout << "before nick on" << std::endl;
 				this->cmdNick->nickOn(targetClient);
-				std::cout << "after nick on" << std::endl;
 				return;
 			case 2:
 				this->cmdUser->setCmd(argv);

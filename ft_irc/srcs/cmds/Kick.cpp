@@ -72,10 +72,11 @@ void Kick::isMemberInChannel(CanClient *client)
 
 int Kick::isOperator(CanClient *client)
 {
-  if (channel->getClientList().begin()->first == client->getSockFd())
-  {
-    return (TRUE);
-  }
+	(void) client;
+//   if (channel->getClientList().begin()->first == client->getSockFd())
+//   {
+//     return (TRUE);
+//   }
   return (FALSE);
 }
 
@@ -100,10 +101,10 @@ void Kick::sendMSG(CanClient *client)
 
 int Kick::isValidFormat(void)
 {
-  if (getSize() != 3)
-  {
-    throw invalidFormatException();
-  }
+//   if (getSize() != 3)
+//   {
+//     throw invalidFormatException();
+//   }
   return (TRUE);
 }
 
