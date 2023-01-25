@@ -22,6 +22,7 @@ void Nick::nickOn(CanClient *client)
 {
   try
   {
+	std::cout << "inside NICK" << std::endl;
     isValidFormat();
     checkClientLevel(client);
     validCheck();

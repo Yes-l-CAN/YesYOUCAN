@@ -51,6 +51,6 @@ re :
 	@echo $(YELLOW) "🍪 make re!" $(ENDCOLOR)
 	$(MAKE) fclean 
 	$(MAKE) all
-	@echo $(RED) "🍪 make re finished!" $(ENDCOLOR)
+	@echo $(GREEN) "🍪 make re finished!" $(ENDCOLOR)
 
 .PHONY : all clean fclean bonus re

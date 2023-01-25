@@ -36,6 +36,8 @@ void ACommand::setSize(void)
 void ACommand::setCmd(std::vector<std::string> cmd)
 {
 	this->cmd = cmd;
+	setFlag();
+    setSize();
 }
 
 int ACommand::getFlag(void) const

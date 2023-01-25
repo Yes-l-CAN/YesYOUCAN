@@ -20,6 +20,7 @@ void Pass::passOn(CanClient *client)
 {
   try
   {
+	std::cout << "inside PASS" << std::endl;
     isValidFormat();
     checkClientLevel(client);
     passCmp(client);
@@ -47,7 +48,7 @@ void Pass::passCmp(CanClient *client)
 int Pass::isValidFormat(void)
 {
   std::vector<std::string>::iterator it;
-  for(it = cmd.begin(); it != cmd.end(); it ++)
+  for(it = cmd.begin(); it != cmd.end(); ++it)
   {
     std::cout << "cmd:: " << *it << std::endl;
     sleep(1);

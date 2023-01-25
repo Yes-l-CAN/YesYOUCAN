@@ -20,6 +20,7 @@ void User::userOn(CanClient *client)
 {
 	try
 	{
+		std::cout << "inside USER" << std::endl;
 		isValidFormat();
 		checkClientLevel(client);
 		validCheck();
