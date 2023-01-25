@@ -9,19 +9,19 @@ CanServer::CanServer() : socketFd(-1), maxFd(1000)
 	FD_ZERO(&writes);
 	FD_ZERO(&copyWrites);
 
-	this->clientList = new std::map<int, CanClient *>;
+	// this->clientList = new std::map<int, CanClient *>;
 }
 
 CanServer::~CanServer()
 {
     // Destuctor
 	std::map<int, CanClient*>::iterator it;
-	if (this->clientList->empty() == true)
+	if (this->clientList.empty() == true)
 	{
 		return ;
 	}
 
-	for (it = this->clientList->begin(); it != this->clientList->end(); it++)
+	for (it = this->clientList.begin(); it != this->clientList.end(); it++)
 	{
 		close(it->first);
 		if (it->second != NULL)
@@ -29,7 +29,7 @@ CanServer::~CanServer()
 			delete it->second;
 		}
 	}
-	this->clientList->clear();
+	this->clientList.clear();
 	// channel clear
 }
 
@@ -50,18 +50,17 @@ CanServer& CanServer::operator=(const CanServer& obj){
 
 void	CanServer::addChannelElement(const std::string channelName, CanChannel *pNewChannel)
 {
-	(void)channelName;
-	(void)pNewChannel;
+	this->getChannelList().insert(std::make_pair(channelName, pNewChannel));
 }
 
 void 	CanServer::deleteChannelElement(const std::string channelName)
 {
-	(void)channelName;
+	this->getChannelList().erase(channelName);
 }						// delete channel List
 
 void 	CanServer::deleteClientElement(const int fd)
 {
-	(void)fd;
+	this->getClientList().erase(fd);
 	// 시그널 종료시 , quit명령어 사용시 호출되어야 함
 }						// delete CanClient => memory 해제 필요!
 
@@ -165,7 +164,7 @@ void CanServer::s_Accept()
 	CanClient *temp = new CanClient(clientAddr, clientSockFd);
 
 	std::cout << "temp lv:: " << temp->getisMember() << std::endl;
-	clientList->insert(std::make_pair(clientSockFd, temp));
+	clientList.insert(std::make_pair(clientSockFd, temp));
 	std::map<int, CanClient *>::iterator it;
 	if (clientSockFd > MAX_FD)
 	{
@@ -268,12 +267,12 @@ fd_set *CanServer::getCopyWrites(){
 
 
 
-std::map<int, CanClient*> *CanServer::getClientList() const{
-	return(this->clientList);
+std::map<int, CanClient*> &CanServer::getClientList() {
+	return (this->clientList);
 }
 
-std::map<std::string, CanChannel*> CanServer::getChannelList() const{
-	return(this->channelList);
+std::map<std::string, CanChannel*>& CanServer::getChannelList() {
+	return (this->channelList);
 }
 
 int CanServer::getCurrentMaxFd() const

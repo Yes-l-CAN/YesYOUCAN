@@ -45,7 +45,7 @@ void Quit::eraseFromList(CanClient *client)
 	{	
 		it->second->getClientList().erase(clientFd);
 	}
-	server->getClientList()->erase(clientFd);
+	server->getClientList().erase(clientFd);
 }
 
 void Quit::msgToAllJoinedChannel(CanClient *client)

@@ -46,7 +46,7 @@ private:
 
 	int maxFd;
 
-	std::map<int, CanClient *> *clientList;			 // current exist all clients list
+	std::map<int, CanClient *> clientList;			 // current exist all clients list
 	std::map<std::string, CanChannel *> channelList; // current exist all channel list
 
 	CanException except;
@@ -92,8 +92,8 @@ public:
 	fd_set *getWrites();
 	fd_set *getCopyReads();
 	fd_set *getCopyWrites();
-	std::map<int, CanClient *> *getClientList() const;
-	std::map<std::string, CanChannel *> getChannelList() const;
+	std::map<int, CanClient *> &getClientList();
+	std::map<std::string, CanChannel *> &getChannelList();
 	int getCurrentMaxFd(void) const;
 };
 

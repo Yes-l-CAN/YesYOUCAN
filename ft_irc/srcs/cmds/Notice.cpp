@@ -71,7 +71,7 @@ CanChannel *Notice::isExistChannelName(std::string name)
 CanClient *Notice::isExistNickname(std::string name)
 {
   std::map<int, CanClient *>::iterator it;
-  for (it = server->getClientList()->begin(); it != server->getClientList()->end(); it++)
+  for (it = server->getClientList().begin(); it != server->getClientList().end(); it++)
   {
     if (it->second->getNickname() == name)
     {

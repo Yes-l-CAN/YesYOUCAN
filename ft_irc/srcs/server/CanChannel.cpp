@@ -35,7 +35,10 @@ std::map<int, CanClient*>& CanChannel::getClientList(void)
 
 void CanChannel::addClientElement(const int fd, CanClient* pNewClient)
 {
-    bool ret = this->clientList.insert(std::make_pair(fd, pNewClient)).second;
+    this->getClientList().insert(std::make_pair(fd, pNewClient));
+    int ret = 12;
+
+    std::cout << "clientList size :: " << this->getClientList().size() << std::endl;
     if (ret == false)
     {
         throw(CanChannel::addClientException());
@@ -70,7 +73,7 @@ void CanChannel::broadcast(const std::string& msg)
     // select함수에서, write가능한 상황인지 확인 후 fd들을 순차적으로 전송
     std::map<int, CanClient *>::iterator it;
     
-    for (it = clientList.begin(); it != clientList.end(); it++)
+    for (it = this->getClientList().begin(); it != this->getClientList().end(); it++)
     {
         it->second->addSendBuff(msg);
     }

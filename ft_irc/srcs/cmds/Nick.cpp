@@ -76,8 +76,8 @@ int Nick::checkUsedNick(void)
   std::map<int, CanClient *>::iterator cit;
   std::string nickName = cmd[2];
   
-  for (cit = server->getClientList()->begin();
-       cit != server->getClientList()->end(); cit++) 
+  for (cit = server->getClientList().begin();
+       cit != server->getClientList().end(); cit++) 
   {
     if (cit->second->getNickname() == nickName) 
     {

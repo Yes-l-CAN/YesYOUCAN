@@ -26,19 +26,17 @@ void Join::joinOn(CanClient *client)
     isValidFormat();
     checkClientLevel(client);
 
-    std::vector<std::string>::iterator it;
-    for (it = cmd.begin() + 2;it != cmd.end();it++)
-    {
-      if (*it == "0")
+      if (cmd[2] == "0")
       {
+      
         leaveAll(client);
-        continue;
       }
 
-      if (isExistChannel(*it) == FALSE)
-        addChannel(*it);
+      if (isExistChannel(cmd[2]) == FALSE)
+           addChannel(cmd[2]);
       else
       {
+        this->channel = getChannel(cmd[2]);
         isAlreadyJoined(client);
         isKicked(client);
       }
@@ -52,13 +50,18 @@ void Join::joinOn(CanClient *client)
       {
         throw channelOverflowException();
       }
-    }
+      
   }
   catch(const std::exception& e)
   {
     std::string msgBuf = e.what();
     client->addSendBuff(msgBuf);
   }
+}
+
+CanChannel *Join::getChannel(std::string &channelName)
+{
+  return (server->getChannelList().find(channelName)->second);
 }
 
 int Join::isKicked(CanClient *client)
@@ -106,11 +109,8 @@ void Join::leaveAll(CanClient *client)
 
 void Join::addClient(CanClient *client)
 {
-  if (client != NULL)
-  {
     channel->addClientElement(client->getSockFd(), client);
     client->addChannelElement(channel->getChannelName(), channel);
-  }
 }
 
 void Join::addChannel(std::string channelName)
@@ -127,7 +127,7 @@ void Join::sendMSG(CanClient *client)
   std::string msgBuff;
   // :<source> JOIN <channel>
 
-  msgBuff = ":" + client->getUsername() + " JOIN #" + channel->getChannelName() + "\n";
+  msgBuff = ":" + client->getNickname() + " JOIN " + channel->getChannelName() + "\r\n";
   channel->broadcast(msgBuff);
 }
 

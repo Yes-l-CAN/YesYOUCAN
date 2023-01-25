@@ -91,8 +91,18 @@ void Operation::Transmission()
                 CanClient *targetClient = findClient(this->setFd);
                                 
                 // parsing
+				/*
+				todo 
+					저희 버퍼 메세지를 받고 커맨드를 만들 때 공백 기준으로 처리를 해주었었는데 
+					들어오는 커맨드 자체가 처음부터 끝까지 한 번에 들어온다는 보장이 없어서 
+					buffer에 냅다 담아놓고 /r/n이 들어오면 그 때서야 /r/n기준으로 짤라서 
+					그 앞을 커맨드 처리 해주어야 한다고 하더라구요.!! 
+					그래서 지금처럼 1recv 1command 형태가 아니라 n recv 1 command 형태가 될 것 같습니당..
+					일단 냅다 버퍼에 넣어두고 계속 /r/n있는지 확인한다음에 있으면 그 때서야 파싱하고 커맨드 처리 해줄 것 같아요!!
+				*/
                 std::vector<std::string> cmd = parser.parseOn(this->buffer);
 				parser.parseClear();
+
                 // check command
                 CommandChecker(cmd, targetClient);
                 memset(this->buffer, 0, this->bufferSize);
@@ -108,9 +118,9 @@ void Operation::Transmission()
             {
                 continue;
             }
-			if(server->getClientList()->find(i) != server->getClientList()->end())
+			if(server->getClientList().find(i) != server->getClientList().end())
 			{
-				pClient = server->getClientList()->find(i)->second;
+				pClient = server->getClientList().find(i)->second;
 				if (pClient->getsendBuff().size() != 0)
 				{
 					pClient->sendToClient();
@@ -124,7 +134,7 @@ void Operation::Transmission()
 
 CanClient *Operation::findClient(int fd)
 {
-	return (server->getClientList()->find(fd)->second);
+	return (server->getClientList().find(fd)->second);
 }
 
 void Operation::CommandChecker(std::vector<std::string> argv, CanClient *targetClient)

@@ -30,6 +30,8 @@ public:
 	int checkClientLevel(CanClient *client);
 	int determineFlag(void);
 
+	CanChannel *getChannel(std::string &channelName);
+
 	class invalidChannelException : public std::exception
 	{
 		virtual const char *what() const throw();
