@@ -6,10 +6,12 @@
 
 CanClient::CanClient() : socketFd(-1), nickname(), username(), realname(), addr(), isMember(0)
 {
+	setMemberLevel(UNCERTIFICATION);
 }
 
 CanClient::CanClient(int fd) : socketFd(fd), nickname(), username(), realname(), addr(), isMember(0)
 {
+	setMemberLevel(UNCERTIFICATION);
 	memset(&this->addr, 0, sizeof(this->addr));
 }
 
@@ -30,13 +32,14 @@ CanClient::~CanClient()
 {
 }
 
-CanClient::CanClient(const struct sockaddr_in addr) : addr(addr)
+CanClient::CanClient(const struct sockaddr_in addr) : addr(addr), isMember(0)
 {
+	setMemberLevel(UNCERTIFICATION);
 }
 
-CanClient::CanClient(const struct sockaddr_in addr, const int fd) : socketFd(fd), addr(addr)
+CanClient::CanClient(const struct sockaddr_in addr, const int fd) : socketFd(fd), addr(addr), isMember(0)
 {
-	setMemberLevel(0);
+	setMemberLevel(UNCERTIFICATION);
 }
 
 void CanClient::setNickname(const std::string name)
@@ -56,7 +59,7 @@ void CanClient::setUsername(const std::string name)
 
 void CanClient::setMemberLevel(int lev)
 {
-	if (lev == USER_FIN || lev == NICK_FIN || lev == PASS_FIN || lev == CERTIFICATION_FIN)
+	if (lev == UNCERTIFICATION || lev == USER_FIN || lev == NICK_FIN || lev == PASS_FIN || lev == CERTIFICATION_FIN)
 		this->isMember |= lev;
 }
 

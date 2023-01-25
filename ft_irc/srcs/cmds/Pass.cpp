@@ -38,9 +38,13 @@ void Pass::passOn(CanClient *client)
 
 void Pass::passCmp(CanClient *client) 
 {
-  // flag PASS <password>
-    if (server->getPassWord() == cmd[2])
+  // flag PASS <password> 
+    std::cout << "server password"  << server->getPassWord() << std::endl;
+    int serverPW = atoi(server->getPassWord().c_str());
+    int clientPW = atoi(cmd[2].c_str());
+    if (serverPW == clientPW)
     {
+      std::cout << "hi" << std::endl;
       client->setMemberLevel(PASS_FIN);
     }
     else
@@ -67,6 +71,8 @@ int Pass::isValidFormat(void)
 
 int Pass::checkClientLevel(CanClient *client) {
   if ((client->getMemberLevel() & PASS_FIN) != 0) {
+    std::cout << "getMemLv :: " << client->getMemberLevel() << std::endl;
+    std::cout << "PASS_FIM" << PASS_FIN << std::endl;
     throw alreadyRegisteredException();
   }
   return (TRUE);

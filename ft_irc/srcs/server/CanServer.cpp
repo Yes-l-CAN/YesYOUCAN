@@ -164,10 +164,9 @@ void CanServer::s_Accept()
 
 	CanClient *temp = new CanClient(clientAddr, clientSockFd);
 
+	std::cout << "temp lv:: " << temp->getisMember() << std::endl;
 	clientList->insert(std::make_pair(clientSockFd, temp));
 	std::map<int, CanClient *>::iterator it;
-	for(it = clientList->begin(); it != clientList->end(); it++)
-		std::cout << "Client list fd " << it->first << std::endl;
 	if (clientSockFd > MAX_FD)
 	{
 		throw(CanException::tooManyClientFDException());
