@@ -206,9 +206,19 @@ void Operation::cRecv(int fd)
 {
 	int ret = recv(fd, buffer, bufferSize, 0);
 	if (ret < 0)
+	{
+		FD_CLR(fd, server->getReads());
+		FD_CLR(fd, server->getWrites());
+        close(fd);
 		throw(CanException::recvSocketErrorException());
+	}
 	if (ret == 0)
+	{
+		FD_CLR(fd, server->getReads());
+		FD_CLR(fd, server->getWrites());
+        close(fd);
 		throw(CanException::recvSocketClosedException());
+	}
 }
 
 void Operation::Client2ServSend(int fd)

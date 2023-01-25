@@ -16,6 +16,7 @@ int main(int argc, char *argv[])
 	Operation operation(argv[1], argv[2]);
 	while (1)
 	{
+		//signal(SIGINT,serverEnd());
 		try
 		{
 			operation.Transmission();
