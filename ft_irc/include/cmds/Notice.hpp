@@ -13,6 +13,7 @@ protected:
 
 public:
 	Notice();
+	Notice(CanServer *serv);
 	~Notice();
 	void noticeOn(CanClient *client);
 	// std::map<CanChannel *, int> getChannel(CanClient *client);

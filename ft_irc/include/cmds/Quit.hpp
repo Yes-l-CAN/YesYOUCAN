@@ -10,6 +10,7 @@ private:
 	Quit& operator=(const Quit &obj); // Deprecated.
 public:
 	Quit();
+	Quit(CanServer *serv);
 	~Quit();
 	void quitOn(CanClient *client);
 	void eraseFromList(CanClient *client);

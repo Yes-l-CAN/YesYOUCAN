@@ -11,6 +11,7 @@ private:
 
 public:
 	Pass();
+	Pass(CanServer *serv);
 	~Pass();
 	void passOn(CanClient *client);
 	void passCmp(CanClient *client);

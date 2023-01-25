@@ -4,6 +4,8 @@
 
 Part::Part() {}
 
+Part::Part(CanServer *serv) : ACommand(serv){}
+
 Part::~Part() {}
 
 // Part::Part(const Part &obj)

@@ -4,6 +4,8 @@
 
 Ping::Ping() {}
 
+Ping::Ping(CanServer *serv) : ACommand(serv){}
+
 Ping::~Ping() {}
 
 // Ping::Ping(const Ping &obj)

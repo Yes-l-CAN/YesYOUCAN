@@ -8,7 +8,7 @@
 class Parsing
 {
   private:
-    std::vector<std::string> v;
+    std::vector<std::string> *v;
     std::string              buff;
     std::string              word;
     bool                     flag;
@@ -18,6 +18,8 @@ class Parsing
     ~Parsing();
 
     std::vector<std::string> parseOn(char* bufferStr);
+
+    void parseClear(void);
 
     void giveFlag();
     int  checkSpaceAndComma(size_t idx);

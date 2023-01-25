@@ -4,6 +4,8 @@
 
 Kick::Kick() {}
 
+Kick::Kick(CanServer *serv) : ACommand(serv){}
+
 Kick::~Kick() {}
 
 // Kick::Kick(const Kick &obj)

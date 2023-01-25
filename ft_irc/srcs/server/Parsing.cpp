@@ -9,11 +9,20 @@ Parsing::~Parsing()
 {
 }
 
+void Parsing::parseClear(void)
+{
+    delete v;
+    buff.clear();
+    word.clear();
+    flag = false;
+}
+
 // main function
 std::vector<std::string> Parsing::parseOn(char* bufferStr)
 {
+    v = new std::vector<std::string>;
     if (!bufferStr)
-        return (v); // nothing inside
+        return (*v); // nothing inside
 
     makeBuffString(bufferStr);
     giveFlag();
@@ -29,15 +38,15 @@ std::vector<std::string> Parsing::parseOn(char* bufferStr)
             break;
         }
     }
-    return (v);
+    return (*v);
 }
 
 void Parsing::giveFlag()
 {
     if (buff.find(":") != std::string::npos)
-        v.push_back("1");
+        (*v).push_back("1");
     else
-        v.push_back("0");
+        (*v).push_back("0");
 }
 
 int Parsing::checkSpaceAndComma(size_t i)
@@ -49,7 +58,7 @@ int Parsing::checkSpaceAndComma(size_t i)
     }
     if ((!word.empty() && flag) || i == buff.size())
     {
-        v.push_back(word);
+        (*v).push_back(word);
         word.clear();
         word += buff[i];
         flag = false;
@@ -73,7 +82,7 @@ void Parsing::checkColon(size_t i)
         }
         if (!word.empty())
         {
-            v.push_back(word);
+            (*v).push_back(word);
             word.clear();
         }
     }
@@ -81,7 +90,7 @@ void Parsing::checkColon(size_t i)
     {
         word += buff[++i];
     }
-    v.push_back(word);
+    (*v).push_back(word);
 }
 
 void Parsing::makeBuffString(char* buffStr)

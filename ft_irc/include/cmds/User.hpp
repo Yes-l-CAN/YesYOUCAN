@@ -14,6 +14,7 @@ private:
 	
 public:
 	User();
+	User(CanServer *serv);
 	~User();
 	void userOn(CanClient *client);
 	int validCheck(void);

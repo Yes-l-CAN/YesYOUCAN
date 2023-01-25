@@ -3,7 +3,11 @@
 
 char Nick::invalid[8] = {' ', ',', '*', '?', '!', '@', '.', '#'};
 
+
 Nick::Nick() {}
+
+Nick::Nick(CanServer *serv) : ACommand(serv){
+}
 
 Nick::~Nick() {}
 
@@ -23,7 +27,8 @@ void Nick::nickOn(CanClient *client)
   try
   {
 	std::cout << "inside NICK" << std::endl;
-    isValidFormat();
+  std::cout << "hasdfasdfasdf" << std::endl;
+    isValidFormat(); 
     checkClientLevel(client);
     validCheck();
     checkUsedNick();
@@ -73,6 +78,7 @@ int Nick::checkUsedNick(void)
 
 int Nick::isValidFormat(void) 
 {
+  std::cout << "getsize() [Nick] :: " << getSize() << std::endl;
   // flag NICK <nickname>
   if (getSize() != 2)
   {

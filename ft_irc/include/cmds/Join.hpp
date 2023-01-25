@@ -14,6 +14,7 @@ private:
 	Join& operator=(const Join &obj); // Deprecated.
 public:
 	Join();
+	Join(CanServer *serv);
 	~Join();
 	void joinOn(CanClient *client);
 

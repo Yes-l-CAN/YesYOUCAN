@@ -2,6 +2,8 @@
 #include "Operation.hpp"
 
 Join::Join() {}
+ 
+Join::Join(CanServer *serv) : ACommand(serv){}
 
 Join::~Join() {}
 

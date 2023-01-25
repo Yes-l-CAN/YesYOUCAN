@@ -16,6 +16,7 @@ private:
 
 public:
 	Nick();
+	Nick(CanServer *serv);
 	~Nick();
 	void nickOn(CanClient *client);
 	int validCheck(void);

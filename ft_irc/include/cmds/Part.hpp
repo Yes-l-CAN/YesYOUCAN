@@ -12,6 +12,7 @@ private:
 
 public:
 	Part();
+	Part(CanServer *serv);
 	~Part();
 	void partOn(CanClient *client);
 	// std::map<CanChannel *, int> getChannel(CanClient *client);

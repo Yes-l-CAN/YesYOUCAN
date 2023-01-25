@@ -11,6 +11,7 @@ private:
 	
 public:
 	Ping();
+	Ping(CanServer *serv);
 	~Ping();
 	void pingOn(CanClient *client);
 	void pong(CanClient *client);

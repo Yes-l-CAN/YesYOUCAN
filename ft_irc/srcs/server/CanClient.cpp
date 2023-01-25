@@ -36,6 +36,7 @@ CanClient::CanClient(const struct sockaddr_in addr) : addr(addr)
 
 CanClient::CanClient(const struct sockaddr_in addr, const int fd) : socketFd(fd), addr(addr)
 {
+	setMemberLevel(0);
 }
 
 void CanClient::setNickname(const std::string name)

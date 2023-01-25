@@ -4,6 +4,8 @@
 
 Notice::Notice() {}
 
+Notice::Notice(CanServer *serv) : ACommand(serv){}
+
 Notice::~Notice() {}
 
 // Notice::Notice(const Notice &obj)

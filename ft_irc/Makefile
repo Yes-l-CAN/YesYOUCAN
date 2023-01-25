@@ -6,7 +6,7 @@ ENDCOLOR	=	"\033[0;0m"
 LINE_CLEAR	=	"\x1b[1A\x1b[M"
 
 CXX = c++
-CXXFLAGS = -I./include -I./include/cmds -I./include/server -I./include/utils -Wall -Wextra -Werror -std=c++98 #-g -fsanitize=address
+CXXFLAGS = -I./include -I./include/cmds -I./include/server -I./include/utils -Wall -Wextra -Werror -std=c++98 -g -fsanitize=address
 RM = rm -rf
 NAME = ircserv
 

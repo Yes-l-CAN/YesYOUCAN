@@ -4,6 +4,8 @@
 
 Quit::Quit() {}
 
+Quit::Quit(CanServer *serv) : ACommand(serv){}
+
 Quit::~Quit() {}
 
 // Quit::Quit(const Quit &obj)

@@ -14,15 +14,15 @@ Operation::Operation()
 	this->server->s_On();
 
 	// new commands
-	this->cmdUser = new User();
-	this->cmdQuit = new Quit();
+	this->cmdUser = new User(this->server);
+	this->cmdQuit = new Quit(this->server);
 	this->cmdPrvmsg = new Prvmsg();
-	this->cmdPing = new Ping();
-	this->cmdPass = new Pass();
-	this->cmdPart = new Part();
-	this->cmdNotice = new Notice();
-	this->cmdNick = new Nick();
-	this->cmdJoin = new Join();
+	this->cmdPing = new Ping(this->server);
+	this->cmdPass = new Pass(this->server);
+	this->cmdPart = new Part(this->server);
+	this->cmdNotice = new Notice(this->server);
+	this->cmdNick = new Nick(this->server);
+	this->cmdJoin = new Join(this->server);
 }
 
 Operation::Operation(char *s1, char *s2)
@@ -33,15 +33,15 @@ Operation::Operation(char *s1, char *s2)
 	this->server->s_On();
 
 	// new commands
-	this->cmdUser = new User();
-	this->cmdQuit = new Quit();
+	this->cmdUser = new User(this->server);
+	this->cmdQuit = new Quit(this->server);
 	this->cmdPrvmsg = new Prvmsg();
-	this->cmdPing = new Ping();
-	this->cmdPass = new Pass();
-	this->cmdPart = new Part();
-	this->cmdNotice = new Notice();
-	this->cmdNick = new Nick();
-	this->cmdJoin = new Join();
+	this->cmdPing = new Ping(this->server);
+	this->cmdPass = new Pass(this->server);
+	this->cmdPart = new Part(this->server);
+	this->cmdNotice = new Notice(this->server);
+	this->cmdNick = new Nick(this->server);
+	this->cmdJoin = new Join(this->server);
 }
 
 // Operation::Operation(const Operation &obj)
@@ -79,6 +79,7 @@ void Operation::Transmission()
     {
         if(FD_ISSET(i, (server->getCopyReads())))
         {
+			this->setFd = i;
             if(i == server->getSocketFd())
             {
                 server->s_Accept();
@@ -86,12 +87,12 @@ void Operation::Transmission()
             }
             else
             {
-                cRecv(i);
+                cRecv(this->setFd);
                 CanClient *targetClient = findClient(this->setFd);
                                 
                 // parsing
                 std::vector<std::string> cmd = parser.parseOn(this->buffer);
-
+				parser.parseClear();
                 // check command
                 CommandChecker(cmd, targetClient);
                 memset(this->buffer, 0, this->bufferSize);

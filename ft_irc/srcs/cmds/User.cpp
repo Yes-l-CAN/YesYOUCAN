@@ -3,6 +3,8 @@
 
 User::User() {}
 
+User::User(CanServer *serv) : ACommand(serv){}
+
 User::~User() {}
 
 // User::User(const User &obj)

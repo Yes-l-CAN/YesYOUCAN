@@ -3,6 +3,10 @@
 
 Pass::Pass() {}
 
+Pass::Pass(CanServer *serv) : ACommand(serv){
+  	this->server = serv;
+}
+
 Pass::~Pass() {}
 
 // Pass::Pass(const Pass &obj)
@@ -47,15 +51,15 @@ void Pass::passCmp(CanClient *client)
 
 int Pass::isValidFormat(void)
 {
-  std::vector<std::string>::iterator it;
-  for(it = cmd.begin(); it != cmd.end(); ++it)
-  {
-    std::cout << "cmd:: " << *it << std::endl;
-    sleep(1);
-  }
-  sleep(1);
-  std::cout << "get Size :: " << getSize() << std::endl;
-  sleep(10);
+  // std::vector<std::string>::iterator it;
+  // for(it = cmd.begin(); it != cmd.end(); ++it)
+  // {
+  //   std::cout << "cmd:: " << *it << std::endl;
+  //   sleep(1);
+  // }
+  // sleep(1);
+  // std::cout << "get Size :: " << getSize() << std::endl;
+  // sleep(10);
   if (getSize() < 2)
     throw invalidFormatException();
   return (TRUE);

@@ -14,6 +14,7 @@ private:
 	Kick& operator=(const Kick &obj); // Deprecated.
 public:
 	Kick();
+	Kick(CanServer *serv);
 	~Kick();
 	void kickOn(CanClient *client);
 	// std::map<CanChannel *, int> getChannel(CanClient *client);
