@@ -60,7 +60,7 @@ void Nick::welcome2CanServ(CanClient *client)
     // 001 :<client> :<msg>
 	std::string userName = cmd[2];
 	std::string serverName = static_cast<std::string>(SERVERNAME);
-	std::string msgBuf = "001 :" + userName + " :Welcome, " + userName + "! Your host is " + serverName + "\r\n"; 
+	std::string msgBuf = "001 " + userName + " :Welcome, " + userName + "! Your host is " + serverName + "\r\n"; 
 	client->addSendBuff(msgBuf);	
 }
 

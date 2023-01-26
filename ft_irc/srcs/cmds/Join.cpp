@@ -136,10 +136,15 @@ void Join::sendMSG(CanClient *client)
    "<client> @ <channel> : @ <nick>{ [prefix]<nick>}"
 
    <client> <channel> :End of /NAMES list"
+
+    :@hejangg
+ :End of /NAMES list.
   */
   msgBuff =  " JOIN " + channel->getChannelName() + "\r\n";
-  msgBuff += "353 " + client->getNickname() + " @ " + channel->getChannelName() + " :@" + client->getNickname() + "\r\n";
-  msgBuff += "366 " + client->getNickname() + " " + channel->getChannelName() + " :End of /NAMES list." + "\r\n"; 
+  client->addSendBuff(msgBuff);
+  msgBuff = "353 " + client->getNickname() + " @ " + channel->getChannelName() + " :@" + client->getNickname() + "\r\n";
+  client->addSendBuff(msgBuff);
+  msgBuff = "366 " + client->getNickname() + " " + channel->getChannelName() + " :End of /NAMES list." + "\r\n"; 
   client->addSendBuff(msgBuff);
 
   std::string memberBuff;

@@ -37,6 +37,7 @@ void Pass::passOn(CanClient *client)
 
 void Pass::passCmp(CanClient *client) 
 {
+  
   // flag PASS <password> 
     int serverPW = atoi(server->getPassWord().c_str());
     int clientPW = atoi(cmd[2].c_str());

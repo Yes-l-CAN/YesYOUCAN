@@ -94,7 +94,12 @@ void Operation::Transmission()
 				std::string sCmd;
 				while (getCommandFromRecvBuffer(this->buffer, sCmd) == TRUE)
 				{
+
+					std::cout << "sCmd :::: " << sCmd << std::endl;
 					std::vector<std::string> cmd = parser.parseOn(sCmd);
+					std::vector<std::string>::iterator it;
+					for(it = cmd.begin() ; it != cmd.end(); it ++)
+						std::cout << "Cmd :::: " << *it << std::endl;
 					parser.parseClear();
 
 					// check command
@@ -237,18 +242,20 @@ int Operation::getCommandFromRecvBuffer(char *cOriginBuf, std::string &sCmd)
         return (FALSE);
     }
 
-    size_t findIdx = sOriginBuf.find("\n");
+    size_t findIdx = sOriginBuf.find("\r\n");
     if (findIdx != std::string::npos)
     {
         char reloadBuf[bufferSize];
-        char commandBuf[findIdx + 1];
+        char commandBuf[findIdx + 2];
 
         memset(reloadBuf, 0, bufferSize);
-		std::size_t len = sOriginBuf.copy(commandBuf, findIdx, 0);
+		std::size_t len = sOriginBuf.copy(commandBuf, findIdx + 1, 0);
 		commandBuf[len] = '\0';
-		sOriginBuf.copy(reloadBuf, sOriginBuf.length() - findIdx, findIdx + 1);
+		sOriginBuf.copy(reloadBuf, sOriginBuf.length() - (findIdx + 1), findIdx + 2);
 		sCmd = commandBuf;
+		std::cout << "sCmd" << sCmd <<std::endl;
 		memcpy(cOriginBuf, reloadBuf, bufferSize);
+		std::cout << "sCmd" << sCmd <<std::endl;
 		std::cout << "cOriginBuf :: " << cOriginBuf << std::endl;
     }
     else
