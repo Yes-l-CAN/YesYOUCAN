@@ -20,15 +20,15 @@ public:
 	int checkClientLevel(CanClient *client);
 	int determineFlag(void);
 
-	class noTokenException : public std::exception
-	{
-		virtual const char *what() const throw();
-	};
+	// class noTokenException : public std::exception
+	// {
+	// 	virtual const char *what() const throw();
+	// };
 
-	class maxLenException : public std::exception
-	{
-		virtual const char *what() const throw();
-	};
+	// class maxLenException : public std::exception
+	// {
+	// 	virtual const char *what() const throw();
+	// };
 };
 
 #endif // COMMAND_PING_HPP

@@ -22,7 +22,7 @@ SRCS_CMDS	:=	$(addprefix $(DIR_CMDS)/, $(SRCS_CMDS))
 
 # $(wildcard ./srcs/server/*.cpp)
 SRCS_SERVER	:=	CanChannel.cpp CanClient.cpp CanException.cpp CanServer.cpp \
-				Operation.cpp Utility.cpp Parsing.cpp
+				Operation.cpp Parsing.cpp
 SRCS_SERVER	:=	$(addprefix $(DIR_SERVER)/, $(SRCS_SERVER))
 
 SRCS		=	./srcs/main.cpp $(SRCS_CMDS) $(SRCS_SERVER) 

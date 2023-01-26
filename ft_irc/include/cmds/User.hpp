@@ -5,6 +5,9 @@
 
 #define USERNAME_MAXLEN 30;
 
+#define ERR_NEEDMOREPARAMS 461
+#define ERR_ALREADYREGISTERED 462
+
 class User : public ACommand
 {
 private:
@@ -24,20 +27,20 @@ public:
 	int checkClientLevel(CanClient *client);
 	int determineFlag(void);
 
-	class alreadyRegisteredException : public std::exception
-	{
-		virtual const char *what() const throw();
-	};
+	// class alreadyRegisteredException : public std::exception
+	// {
+	// 	virtual const char *what() const throw();
+	// };
 
-	class minUserLenException : public std::exception
-	{
-		virtual const char *what() const throw();
-	};
+	// class minUserLenException : public std::exception
+	// {
+	// 	virtual const char *what() const throw();
+	// };
 
-	class spaceWithoutColonException : public std::exception
-	{
-		virtual const char *what() const throw();
-	};
+	// class spaceWithoutColonException : public std::exception
+	// {
+	// 	virtual const char *what() const throw();
+	// };
 };
 
 #endif // COMMAND_USER_HPP

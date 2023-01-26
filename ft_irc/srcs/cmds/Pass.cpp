@@ -21,16 +21,33 @@ void Pass::passOn(CanClient *client)
   }
   catch(int numeric)
   {
-    std::string msgBuf;
-    if (numeric == 464)
-      msgBuf = std::to_string(numeric) + client->getNickname() + ":Password incorrect\r\n";
-    else if (numeric == 461)
-      msgBuf = std::to_string(numeric) + client->getNickname() + "::Not enough parameters\r\n";
+    std::stringstream sstm;
+    sstm << numeric << " " << client->getSockFd();
+    std::string msgBuf = sstm.str();
+    switch(numeric)
+    {
+    case ERR_UNKNOWNERROR:
+      msgBuf += " PASS :Invalid Format error !";
+      break;
+
+    case ERR_PASSWDMISMATCH:
+      msgBuf += " :Password incorrect";
+      break;
+
+    case ERR_ALREADYREGISTERED:
+      msgBuf += " :Not enough parameters";
+      break;
+
+    default:
+      break;
+    }
+
+    msgBuf += "\r\n";
     client->addSendBuff(msgBuf);
   }
 }
 
-void Pass::passCmp(CanClient *client) throw(int)
+void Pass::passCmp(CanClient *client)
 {
   
   // flag PASS <password> 
@@ -42,21 +59,21 @@ void Pass::passCmp(CanClient *client) throw(int)
     }
     else
     {
-      throw (464);
+      throw(ERR_PASSWDMISMATCH);
     }
 }
 
 int Pass::isValidFormat(void)
 {
   if (getSize() < 2)
-    throw invalidFormatException();
+    throw ERR_UNKNOWNERROR;
   return (TRUE);
 }
 
-int Pass::checkClientLevel(CanClient *client) throw(int)
+int Pass::checkClientLevel(CanClient *client)
 {
   if ((client->getMemberLevel() & PASS_FIN) != 0) {
-    throw (461);
+    throw (ERR_ALREADYREGISTERED);
   }
   return (TRUE);
 }
@@ -64,11 +81,11 @@ int Pass::checkClientLevel(CanClient *client) throw(int)
 int Pass::determineFlag(void) { return (-1); }
 
 // // ERR_PASSWDMISMATCH (464) :Password incorrect
-// const char *Pass::incorrectPassException::what() const throw() {
-//   return ("Pass : Incorrect Password ! \r\n");
-// }
-// // ERR_NEEDMOREPARAMS (461) :Not enough parameters
-// const char *Pass::alreadyRegisteredException::what() const throw() {
-//   return ("Pass : Password already registered ! \r\n");
-// }
+const char *Pass::incorrectPassException::what() const throw() {
+  return ("Pass : Incorrect Password ! \r\n");
+}
 
+// ERR_ALREADYREGISTERED (462) "<client> :You may not reregister"
+const char *Pass::alreadyRegisteredException::what() const throw() {
+  return ("Pass : Password already registered ! \r\n");
+}

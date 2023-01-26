@@ -30,20 +30,20 @@ public:
 	int checkClientLevel(CanClient *client);
 	int determineFlag(void);
 
-	class notOperatorException : public std::exception
-	{
-		virtual const char *what() const throw();
-	};
+	// class notOperatorException : public std::exception
+	// {
+	// 	virtual const char *what() const throw();
+	// };
 
-	class noSuchUserException : public std::exception
-	{
-		virtual const char *what() const throw();
-	};
+	// class noSuchUserException : public std::exception
+	// {
+	// 	virtual const char *what() const throw();
+	// };
 
-	class noSuchChannelException : public std::exception
-	{
-		virtual const char *what() const throw();
-	};
+	// class noSuchChannelException : public std::exception
+	// {
+	// 	virtual const char *what() const throw();
+	// };
 };
 
 #endif // COMMAND_KICK_HPP

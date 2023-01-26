@@ -31,20 +31,20 @@ public:
 
 	CanChannel *getChannel(std::string &channelName);
 
-	class alreadyJoinedException : public std::exception
-	{
-		virtual const char *what() const throw();
-	};
+	// class alreadyJoinedException : public std::exception
+	// {
+	// 	virtual const char *what() const throw();
+	// };
 
-	class channelOverflowException : public std::exception
-	{
-		virtual const char *what() const throw();
-	};
+	// class channelOverflowException : public std::exception
+	// {
+	// 	virtual const char *what() const throw();
+	// };
 
-	class kickedException : public std::exception
-	{
-		virtual const char *what() const throw();
-	};
+	// class kickedException : public std::exception
+	// {
+	// 	virtual const char *what() const throw();
+	// };
 };
 
 #endif // COMMAND_JOIN_HPP

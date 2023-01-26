@@ -29,15 +29,15 @@ public:
 
 	void welcome2CanServ(CanClient *client);
 
-	class invalidNickException : public std::exception
-	{
-		virtual const char *what() const throw();
-	};
+	// class invalidNickException : public std::exception
+	// {
+	// 	virtual const char *what() const throw();
+	// };
 
-	class usedNickException : public std::exception
-	{
-		virtual const char *what() const throw();
-	};
+	// class usedNickException : public std::exception
+	// {
+	// 	virtual const char *what() const throw();
+	// };
 };
 
 #endif // COMMAND_NICK_HPP

@@ -2,24 +2,35 @@
 
 #include "Operation.hpp"
 
-Prvmsg::Prvmsg(CanServer *serv): Notice(serv) {this->bot = new Bot();}
-Prvmsg::Prvmsg() { this->bot = new Bot();}
-Prvmsg::~Prvmsg() { delete this->bot;}
+Prvmsg::Prvmsg(CanServer *serv): Notice(serv) 
+{
+	this->bot = new Bot();
+}
 
+Prvmsg::Prvmsg() 
+{
+	this->bot = new Bot();
+}
+
+Prvmsg::~Prvmsg() 
+{
+	delete this->bot;
+}
 
 int Prvmsg::isValidFormat(void) 
 {
 	// flag PRIVMSG <target> <msg>
 	if (getSize() != 3)
 	{
-		throw invalidFormatException();
+		throw ERR_UNKNOWNERROR;
 	}
 	return (TRUE);
 }
 
-int Prvmsg::checkClientLevel(CanClient *client) {
+int Prvmsg::checkClientLevel(CanClient *client) 
+{
   if ((client->getMemberLevel() & CERTIFICATION_FIN) == 0) {
-    throw noAuthorityException();
+    throw ERR_NOTREGISTERED;
   }
   return (TRUE);
 }
@@ -33,11 +44,30 @@ void Prvmsg::prvMSGOn(CanClient *client)
 		isValidFormat();
 		checkClientLevel(client);
 		executePrvmsg(client);
-	} catch(std::exception &e)
-	{
-		std::string msgBuf = e.what();
-    	client->addSendBuff(msgBuf);
-	}
+	} 
+  catch(int numeric)
+  {
+    std::stringstream sstm;
+    sstm << numeric << " " << client->getNickname();
+    std::string msgBuf =  sstm.str();
+    switch (numeric)
+    {
+    case ERR_UNKNOWNERROR:
+      msgBuf += " PRIVMSG :Invalid Format error !";
+      break;
+    case ERR_NOTREGISTERED:
+      msgBuf += " :You have not registered. Register PASS, USER, NICK !";
+      break;
+    case ERR_BANNEDFROMCHAN:
+      msgBuf += " " + cmd[2] + " :Banned from channel!";
+      break;
+    default:
+      break;
+    }
+  
+    msgBuf += "\r\n";
+    client->addSendBuff(msgBuf);
+  }
 }
 
 void Prvmsg::executePrvmsg(CanClient *client)
@@ -48,11 +78,10 @@ void Prvmsg::executePrvmsg(CanClient *client)
 	{
 		channel = isExistChannelName(targetName);
 		if (isKicked(client, channel) == TRUE)
-			throw(kickedUserException());
+			throw ERR_BANNEDFROMCHAN;
 		channel->broadcast(message, client);
 		bot->executeBot(message, channel);
 	} else {
-				// send to Client ? 보다는 buffer에 저장이 더 맞을 듯...?=
 		CanClient *pClient = isExistNickname(targetName);
 		pClient->addSendBuff(message);
 		bot->executeBot(message, pClient);

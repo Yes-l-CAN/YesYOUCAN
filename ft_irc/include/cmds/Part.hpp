@@ -14,7 +14,6 @@ public:
 	Part(CanServer *serv);
 	~Part();
 	void partOn(CanClient *client);
-	// std::map<CanChannel *, int> getChannel(CanClient *client);
 
 	int isLastMember(void);
 	void eraseChannel(CanClient *client);
@@ -25,15 +24,15 @@ public:
 	int checkClientLevel(CanClient *client);
 	int determineFlag(void);
 
-	class noSuchChannelException : public std::exception
-	{
-		virtual const char *what() const throw();
-	};
+	// class noSuchChannelException : public std::exception
+	// {
+	// 	virtual const char *what() const throw();
+	// };
 
-	class notOnChannelException : public std::exception
-	{
-		virtual const char *what() const throw();
-	};
+	// class notOnChannelException : public std::exception
+	// {
+	// 	virtual const char *what() const throw();
+	// };
 };
 
 #endif // COMMAND_PART_HPP

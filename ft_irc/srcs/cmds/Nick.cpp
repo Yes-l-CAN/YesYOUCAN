@@ -36,12 +36,34 @@ void Nick::nickOn(CanClient *client)
       }
     }
   }
-  catch(const std::exception& e)
+  catch(int numeric)
   {
-    std::string msgBuf = e.what();
+    std::stringstream sstm;
+    sstm << numeric << " " << client->getSockFd();
+    std::string msgBuf = sstm.str();
+    switch (numeric)
+    {
+    case ERR_UNKNOWNERROR:
+      msgBuf += " NICK :Invalid Format error !";
+      break;
+    case ERR_NOTREGISTERED:
+      msgBuf += " :You have not registered. Register PASS, USER, NICK !";
+      break;
+
+    case ERR_ERRONEUSNICKNAME:
+      msgBuf += " " + cmd[2] + " :Erroneus nickname ";
+      break;
+    case ERR_NICKNAMEINUSE:
+      msgBuf += " " + cmd[2] + " :Nickname is already in use";
+      break;
+
+    default:
+      break;
+    }
+  
+    msgBuf += "\r\n";
     client->addSendBuff(msgBuf);
   }
-  
 }
 
 void Nick::welcome2CanServ(CanClient *client)
@@ -60,12 +82,12 @@ int Nick::validCheck(void)
   for (int i = 0; i < 8; i++) {
     if (nickName.find(invalid[i]) != std::string::npos) 
     {
-      throw invalidNickException();
+      throw ERR_UNKNOWNERROR;
     }
   }
   if (nickName[0] == '$' || nickName[0] == ':') 
   {
-    throw invalidNickException();
+    throw ERR_UNKNOWNERROR;
   }
   return (TRUE);
 }
@@ -81,7 +103,7 @@ int Nick::checkUsedNick(void)
   {
     if (cit->second->getNickname() == nickName) 
     {
-      throw usedNickException();
+      throw ERR_NICKNAMEINUSE;
     }
   }
   return (TRUE);
@@ -92,7 +114,7 @@ int Nick::isValidFormat(void)
   // flag NICK <nickname>
   if (getSize() != 2)
   {
-    throw invalidFormatException();
+    throw ERR_UNKNOWNERROR;
   }
   return (TRUE);
 }
@@ -106,26 +128,25 @@ void Nick::setClientNick(CanClient *client)
   client->setMemberLevel(NICK_FIN);
 
 	if((client->getMemberLevel() & (PASS_FIN | USER_FIN)) ==  (PASS_FIN | USER_FIN))
-      	client->setMemberLevel(CERTIFICATION_FIN);
+    client->setMemberLevel(CERTIFICATION_FIN);
 }
 
 int Nick::checkClientLevel(CanClient *client) {
   if ((client->getMemberLevel() & PASS_FIN) == 0) 
   {
-    // ERR_NOTREGISTERED (451)   "<client> :You have not registered"
-    throw noAuthorityException();
+    throw ERR_NOTREGISTERED;
   }
   return (TRUE);
 }
 
 int Nick::determineFlag(void) { return (0); }
 
-// ERR_ERRONEUSNICKNAME (432) "<client> <nick> :Erroneus nickname"
-const char *Nick::invalidNickException::what() const throw() {
-  return ("Nick Error : invalid nick! \r\n");
-}
+// // ERR_ERRONEUSNICKNAME (432) "<client> <nick> :Erroneus nickname"
+// const char *Nick::invalidNickException::what() const throw() {
+//   return ("Nick Error : invalid nick! \r\n");
+// }
 
-// ERR_NICKNAMEINUSE (433)   "<client> <nick> :Nickname is already in use"
-const char *Nick::usedNickException::what() const throw() {
-  return ("Nick Error : already used nick! \r\n");
-}
+// // ERR_NICKNAMEINUSE (433)   "<client> <nick> :Nickname is already in use"
+// const char *Nick::usedNickException::what() const throw() {
+//   return ("Nick Error : already used nick! \r\n");
+// }

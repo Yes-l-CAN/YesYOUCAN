@@ -17,11 +17,35 @@ void User::userOn(CanClient *client)
 		if((client->getMemberLevel() & CERTIFICATION_FIN) == CERTIFICATION_FIN)
 				welcome2CanServ(client);
 	}
-	catch (const std::exception &e) throw(int i)
-	{
-		std::string msgBuf = client->getNickname() + e.what();
+	catch(int numeric)
+  	{
+		std::stringstream sstm;
+		sstm << numeric << " " << client->getSockFd();
+		std::string msgBuf = sstm.str();
+		switch(numeric)
+		{
+			case ERR_UNKNOWNERROR:
+				msgBuf += " USER :Invalid Format error !";
+				break;
+			case ERR_NOTREGISTERED:
+				msgBuf += " :You have not registered. Register PASS, USER, NICK !";
+				break;
+
+			case ERR_NEEDMOREPARAMS:
+				msgBuf += " USER :Invalid Format error !";
+				break;
+
+			case ERR_ALREADYREGISTERED:
+				msgBuf += " :You may not reregister";
+				break;
+
+			default:
+				break;
+		}
+
+		msgBuf += "\r\n";
 		client->addSendBuff(msgBuf);
-	}
+  	}
 }
 
 int User::validCheck(void)
@@ -31,12 +55,7 @@ int User::validCheck(void)
 
 	if (cmd[2].length() < 1 || cmd[5].length() < 1)
 	{
-		throw minUserLenException();
-	}
-
-	if (cmd[5].find(" ") != std::string::npos && getFlag() == 0)
-	{
-		throw spaceWithoutColonException();
+		throw(ERR_NEEDMOREPARAMS);
 	}
 	return (TRUE);
 }
@@ -66,7 +85,7 @@ int User::isValidFormat(void)
 {
 	// flag USER <username> 0 * <realname>
 	if (getSize() != 5)
-		throw invalidFormatException();
+		throw ERR_UNKNOWNERROR;
 	return (TRUE);
 }
 
@@ -74,11 +93,11 @@ int User::checkClientLevel(CanClient *client)
 {
 	if ((client->getMemberLevel() & PASS_FIN) == 0)
 	{
-		throw noAuthorityException();
+		throw ERR_NOTREGISTERED;
 	}
-	else if ((client->getMemberLevel() & CERTIFICATION_FIN) != 0)
+	else if ((client->getMemberLevel() & USER_FIN) == USER_FIN)
 	{
-		throw alreadyRegisteredException();
+		throw(ERR_ALREADYREGISTERED);
 	}
 	return (TRUE);
 }
@@ -88,18 +107,21 @@ int User::determineFlag(void)
 	return (1);
 }
 
-// ERR_ALREADYREGISTERED (462) "<client> :You may not reregister"
-const char *User::alreadyRegisteredException::what() const throw()
-{
-	return (" :You may not reregister\r\n");
-}
+// // ERR_ALREADYREGISTERED (462) "<client> :You may not reregister"
+// const char *User::alreadyRegisteredException::what() const throw()
+// {
+// 	return (" :You may not reregister\r\n");
+// }
 
-const char *User::minUserLenException::what() const throw()
-{
-	return (" USER :Not enough parameters\r\n");
-}
+// // ERR_NEEDMOREPARAMS (461)   "<client> <command> :Not enough parameters"
+// const char *User::minUserLenException::what() const throw()
+// {
+// 	return (" USER :Not enough parameters\r\n");
+// }
 
-const char *User::spaceWithoutColonException::what() const throw()
-{
-	return (" USER :Space without colon \r\n");
-}
+// 필요없어보임
+// // ERR_UNKNOWNERROR (400)    "<client> <command>{ <subcommand>} :<info>"
+// const char *User::spaceWithoutColonException::what() const throw()
+// {
+// 	return (" USER :Space without colon \r\n");
+// }

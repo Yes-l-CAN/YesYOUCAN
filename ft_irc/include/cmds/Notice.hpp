@@ -15,7 +15,6 @@ public:
 	Notice(CanServer *serv);
 	~Notice();
 	void noticeOn(CanClient *client);
-	// std::map<CanChannel *, int> getChannel(CanClient *client);
 
 	void noticeToChannel(void);
 	CanChannel *isExistChannelName(std::string name);
@@ -28,25 +27,25 @@ public:
 	int checkClientLevel(CanClient *client);
 	int determineFlag(void);
 
-	class noSuchNickException : public std::exception
-	{
-		virtual const char *what() const throw();
-	};
-
-	class noSuchChannelException : public std::exception
-	{
-		virtual const char *what() const throw();
-	};
-
-	// class replyAnywayException : public std::exception
+	// class noSuchNickException : public std::exception
 	// {
 	// 	virtual const char *what() const throw();
 	// };
 
-	class kickedUserException : public std::exception
-	{
-		virtual const char *what() const throw();
-	};
+	// class noSuchChannelException : public std::exception
+	// {
+	// 	virtual const char *what() const throw();
+	// };
+
+	// // class replyAnywayException : public std::exception
+	// // {
+	// // 	virtual const char *what() const throw();
+	// // };
+
+	// class kickedUserException : public std::exception
+	// {
+	// 	virtual const char *what() const throw();
+	// };
 };
 
 #endif // COMMAND_NOTICE_HPP

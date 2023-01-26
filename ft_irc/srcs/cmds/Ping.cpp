@@ -14,12 +14,39 @@ void Ping::pingOn(CanClient *client)
     isValidFormat();
     pong(client);
   }
-  catch(const std::exception& e)
+  catch(int numeric)
   {
-    std::string msgBuf = e.what() ;
+    std::stringstream sstm;
+    sstm << numeric << " ";
+    if (checkClientLevel(client) == TRUE)
+    {
+      sstm << client->getNickname();
+    }
+    else
+    {
+      sstm << client->getSockFd();
+    }
+    std::string msgBuf = sstm.str();
+
+    switch (numeric)
+    {
+    case ERR_UNKNOWNERROR:
+      msgBuf += " PING :Invalid Format error !";
+      break;
+    case ERR_NEEDMOREPARAMS:
+        msgBuf += " PING :No Token";
+      break;
+    case ERR_INPUTTOOLONG:
+        msgBuf += " :Input line was too long";
+      break;
+
+    default:
+      break;
+    }
+  
+    msgBuf += "\r\n";
     client->addSendBuff(msgBuf);
   }
-  
 }
 
 void Ping::pong(CanClient *client) {
@@ -34,11 +61,16 @@ int Ping::isValidFormat(void)
 {
   if (getSize() < 2) 
   {
-    throw noTokenException();
+    throw ERR_NEEDMOREPARAMS;
   }
   else if (getSize() > 2)
   {
-    throw invalidFormatException();
+    throw ERR_UNKNOWNERROR;
+  }
+
+  if (cmd[2].length() - 2 > 512) // -2 = \r\n
+  {
+    throw ERR_INPUTTOOLONG;
   }
   return (TRUE);
 }
@@ -52,10 +84,11 @@ int Ping::checkClientLevel(CanClient *client) {
 
 int Ping::determineFlag(void) { return (1); }
 
-const char *Ping::noTokenException::what() const throw() {
-  return ("Ping : No Token \r\n");
-}
-
-const char *Ping::maxLenException::what() const throw() {
-  return ("Ping : Max Buffer Length => 512 \r\n");
-}
+// // ERR_NEEDMOREPARAMS (461)    "<client> <command> :Not enough parameters"
+// const char *Ping::noTokenException::what() const throw() {
+//   return ("Ping : No Token \r\n");
+// }
+// // ERR_INPUTTOOLONG (417)   "<client> :Input line was too long"
+// const char *Ping::maxLenException::what() const throw() {
+//   return ("Ping : Max Buffer Length => 512 \r\n");
+// }

@@ -7,6 +7,7 @@
 #include <map>
 #include <vector>
 #include <exception>
+#include <sstream>
 #include "CanClient.hpp"
 #include "CanServer.hpp"
 #include "CanChannel.hpp"
@@ -41,17 +42,16 @@ public:
 
 	int getFlag(void) const;
 	int getSize(void) const;
-	
 
-	class invalidFormatException : public std::exception
-	{
-		virtual const char *what() const throw();
-	};
+	// class invalidFormatException : public std::exception
+	// {
+	// 	virtual const char *what() const throw();
+	// };
 
-	class noAuthorityException : public std::exception
-	{
-		virtual const char *what() const throw();
-	};
+	// class noAuthorityException : public std::exception
+	// {
+	// 	virtual const char *what() const throw();
+	// };
 };
 
 #endif

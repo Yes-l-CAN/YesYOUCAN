@@ -15,34 +15,58 @@ void Notice::noticeOn(CanClient *client)
   {
     isValidFormat();
     checkClientLevel(client);
-	executeNotice(client);
+	  executeNotice(client);
   }
-  catch(const std::exception& e)
+  catch(int numeric)
   {
-    std::string msgBuf = e.what();
+    std::stringstream sstm;
+    sstm << numeric << " " << client->getNickname();
+    std::string msgBuf = sstm.str();
+    switch (numeric)
+    {
+    case ERR_UNKNOWNERROR:
+      msgBuf += " NOTICE :Invalid Format error !";
+      break;
+    case ERR_NOTREGISTERED:
+      msgBuf += " :You have not registered. Register PASS, USER, NICK !";
+      break;
+
+    case ERR_NOSUCHCHANNEL:
+      msgBuf += " " + cmd[2] + " :No such channel";
+      break;
+    case ERR_NOSUCHNICK:
+      msgBuf += " " + cmd[2] + " :No such nick/channel";
+      break;
+    case ERR_BANNEDFROMCHAN:
+      msgBuf += " " + cmd[2] + " :Banned from channel!";
+      break;
+
+    default:
+      break;
+    }
+  
+    msgBuf += "\r\n";
     client->addSendBuff(msgBuf);
   }
-  
 }
 
 void Notice::executeNotice(CanClient *client)
 {
-  	std::string targetName = this->cmd[2];
+  std::string targetName = this->cmd[2];
 	std::string message = "Notice " + targetName + " : " + this->cmd[3] + "\n";
 	if (targetName[0] == '#')
 	{
 		channel = isExistChannelName(targetName);
 		if (isKicked(client, channel) == TRUE)
-			throw(kickedUserException());
+			throw ERR_BANNEDFROMCHAN;
 		channel->broadcast(message, client);
-	} else {
-				// send to Client ? 보다는 buffer에 저장이 더 맞을 듯...?=
+	}
+  else 
+  {
 		CanClient *pClient = isExistNickname(targetName);
 		pClient->addSendBuff(message);
 	}
 }
-
-// std::map<CanChannel *, int> Notice::getChannel(CanClient *client) {}
 
 void Notice::noticeToChannel(void) {}
 
@@ -52,7 +76,7 @@ CanChannel *Notice::isExistChannelName(std::string name)
   it = server->getChannelList().find(name);
   if (it == server->getChannelList().end())
   {
-    throw noSuchChannelException();
+    throw ERR_NOSUCHCHANNEL;
   }
   return (it->second);
 }
@@ -67,7 +91,7 @@ CanClient *Notice::isExistNickname(std::string name)
       return (it->second);
     }
   }
-  throw noSuchNickException();
+  throw ERR_NOSUCHNICK;
 }
 
 int Notice::isKicked(CanClient *client, CanChannel *channel)
@@ -85,35 +109,37 @@ int Notice::isValidFormat(void)
   // flag NOTICE <target> <text to be sent>
   if (getSize() != 3)
   {
-    throw invalidFormatException();
+    throw ERR_UNKNOWNERROR;
   }
   return (TRUE);
 }
 
 int Notice::checkClientLevel(CanClient *client) {
   if ((client->getMemberLevel() & CERTIFICATION_FIN) == 0) {
-    throw noAuthorityException();
+    throw ERR_NOTREGISTERED;
   }
   return (TRUE);
 }
 
 int Notice::determineFlag(void) { return (1); }
 
-// ERR_NOSUCHNICK (401)   "<client> <nickname> :No such nick/channel"
-const char *Notice::noSuchNickException::what() const throw() {
-  return (":No such nick/channel\r\n");
-}
-
-// ERR_NOSUCHCHANNEL (403)   "<client> <channel> :No such channel"
-const char *Notice::noSuchChannelException::what() const throw() {
-  return (":No such channel\r\n");
-}
-
-// const char *Notice::replyAnywayException::what() const throw() {
-//   return ("Notice Error! : replied anyway! \r\n");
+// // ERR_NOSUCHNICK (401)   "<client> <nickname> :No such nick/channel"
+// const char *Notice::noSuchNickException::what() const throw() {
+//   return (":No such nick/channel\r\n");
 // }
 
-// ERR_NOTREGISTERED (451)  "<client> :You have not registered"
-const char *Notice::kickedUserException::what() const throw() {
-  return ("Notice Error! : Already kicked user! \r\n");
-}
+// // ERR_NOSUCHCHANNEL (403)   "<client> <channel> :No such channel"
+// const char *Notice::noSuchChannelException::what() const throw() {
+//   return (":No such channel\r\n");
+// }
+
+// // 사용 안함
+// // const char *Notice::replyAnywayException::what() const throw() {
+// //   return ("Notice Error! : replied anyway! \r\n");
+// // }
+
+// // ERR_BANNEDFROMCHAN (474) "<client> <channel> :Cannot join channel"
+                                                  // 메시지 내용은 변경하기
+// const char *Notice::kickedUserException::what() const throw() {
+//   return ("Notice Error! : Already kicked user! \r\n");
+// }

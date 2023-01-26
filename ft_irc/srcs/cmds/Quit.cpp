@@ -20,10 +20,22 @@ void Quit::quitOn(CanClient *client)
 		FD_CLR(clientFd, server->getWrites());
 		close(clientFd);
 	}
-	catch(const std::exception& e)
+	catch(int numeric)
 	{
-    	std::string msgBuf = e.what();
-    	client->addSendBuff(msgBuf);  	
+		std::stringstream sstm;
+    	sstm << numeric << " " << client->getNickname();
+   		std::string msgBuf = sstm.str();
+		switch (numeric)
+		{
+			case ERR_UNKNOWNERROR:
+				msgBuf += " QUIT :Invalid Format error !";
+				break;
+			default:
+				break;
+		}
+	
+		msgBuf += "\r\n";
+		client->addSendBuff(msgBuf);
 	}
 }
 
@@ -69,7 +81,7 @@ int Quit::isValidFormat(void)
 	// flag QUIT [reason]
 	if (getSize() > 2)
 	{
-		throw invalidFormatException();	
+		throw ERR_UNKNOWNERROR;
 	}
 	return (TRUE);
 }

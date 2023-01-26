@@ -38,15 +38,35 @@ void Join::joinOn(CanClient *client)
       }
       else
       {
-        throw channelOverflowException();
+        throw ERR_CHANNELISFULL;
       }
       
   }
-  catch(const std::exception& e)
+  catch(int numeric)
   {
-    std::string excpMsg(const_cast<char *>(e.what()));
-    // std::string msgBuf = "123 " + client->getNickname() + " : " + excpMsg;
-    std::string msgBuf = excpMsg;
+    std::stringstream sstm;
+    sstm << numeric << " " << client->getNickname();
+    std::string msgBuf =  sstm.str();
+    switch (numeric)
+    {
+    case ERR_UNKNOWNERROR:
+      msgBuf += " JOIN :Invalid Format error !";
+      break;
+    case ERR_NOTREGISTERED:
+      msgBuf += " :You have not registered. Register PASS, USER, NICK !";
+      break;
+    case ERR_USERONCHANNEL:
+      msgBuf += " " + client->getNickname() + " " + cmd[2] + " :is already on channel"; 
+      break;
+    case ERR_BANNEDFROMCHAN:
+    case ERR_CHANNELISFULL:
+      msgBuf += " " + cmd[2] + " :Cannot join channel";
+      break;
+    default:
+      break;
+    }
+
+    msgBuf += "\r\n";
     client->addSendBuff(msgBuf);
   }
 }
@@ -62,7 +82,7 @@ int Join::isKicked(CanClient *client)
     return (FALSE);
   if (channel->getKickedList().find(client->getSockFd()) != channel->getKickedList().end()) 
   {
-    throw kickedException();
+    throw ERR_BANNEDFROMCHAN;
   }
   return (FALSE);
 }
@@ -154,7 +174,7 @@ int Join::isAlreadyJoined(CanClient *client)
     end_it = client->getChannelList().end();
     if (find_it != end_it)
     {
-      throw alreadyJoinedException();
+      throw ERR_USERONCHANNEL;
     }
   }
   return (FALSE);
@@ -166,39 +186,36 @@ int Join::isValidFormat(void)
 
   if (getSize() < 2 || (getSize() > ADD_LIMIT + 1))
   {
-    // ERR_NEEDMOREPARAMS (461) :Not enough parameters
-    throw invalidFormatException();
+    throw ERR_UNKNOWNERROR;
   }
 
   if (getFlag() != determineFlag())
   {
-        // ERR_NEEDMOREPARAMS (461) :Not enough parameters
-    throw invalidFormatException();
+    throw ERR_UNKNOWNERROR;
   }
   return (TRUE);
 }
 
 int Join::checkClientLevel(CanClient *client) {
   if ((client->getMemberLevel() & CERTIFICATION_FIN) == 0) {
-        // ERR_NOTREGISTERED (451)   "<client> :You have not registered"
-    throw noAuthorityException();
+    throw ERR_NOTREGISTERED;
   }
   return (TRUE);
 }
 
 int Join::determineFlag(void) { return (0); }
 
-// ERR_USERONCHANNEL (443)   "<client> <nick> <channel> :is already on channel"
-const char *Join::alreadyJoinedException::what() const throw() {
-  return "Join : Already joined !\r\n";
-}
+// // ERR_USERONCHANNEL (443)   "<client> <nick> <channel> :is already on channel"
+// const char *Join::alreadyJoinedException::what() const throw() {
+//   return "Join : Already joined !\r\n";
+// }
 
-// ERR_CHANNELISFULL (471)   "<client> <channel> :Cannot join channel (+l)"
-const char *Join::channelOverflowException::what() const throw() {
-  return " :Cannot join channel\r\n";
-}
+// // ERR_CHANNELISFULL (471)   "<client> <channel> :Cannot join channel (+l)"
+// const char *Join::channelOverflowException::what() const throw() {
+//   return " :Cannot join channel\r\n";
+// }
 
-// ERR_BANNEDFROMCHAN (474) "<client> <channel> :Cannot join channel"
-const char *Join::kickedException::what() const throw() {
-  return "Join : cannot join channels that have been kicked. \r\n";
-}
+// // ERR_BANNEDFROMCHAN (474) "<client> <channel> :Cannot join channel"
+// const char *Join::kickedException::what() const throw() {
+//   return "Join : cannot join channels that have been kicked. \r\n";
+// }

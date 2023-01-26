@@ -40,13 +40,15 @@ int ACommand::getSize(void) const
 	return (this->size);
 }
 
+//   		 예시:	  400 dan!~d@n PACK BOX :Could not find box to pack
+// ERR_UNKNOWNERROR (400)    "<client> <command>{ <subcommand>} :<info>"
+// const char *ACommand::invalidFormatException::what() const throw()
+// {
+// 	return "Invalid Format error ! \r\n";
+// }
 
-	const char *ACommand::invalidFormatException::what() const throw()
-{
-	return "Invalid Command : Format error ! \r\n";
-}
-
-const char *ACommand::noAuthorityException::what() const throw()
-{
-	return ("No Authority : Register PASS, USER, NICK \r\n");
-}
+// ERR_NOTREGISTERED (451)   "<client> :You have not registered"
+// const char *ACommand::noAuthorityException::what() const throw()
+// {
+// 	return ("No Authority : Register PASS, USER, NICK \r\n");
+// }
