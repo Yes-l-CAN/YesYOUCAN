@@ -89,32 +89,19 @@ void Operation::Transmission()
             {
                 cRecv(this->setFd);
                 CanClient *targetClient = findClient(this->setFd);
-				/*
-				1. /r/n이 있는지 확인하고
-				만약에 있으면
-				 /r/n 까지 newStr 넣어주고
-				 buffer -> /r/n 뒤부터 남아있고
-				 return true
-				 false;
-				*/
-                // parsing
-				/*
-				todo 
-					저희 버퍼 메세지를 받고 커맨드를 만들 때 공백 기준으로 처리를 해주었었는데 
-					들어오는 커맨드 자체가 처음부터 끝까지 한 번에 들어온다는 보장이 없어서 
-					buffer에 냅다 담아놓고 /r/n이 들어오면 그 때서야 /r/n기준으로 짤라서 
-					그 앞을 커맨드 처리 해주어야 한다고 하더라구요.!! 
-					그래서 지금처럼 1recv 1command 형태가 아니라 n recv 1 command 형태가 될 것 같습니당..
-					일단 냅다 버퍼에 넣어두고 계속 /r/n있는지 확인한다음에 있으면 그 때서야 파싱하고 커맨드 처리 해줄 것 같아요!!
-				*/
-                std::vector<std::string> cmd = parser.parseOn(this->buffer);
-				parser.parseClear();
 
-                // check command
-                CommandChecker(cmd, targetClient);
-                memset(this->buffer, 0, this->bufferSize);
+				std::cout << "whats in buffer? :: " << this->buffer << std::endl;
+				std::string sCmd;
+				while (getCommandFromRecvBuffer(this->buffer, sCmd) == TRUE)
+				{
+					std::vector<std::string> cmd = parser.parseOn(sCmd);
+					parser.parseClear();
+
+					// check command
+					CommandChecker(cmd, targetClient);
 				}
-            }
+			}
+        }
     }
     CanClient * pClient = NULL;
     for (int i = 0; i < MAX_FD;i++)
@@ -156,22 +143,27 @@ void Operation::CommandChecker(std::vector<std::string> argv, CanClient *targetC
 			switch (i)
 			{
 			case 0:
+				std::cout << "PASS" << std::endl;
 				this->cmdPass->setCmd(argv);
 				this->cmdPass->passOn(targetClient);
 				return;
 			case 1:
+				std::cout << "NICK" << std::endl;
 				this->cmdNick->setCmd(argv);
 				this->cmdNick->nickOn(targetClient);
 				return;
 			case 2:
+				std::cout << "USER" << std::endl;
 				this->cmdUser->setCmd(argv);
 				this->cmdUser->userOn(targetClient);
 				return;
 			case 3:
+				std::cout << "PING" << std::endl;
 				this->cmdPing->setCmd(argv);
 				this->cmdPing->pingOn(targetClient);
 				return;
 			case 4:
+				std::cout << "JOIN" << std::endl;
 				this->cmdJoin->setCmd(argv);
 				this->cmdJoin->joinOn(targetClient);
 				return;
@@ -205,11 +197,13 @@ void Operation::CommandChecker(std::vector<std::string> argv, CanClient *targetC
 void Operation::cRecv(int fd)
 {
 	int ret = recv(fd, buffer, bufferSize, 0);
+	std::cout << "you are in recv ~~ " << std::endl;
 	if (ret < 0)
 	{
 		FD_CLR(fd, server->getReads());
 		FD_CLR(fd, server->getWrites());
         close(fd);
+		std::cout << "recv error ~~ " << std::endl;
 		throw(CanException::recvSocketErrorException());
 	}
 	if (ret == 0)
@@ -217,6 +211,7 @@ void Operation::cRecv(int fd)
 		FD_CLR(fd, server->getReads());
 		FD_CLR(fd, server->getWrites());
         close(fd);
+		std::cout << "recv error ~~ " << std::endl;
 		throw(CanException::recvSocketClosedException());
 	}
 }
@@ -231,4 +226,35 @@ void Operation::Serv2ClientSend(int fd)
 {
 	(void)fd;
 	// need to think about it more ...
+}
+
+
+int Operation::getCommandFromRecvBuffer(char *cOriginBuf, std::string &sCmd)
+{
+    std::string sOriginBuf(cOriginBuf);
+    if (sOriginBuf.length() == 0)
+    {
+        return (FALSE);
+    }
+
+    size_t findIdx = sOriginBuf.find("\n");
+    if (findIdx != std::string::npos)
+    {
+        char reloadBuf[bufferSize];
+        char commandBuf[findIdx + 1];
+
+        memset(reloadBuf, 0, bufferSize);
+		std::size_t len = sOriginBuf.copy(commandBuf, findIdx, 0);
+		commandBuf[len] = '\0';
+		sOriginBuf.copy(reloadBuf, sOriginBuf.length() - findIdx, findIdx + 1);
+		sCmd = commandBuf;
+		memcpy(cOriginBuf, reloadBuf, bufferSize);
+		std::cout << "cOriginBuf :: " << cOriginBuf << std::endl;
+    }
+    else
+    {
+		(void)sCmd;
+        return (FALSE);
+    }
+    return (TRUE);
 }

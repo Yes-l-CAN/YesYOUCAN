@@ -17,7 +17,7 @@ class Parsing
     Parsing();
     ~Parsing();
 
-    std::vector<std::string> parseOn(char* bufferStr);
+    std::vector<std::string> parseOn(std::string bufferStr);
 
     void parseClear(void);
 

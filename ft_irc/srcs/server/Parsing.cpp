@@ -18,13 +18,13 @@ void Parsing::parseClear(void)
 }
 
 // main function
-std::vector<std::string> Parsing::parseOn(char* bufferStr)
+std::vector<std::string> Parsing::parseOn(std::string bufferStr)
 {
     v = new std::vector<std::string>;
-    if (!bufferStr)
+    if (bufferStr.empty())
         return (*v); // nothing inside
-
-    makeBuffString(bufferStr);
+    this->buff = bufferStr;
+  //  makeBuffString(bufferStr);
     giveFlag();
 
     for (size_t i = 0; i <= buff.size(); i++)

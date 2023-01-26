@@ -85,17 +85,7 @@ public:
 	void Client2ServSend(int fd);
 	void Serv2ClientSend(int fd);
 
-	// void Pass(std::vector<std::string> argv, CanClient *targetClient);
-	// int Nick(std::vector<std::string> argv, CanClient *targetClient);
-	// int User(std::vector<std::string> argv, CanClient *targetClient);
-	// void Ping(std::vector<std::string> argv, CanClient *targetClient);
-	// void Quit(std::vector<std::string> argv, CanClient *targetClient);
-	// // void    Pong(std::vector<std::string> argv, CanClient* targetClient);
-	// void Join(std::vector<std::string> argv, CanClient *targetClient);
-	// void Part(std::vector<std::string> argv, CanClient *targetClient);
-	// void Kick(std::vector<std::string> argv, CanClient *targetClient);
-	// void Notice(std::vector<std::string> argv, CanClient *targetClient);
-	// void PrivateMSG(std::vector<std::string> argv, CanClient *targetClient);
+	int getCommandFromRecvBuffer(char *cOriginBuf, std::string &sCmd);
 };
 
 #endif // OPERATION_HPP
