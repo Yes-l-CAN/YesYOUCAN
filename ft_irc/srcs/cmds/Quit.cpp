@@ -72,7 +72,7 @@ void Quit::msgToAllJoinedChannel(CanClient *client)
 	std::map<std::string, CanChannel *>::iterator it;
 	for (it = client->getChannelList().begin(); it != client->getChannelList().end(); it++)
 	{
-		it->second->broadcast(msgBuf);
+		it->second->broadcast(msgBuf, client);
 	}
 }
 

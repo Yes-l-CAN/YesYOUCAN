@@ -64,7 +64,7 @@ void CanChannel::delKickedListElement(CanClient* client)
     this->kickedList.erase(client->getSockFd());
 }
 
-void CanChannel::broadcast(const std::string& msg)
+void CanChannel::broadcast(const std::string& msg, CanClient *client)
 {
     // 채널에서 바로 send를 사용하여 전송하면 안된다고 함
     // 클라이언트가 write불가능한 상황일 수 있기 때문
@@ -74,7 +74,8 @@ void CanChannel::broadcast(const std::string& msg)
     
     for (it = this->getClientList().begin(); it != this->getClientList().end(); it++)
     {
-        it->second->addSendBuff(msg);
+        if(it->second != client)
+             it->second->addSendBuff(msg);
     }
 }
 

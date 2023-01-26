@@ -28,6 +28,9 @@ void User::userOn(CanClient *client)
 		setClientUser(client);
 		if((client->getMemberLevel() & CERTIFICATION_FIN) == CERTIFICATION_FIN)
 				welcome2CanServ(client);
+		std::cout << "NICK : " << client->getNickname() << std::endl;
+		 std::cout << "USERNAEM : " << client->getUsername() << std::endl;
+		 std::cout << "REALNAME : " << client->getRealname() << std::endl;
 	}
 	catch (const std::exception &e)
 	{

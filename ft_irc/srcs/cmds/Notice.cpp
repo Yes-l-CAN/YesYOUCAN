@@ -45,7 +45,7 @@ void Notice::executeNotice(CanClient *client)
 		channel = isExistChannelName(targetName);
 		if (isKicked(client, channel) == TRUE)
 			throw(kickedUserException());
-		channel->broadcast(message);
+		channel->broadcast(message, client);
 	} else {
 				// send to Client ? 보다는 buffer에 저장이 더 맞을 듯...?=
 		CanClient *pClient = isExistNickname(targetName);

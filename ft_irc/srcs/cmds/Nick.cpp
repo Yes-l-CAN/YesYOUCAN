@@ -43,7 +43,7 @@ void Nick::nickOn(CanClient *client)
       std::map<std::string, CanChannel *>::iterator it;
       for(it = client->getChannelList().begin() ; it != client->getChannelList().end(); it++)
       {
-        it->second->broadcast(msg);
+        it->second->broadcast(msg, client);
       }
     }
   }

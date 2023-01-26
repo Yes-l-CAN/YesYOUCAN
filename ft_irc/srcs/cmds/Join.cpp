@@ -96,7 +96,7 @@ void Join::leaveAll(CanClient *client)
     {
       it = client->getChannelList().begin();
       msgBuf = ":" + client->getUsername() + " PART " + it->second->getChannelName() + "\r\n";
-      it->second->broadcast(msgBuf);
+      it->second->broadcast(msgBuf, client);
       it->second->deleteClientElement(client->getSockFd());
       if (it->second->getClientList().size() == 0)
       {
@@ -126,9 +126,25 @@ void Join::sendMSG(CanClient *client)
 {
   std::string msgBuff;
   // :<source> JOIN <channel>
+  /*
+    JOIN #welove42Seoul
+    103.196.037.095.06667-010.019.227.116.51934: :poiupoiu!~katherine@121.135.181.61 JOIN #welove42Seoul
+    103.196.037.095.06667-010.019.227.116.51934: :cadmium.libera.chat MODE #welove42Seoul +Cnst
+    :cadmium.libera.chat 353 poiupoiu @ #welove42Seoul :@poiupoiu
+    :cadmium.libera.chat 366 poiupoiu #welove42Seoul :End of /NAMES list.
+  
+   "<client> @ <channel> : @ <nick>{ [prefix]<nick>}"
 
-  msgBuff = ":" + client->getNickname() + " JOIN " + channel->getChannelName() + "\r\n";
-  channel->broadcast(msgBuff);
+   <client> <channel> :End of /NAMES list"
+  */
+  msgBuff =  " JOIN " + channel->getChannelName() + "\r\n";
+  msgBuff += "353 " + client->getNickname() + " @ " + channel->getChannelName() + " :@" + client->getNickname() + "\r\n";
+  msgBuff += "366 " + client->getNickname() + " " + channel->getChannelName() + " :End of /NAMES list." + "\r\n"; 
+  client->addSendBuff(msgBuff);
+
+  std::string memberBuff;
+  memberBuff = ":" + client->getNickname() + " JOIN " + channel->getChannelName() + "\r\n";
+  channel->broadcast(memberBuff, client);
 }
 
 int Join::isAlreadyJoined(CanClient *client)

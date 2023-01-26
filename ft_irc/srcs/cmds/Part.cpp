@@ -68,7 +68,7 @@ void Part::operatorChanged(CanClient *client)
     msgBuf += " :" + cmd[3];
   }
   msgBuf += "\r\n";
-  channel->broadcast(msgBuf);
+  channel->broadcast(msgBuf, client);
 }
 
 int Part::isValidFormat(void)

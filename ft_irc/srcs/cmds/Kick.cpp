@@ -96,7 +96,7 @@ void Kick::sendMSG(CanClient *client)
     msgBuf += " :" + cmd[4];
   } 
   msgBuf += "\r\n";
-  channel->broadcast(msgBuf);
+  channel->broadcast(msgBuf, client);
 }
 
 int Kick::isValidFormat(void)
