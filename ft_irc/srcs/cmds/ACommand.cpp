@@ -7,16 +7,6 @@ ACommand::ACommand(CanServer *serv) : flag(-1), size(-1)
 	this->server = serv;
 };
 
-// ACommand::ACommand(const ACommand &obj)
-// {
-// 	// Deprecated.
-// }
-
-// ACommand &ACommand::operator=(const ACommand &obj)
-// {
-// 	// Deprecated.
-// 	return (*this);
-// }
 
 ACommand::~ACommand(){};
 

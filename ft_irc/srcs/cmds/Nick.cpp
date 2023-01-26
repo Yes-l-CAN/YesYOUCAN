@@ -11,17 +11,6 @@ Nick::Nick(CanServer *serv) : ACommand(serv){
 
 Nick::~Nick() {}
 
-// Nick::Nick(const Nick &obj)
-// {
-// 	// Deprecated.
-// }
-
-// Nick &Nick::operator=(const Nick &obj)
-// {
-// 	// Deprecated.
-// 	return (*this);
-// }
-
 void Nick::nickOn(CanClient *client)
 {
   try
@@ -57,7 +46,7 @@ void Nick::nickOn(CanClient *client)
 
 void Nick::welcome2CanServ(CanClient *client)
 {
-    // 001 :<client> :<msg>
+    // 001 <client> :<msg>
 	std::string userName = cmd[2];
 	std::string serverName = static_cast<std::string>(SERVERNAME);
 	std::string msgBuf = "001 " + userName + " :Welcome, " + userName + "! Your host is " + serverName + "\r\n"; 
@@ -123,6 +112,7 @@ void Nick::setClientNick(CanClient *client)
 int Nick::checkClientLevel(CanClient *client) {
   if ((client->getMemberLevel() & PASS_FIN) == 0) 
   {
+    // ERR_NOTREGISTERED (451)   "<client> :You have not registered"
     throw noAuthorityException();
   }
   return (TRUE);
@@ -130,10 +120,12 @@ int Nick::checkClientLevel(CanClient *client) {
 
 int Nick::determineFlag(void) { return (0); }
 
+// ERR_ERRONEUSNICKNAME (432) "<client> <nick> :Erroneus nickname"
 const char *Nick::invalidNickException::what() const throw() {
   return ("Nick Error : invalid nick! \r\n");
 }
 
+// ERR_NICKNAMEINUSE (433)   "<client> <nick> :Nickname is already in use"
 const char *Nick::usedNickException::what() const throw() {
   return ("Nick Error : already used nick! \r\n");
 }

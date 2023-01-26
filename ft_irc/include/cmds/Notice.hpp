@@ -38,10 +38,10 @@ public:
 		virtual const char *what() const throw();
 	};
 
-	class replyAnywayException : public std::exception
-	{
-		virtual const char *what() const throw();
-	};
+	// class replyAnywayException : public std::exception
+	// {
+	// 	virtual const char *what() const throw();
+	// };
 
 	class kickedUserException : public std::exception
 	{

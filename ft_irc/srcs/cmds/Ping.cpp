@@ -3,21 +3,9 @@
 #include "Operation.hpp"
 
 Ping::Ping() {}
-
 Ping::Ping(CanServer *serv) : ACommand(serv){}
-
 Ping::~Ping() {}
 
-// Ping::Ping(const Ping &obj)
-// {
-// 	// Deprecated.
-// }
-
-// Ping &Ping::operator=(const Ping &obj)
-// {
-// 	// Deprecated.
-// 	return (*this);
-// }
 
 void Ping::pingOn(CanClient *client)
 {

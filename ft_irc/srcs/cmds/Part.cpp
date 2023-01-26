@@ -8,16 +8,6 @@ Part::Part(CanServer *serv) : ACommand(serv){}
 
 Part::~Part() {}
 
-// Part::Part(const Part &obj)
-// {
-// 	// Deprecated.
-// }
-
-// Part &Part::operator=(const Part &obj)
-// {
-// 	// Deprecated.
-// 	return (*this);
-// }
 
 void Part::partOn(CanClient *client)
 {

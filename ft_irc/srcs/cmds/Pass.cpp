@@ -1,6 +1,7 @@
 #include "Pass.hpp"
 #include "Operation.hpp"
 
+
 Pass::Pass() {}
 
 Pass::Pass(CanServer *serv) : ACommand(serv){
@@ -9,16 +10,6 @@ Pass::Pass(CanServer *serv) : ACommand(serv){
 
 Pass::~Pass() {}
 
-// Pass::Pass(const Pass &obj)
-// {
-// 	// Deprecated.
-// }
-
-// Pass &Pass::operator=(const Pass &obj)
-// {
-// 	// Deprecated.
-// 	return (*this);
-// }
 
 void Pass::passOn(CanClient *client)
 {
@@ -28,14 +19,18 @@ void Pass::passOn(CanClient *client)
     checkClientLevel(client);
     passCmp(client);
   }
-  catch(const std::exception& e)
+  catch(int numeric)
   {
-    std::string msgBuf = e.what();
+    std::string msgBuf;
+    if (numeric == 464)
+      msgBuf = std::to_string(numeric) + client->getNickname() + ":Password incorrect\r\n";
+    else if (numeric == 461)
+      msgBuf = std::to_string(numeric) + client->getNickname() + "::Not enough parameters\r\n";
     client->addSendBuff(msgBuf);
   }
 }
 
-void Pass::passCmp(CanClient *client) 
+void Pass::passCmp(CanClient *client) throw(int)
 {
   
   // flag PASS <password> 
@@ -47,7 +42,7 @@ void Pass::passCmp(CanClient *client)
     }
     else
     {
-      throw incorrectPassException();
+      throw (464);
     }
 }
 
@@ -58,22 +53,22 @@ int Pass::isValidFormat(void)
   return (TRUE);
 }
 
-int Pass::checkClientLevel(CanClient *client) {
+int Pass::checkClientLevel(CanClient *client) throw(int)
+{
   if ((client->getMemberLevel() & PASS_FIN) != 0) {
-    std::cout << "getMemLv :: " << client->getMemberLevel() << std::endl;
-    std::cout << "PASS_FIM" << PASS_FIN << std::endl;
-    throw alreadyRegisteredException();
+    throw (461);
   }
   return (TRUE);
 }
 
 int Pass::determineFlag(void) { return (-1); }
 
-const char *Pass::incorrectPassException::what() const throw() {
-  return ("Pass : Incorrect Password ! \r\n");
-}
-
-const char *Pass::alreadyRegisteredException::what() const throw() {
-  return ("Pass : Password already registered ! \r\n");
-}
+// // ERR_PASSWDMISMATCH (464) :Password incorrect
+// const char *Pass::incorrectPassException::what() const throw() {
+//   return ("Pass : Incorrect Password ! \r\n");
+// }
+// // ERR_NEEDMOREPARAMS (461) :Not enough parameters
+// const char *Pass::alreadyRegisteredException::what() const throw() {
+//   return ("Pass : Password already registered ! \r\n");
+// }
 

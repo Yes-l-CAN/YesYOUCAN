@@ -8,7 +8,6 @@
 class User : public ACommand
 {
 private:
-	
 	User(const User &obj); // Deprecated.
 	User& operator=(const User &obj); // Deprecated.
 	

@@ -2,21 +2,9 @@
 #include "Operation.hpp"
 
 User::User() {}
-
 User::User(CanServer *serv) : ACommand(serv){}
-
 User::~User() {}
 
-// User::User(const User &obj)
-// {
-// 	// Deprecated.
-// }
-
-// User &User::operator=(const User &obj)
-// {
-// 	// Deprecated.
-// 	return (*this);
-// }
 
 void User::userOn(CanClient *client)
 {
@@ -28,13 +16,10 @@ void User::userOn(CanClient *client)
 		setClientUser(client);
 		if((client->getMemberLevel() & CERTIFICATION_FIN) == CERTIFICATION_FIN)
 				welcome2CanServ(client);
-		std::cout << "NICK : " << client->getNickname() << std::endl;
-		 std::cout << "USERNAEM : " << client->getUsername() << std::endl;
-		 std::cout << "REALNAME : " << client->getRealname() << std::endl;
 	}
-	catch (const std::exception &e)
+	catch (const std::exception &e) throw(int i)
 	{
-		std::string msgBuf = e.what() ;
+		std::string msgBuf = client->getNickname() + e.what();
 		client->addSendBuff(msgBuf);
 	}
 }
@@ -70,7 +55,7 @@ void User::setClientUser(CanClient *client)
 
 void User::welcome2CanServ(CanClient *client)
 {
-    // 001 :<client> :<msg>
+    // 001 <client> :<msg>
 	std::string userName = cmd[2];
 	std::string serverName = static_cast<std::string>(SERVERNAME);
 	std::string msgBuf = "001 " + userName + " :Welcome, " + userName + "! Your host is " + serverName + "\r\n"; 
@@ -103,17 +88,18 @@ int User::determineFlag(void)
 	return (1);
 }
 
+// ERR_ALREADYREGISTERED (462) "<client> :You may not reregister"
 const char *User::alreadyRegisteredException::what() const throw()
 {
-	return ("USER : You already registered \r\n");
+	return (" :You may not reregister\r\n");
 }
 
 const char *User::minUserLenException::what() const throw()
 {
-	return ("USER : Minimum name Length = 1 \r\n");
+	return (" USER :Not enough parameters\r\n");
 }
 
 const char *User::spaceWithoutColonException::what() const throw()
 {
-	return ("USER : Space without colon \r\n");
+	return (" USER :Space without colon \r\n");
 }

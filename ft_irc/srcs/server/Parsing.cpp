@@ -38,9 +38,9 @@ std::vector<std::string> Parsing::parseOn(std::string bufferStr)
             break;
         }
     }
-    //  && ((*(*(v->begin() + 1)).end() - 1) == '\n')
     std::string::iterator it = (*(v->end() - 1)).end() - 1;
-    (v->end() - 1)->erase(it); 
+    if(*it == '\r')
+        (v->end() - 1)->erase(it); 
  
     return (*v);
 }

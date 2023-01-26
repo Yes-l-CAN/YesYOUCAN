@@ -7,16 +7,6 @@ Join::Join(CanServer *serv) : ACommand(serv){}
 
 Join::~Join() {}
 
-// Join::Join(const Join &obj)
-// {
-// 	// Deprecated.
-// }
-
-// Join &Join::operator=(const Join &obj)
-// {
-// 	// Deprecated.
-// 	return (*this);
-// }
 
 void Join::joinOn(CanClient *client)
 {
@@ -54,7 +44,9 @@ void Join::joinOn(CanClient *client)
   }
   catch(const std::exception& e)
   {
-    std::string msgBuf = e.what();
+    std::string excpMsg(const_cast<char *>(e.what()));
+    // std::string msgBuf = "123 " + client->getNickname() + " : " + excpMsg;
+    std::string msgBuf = excpMsg;
     client->addSendBuff(msgBuf);
   }
 }
@@ -174,11 +166,13 @@ int Join::isValidFormat(void)
 
   if (getSize() < 2 || (getSize() > ADD_LIMIT + 1))
   {
+    // ERR_NEEDMOREPARAMS (461) :Not enough parameters
     throw invalidFormatException();
   }
 
   if (getFlag() != determineFlag())
   {
+        // ERR_NEEDMOREPARAMS (461) :Not enough parameters
     throw invalidFormatException();
   }
   return (TRUE);
@@ -186,6 +180,7 @@ int Join::isValidFormat(void)
 
 int Join::checkClientLevel(CanClient *client) {
   if ((client->getMemberLevel() & CERTIFICATION_FIN) == 0) {
+        // ERR_NOTREGISTERED (451)   "<client> :You have not registered"
     throw noAuthorityException();
   }
   return (TRUE);
@@ -193,18 +188,17 @@ int Join::checkClientLevel(CanClient *client) {
 
 int Join::determineFlag(void) { return (0); }
 
-const char *Join::invalidChannelException::what() const throw() {
-  return "Join : Invalid Channel !\r\n";
-}
-
+// ERR_USERONCHANNEL (443)   "<client> <nick> <channel> :is already on channel"
 const char *Join::alreadyJoinedException::what() const throw() {
   return "Join : Already joined !\r\n";
 }
 
+// ERR_CHANNELISFULL (471)   "<client> <channel> :Cannot join channel (+l)"
 const char *Join::channelOverflowException::what() const throw() {
-  return "Join : channel Overflow\r\n";
+  return " :Cannot join channel\r\n";
 }
 
+// ERR_BANNEDFROMCHAN (474) "<client> <channel> :Cannot join channel"
 const char *Join::kickedException::what() const throw() {
   return "Join : cannot join channels that have been kicked. \r\n";
 }

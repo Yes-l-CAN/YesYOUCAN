@@ -6,7 +6,6 @@
 #include "CanException.hpp"
 #include "CanServer.hpp"
 #include "Operation.hpp"
-#include "Utility.hpp"
 #include "Parsing.hpp"
 
 #include "User.hpp"

@@ -6,20 +6,6 @@ Prvmsg::Prvmsg(CanServer *serv): Notice(serv) {this->bot = new Bot();}
 Prvmsg::Prvmsg() { this->bot = new Bot();}
 Prvmsg::~Prvmsg() { delete this->bot;}
 
-// Prvmsg::Prvmsg(const Prvmsg &obj)
-// {
-// 	// Deprecated.
-// }
-
-// Prvmsg &Prvmsg::operator=(const Prvmsg &obj)
-// {
-// 	// Deprecated.
-// 	return (*this);
-// }
-
-// Prvmsg::Prvmsg() { this->bot = new Bot(); }
-
-//Prvmsg::~Prvmsg() { delete this->bot; }
 
 int Prvmsg::isValidFormat(void) 
 {

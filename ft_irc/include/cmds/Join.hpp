@@ -31,11 +31,6 @@ public:
 
 	CanChannel *getChannel(std::string &channelName);
 
-	class invalidChannelException : public std::exception
-	{
-		virtual const char *what() const throw();
-	};
-
 	class alreadyJoinedException : public std::exception
 	{
 		virtual const char *what() const throw();

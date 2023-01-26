@@ -3,12 +3,14 @@
 
 #include <iostream>
 #include <string>
+#include <cstdlib>
 #include <map>
 #include <vector>
 #include <exception>
 #include "CanClient.hpp"
 #include "CanServer.hpp"
 #include "CanChannel.hpp"
+
 
 #define MAXBUFLEN 512
 

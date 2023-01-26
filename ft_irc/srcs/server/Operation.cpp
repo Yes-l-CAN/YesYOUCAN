@@ -1,6 +1,4 @@
 #include "Operation.hpp"
-#include "Utility.hpp"
-
 #include <exception>
 #include <iostream>
 #include <string>
@@ -44,17 +42,6 @@ Operation::Operation(char *s1, char *s2)
 	this->cmdJoin = new Join(this->server);
 }
 
-// Operation::Operation(const Operation &obj)
-// {
-// 	// Deprecated.
-// }
-
-// // deep copy
-// Operation &Operation::operator=(const Operation &obj)
-// {
-// 	// Deprecated.
-// 	return (*this);
-// }
 
 Operation::~Operation()
 {
@@ -72,7 +59,6 @@ Operation::~Operation()
 
 void Operation::Transmission()
 {
-
 	server->s_Select();
 
     for(int i = 0; i < MAX_FD; i++)
@@ -90,16 +76,11 @@ void Operation::Transmission()
                 cRecv(this->setFd);
                 CanClient *targetClient = findClient(this->setFd);
 
-				std::cout << "whats in buffer? :: " << this->buffer << std::endl;
 				std::string sCmd;
 				while (getCommandFromRecvBuffer(this->buffer, sCmd) == TRUE)
 				{
 
-					std::cout << "sCmd :::: " << sCmd << std::endl;
 					std::vector<std::string> cmd = parser.parseOn(sCmd);
-					std::vector<std::string>::iterator it;
-					for(it = cmd.begin() ; it != cmd.end(); it ++)
-						std::cout << "Cmd :::: " << *it << std::endl;
 					parser.parseClear();
 
 					// check command
@@ -148,27 +129,22 @@ void Operation::CommandChecker(std::vector<std::string> argv, CanClient *targetC
 			switch (i)
 			{
 			case 0:
-				std::cout << "PASS" << std::endl;
 				this->cmdPass->setCmd(argv);
 				this->cmdPass->passOn(targetClient);
 				return;
 			case 1:
-				std::cout << "NICK" << std::endl;
 				this->cmdNick->setCmd(argv);
 				this->cmdNick->nickOn(targetClient);
 				return;
 			case 2:
-				std::cout << "USER" << std::endl;
 				this->cmdUser->setCmd(argv);
 				this->cmdUser->userOn(targetClient);
 				return;
 			case 3:
-				std::cout << "PING" << std::endl;
 				this->cmdPing->setCmd(argv);
 				this->cmdPing->pingOn(targetClient);
 				return;
 			case 4:
-				std::cout << "JOIN" << std::endl;
 				this->cmdJoin->setCmd(argv);
 				this->cmdJoin->joinOn(targetClient);
 				return;
@@ -221,19 +197,6 @@ void Operation::cRecv(int fd)
 	}
 }
 
-void Operation::Client2ServSend(int fd)
-{
-	(void)fd;
-	// need to think about it more ...
-}
-
-void Operation::Serv2ClientSend(int fd)
-{
-	(void)fd;
-	// need to think about it more ...
-}
-
-
 int Operation::getCommandFromRecvBuffer(char *cOriginBuf, std::string &sCmd)
 {
     std::string sOriginBuf(cOriginBuf);
@@ -242,21 +205,18 @@ int Operation::getCommandFromRecvBuffer(char *cOriginBuf, std::string &sCmd)
         return (FALSE);
     }
 
-    size_t findIdx = sOriginBuf.find("\r\n");
-    if (findIdx != std::string::npos)
+	size_t	findIdx = sOriginBuf.find("\n");
+    if ( findIdx != std::string::npos)
     {
-        char reloadBuf[bufferSize];
-        char commandBuf[findIdx + 2];
+		char reloadBuf[bufferSize];
+        char commandBuf[findIdx + 1];
 
         memset(reloadBuf, 0, bufferSize);
-		std::size_t len = sOriginBuf.copy(commandBuf, findIdx + 1, 0);
+		std::size_t len = sOriginBuf.copy(commandBuf, findIdx, 0);
 		commandBuf[len] = '\0';
-		sOriginBuf.copy(reloadBuf, sOriginBuf.length() - (findIdx + 1), findIdx + 2);
+		sOriginBuf.copy(reloadBuf, sOriginBuf.length() - (findIdx), findIdx + 1);
 		sCmd = commandBuf;
-		std::cout << "sCmd" << sCmd <<std::endl;
 		memcpy(cOriginBuf, reloadBuf, bufferSize);
-		std::cout << "sCmd" << sCmd <<std::endl;
-		std::cout << "cOriginBuf :: " << cOriginBuf << std::endl;
     }
     else
     {

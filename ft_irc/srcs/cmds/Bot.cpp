@@ -5,16 +5,6 @@ Bot::Bot(): word("42Seoul"), botMessage("Thanks for visiting CanServ! weLove42Se
 
 Bot::~Bot() {}
 
-// Bot::Bot(const Bot &obj)
-// {
-// 	// Deprecated.
-// }
-
-// Bot &Bot::operator=(const Bot &obj)
-// {
-// 	// Deprecated.
-// 	return (*this);
-// }
 
 int Bot::findWord(std::string message)
 {
@@ -22,7 +12,6 @@ int Bot::findWord(std::string message)
 		return (TRUE);	
 	return (FALSE);
 }
-
 
 void Bot::executeBot(std::string message, CanClient *client)
 {

@@ -8,17 +8,6 @@ Kick::Kick(CanServer *serv) : ACommand(serv){}
 
 Kick::~Kick() {}
 
-// Kick::Kick(const Kick &obj)
-// {
-// 	// Deprecated.
-// }
-
-// Kick &Kick::operator=(const Kick &obj)
-// {
-// 	// Deprecated.
-// 	return (*this);
-// }
-
 void Kick::kickOn(CanClient *client)
 {
   try
@@ -26,16 +15,20 @@ void Kick::kickOn(CanClient *client)
 
   	if (getSize() != 3)
   	{
+      // ERR_NEEDMOREPARAMS (461) :Not enough parameters
    		throw invalidFormatException();
   	}
- 	if ((client->getMemberLevel() & CERTIFICATION_FIN) == 0) 
-	{
+  	if ((client->getMemberLevel() & CERTIFICATION_FIN) == 0) 
+	  {
+      // ERR_NOTREGISTERED (451)   "<client> :You have not registered"
    		throw noAuthorityException();
   	}
 
     isMemberInChannel(client);
     if (isOperator(client) == FALSE)
     {
+      // ERR_NOTREGISTERED (451)   "<client> :You have not registered"
+      // ERR_NEEDMOREPARAMS (461) :Not enough parameters
       throw notOperatorException();
     }
     sendMSG(client);
@@ -65,10 +58,6 @@ void Kick::isMemberInChannel(CanClient *client)
 	throw(noSuchUserException());
 }
 
-// std::map<CanChannel *, int> Kick::getChannel(CanClient *client)
-// {
-
-// }
 
 int Kick::isOperator(CanClient *client)
 {
@@ -110,6 +99,7 @@ int Kick::isValidFormat(void)
 
 int Kick::checkClientLevel(CanClient *client) {
   if ((client->getMemberLevel() & CERTIFICATION_FIN) == 0) {
+        // ERR_NOTREGISTERED (451)   "<client> :You have not registered"
     throw noAuthorityException();
   }
   return (TRUE);
@@ -117,14 +107,17 @@ int Kick::checkClientLevel(CanClient *client) {
 
 int Kick::determineFlag(void) { return (1); }
 
+// ERR_NOPRIVILEGES (481)  "<client> :Permission Denied- You're not an IRC operator"
 const char *Kick::notOperatorException::what() const throw() {
   return "Kick : not Operator ! No authority !\r\n";
 }
 
+// ERR_NOSUCHNICK (401)   "<client> <nickname> :No such nick/channel"
 const char *Kick::noSuchUserException::what() const throw() {
   return "Kick : No such user !\r\n";
 }
 
+// ERR_NOSUCHCHANNEL (403)   "<client> <channel> :No such channel"
 const char *Kick::noSuchChannelException::what() const throw() {
   return "Kick : No such channel !\r\n";
 }

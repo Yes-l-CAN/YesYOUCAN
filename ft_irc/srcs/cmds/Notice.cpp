@@ -8,17 +8,6 @@ Notice::Notice(CanServer *serv) : ACommand(serv){}
 
 Notice::~Notice() {}
 
-// Notice::Notice(const Notice &obj)
-// {
-// 	// Deprecated.
-// }
-
-// Notice &Notice::operator=(const Notice &obj)
-// {
-// 	// Deprecated.
-// 	return (*this);
-// }
-
 void Notice::noticeOn(CanClient *client) 
 {
   // flag NOTICE <target> <text to be sent>
@@ -110,18 +99,21 @@ int Notice::checkClientLevel(CanClient *client) {
 
 int Notice::determineFlag(void) { return (1); }
 
+// ERR_NOSUCHNICK (401)   "<client> <nickname> :No such nick/channel"
 const char *Notice::noSuchNickException::what() const throw() {
-  return ("Notice Error! : Threre's no such nick! \r\n");
+  return (":No such nick/channel\r\n");
 }
 
+// ERR_NOSUCHCHANNEL (403)   "<client> <channel> :No such channel"
 const char *Notice::noSuchChannelException::what() const throw() {
-  return ("Notice Error! : Threre's no such channel! \r\n");
+  return (":No such channel\r\n");
 }
 
-const char *Notice::replyAnywayException::what() const throw() {
-  return ("Notice Error! : replied anyway! \r\n");
-}
+// const char *Notice::replyAnywayException::what() const throw() {
+//   return ("Notice Error! : replied anyway! \r\n");
+// }
 
+// ERR_NOTREGISTERED (451)  "<client> :You have not registered"
 const char *Notice::kickedUserException::what() const throw() {
   return ("Notice Error! : Already kicked user! \r\n");
 }

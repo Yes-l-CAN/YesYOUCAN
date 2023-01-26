@@ -3,21 +3,9 @@
 #include "Operation.hpp"
 
 Quit::Quit() {}
-
 Quit::Quit(CanServer *serv) : ACommand(serv){}
-
 Quit::~Quit() {}
 
-// Quit::Quit(const Quit &obj)
-// {
-// 	// Deprecated.
-// }
-
-// Quit &Quit::operator=(const Quit &obj)
-// {
-// 	// Deprecated.
-// 	return (*this);
-// }
 
 void Quit::quitOn(CanClient *client)
 {
