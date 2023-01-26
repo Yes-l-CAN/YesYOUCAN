@@ -225,3 +225,8 @@ int Operation::getCommandFromRecvBuffer(char *cOriginBuf, std::string &sCmd)
     }
     return (TRUE);
 }
+
+void Operation::serverClose(void)
+{
+    server->serverClose();
+}

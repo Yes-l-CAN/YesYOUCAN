@@ -21,7 +21,6 @@
 #include <utility>
 
 #include "CanClient.hpp"
-#include "CanServer.hpp"
 #include "CanException.hpp"
 
 #define MAX_FD 1000
@@ -95,6 +94,9 @@ public:
 	std::map<int, CanClient *> &getClientList();
 	std::map<std::string, CanChannel *> &getChannelList();
 	int getCurrentMaxFd(void) const;
+
+	void serverClose(void);
+
 };
 
 #endif // CAN_SERVER_HPP

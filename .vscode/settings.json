@@ -61,7 +61,8 @@
 		"unordered_map": "cpp",
 		"variant": "cpp",
 		"vector": "cpp",
-		"algorithm": "cpp"
+		"algorithm": "cpp",
+		"csignal": "cpp"
 	},
 	"files.autoSave": "afterDelay"
 }

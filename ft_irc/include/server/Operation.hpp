@@ -1,11 +1,12 @@
 #ifndef OPERATION_HPP
 #define OPERATION_HPP
 
+#include <csignal>
+
 #include "CanChannel.hpp"
 #include "CanClient.hpp"
 #include "CanException.hpp"
 #include "CanServer.hpp"
-#include "Operation.hpp"
 #include "Parsing.hpp"
 
 #include "User.hpp"
@@ -85,6 +86,8 @@ public:
 	void Serv2ClientSend(int fd);
 
 	int getCommandFromRecvBuffer(char *cOriginBuf, std::string &sCmd);
+
+	void serverClose(void);
 };
 
 #endif // OPERATION_HPP

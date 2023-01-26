@@ -1,7 +1,18 @@
-#include "CanChannel.hpp"
-#include "CanClient.hpp"
-#include "CanServer.hpp"
 #include "Operation.hpp"
+#include "CanServer.hpp"
+#include "CanClient.hpp"
+#include "CanChannel.hpp"
+
+int loopFlag = TRUE;
+
+void sigintHandler(int signum) 
+{
+    if (signum != SIGINT)
+    {
+        return ;
+    }
+    loopFlag = FALSE;
+}
 
 int main(int argc, char *argv[])
 {
@@ -12,10 +23,10 @@ int main(int argc, char *argv[])
 		return (1);
 	}
 
+	signal(SIGINT, sigintHandler);
 	Operation operation(argv[1], argv[2]);
-	while (1)
+	while (loopFlag)
 	{
-		//signal(SIGINT,serverEnd());
 		try
 		{
 			operation.Transmission();
@@ -24,6 +35,11 @@ int main(int argc, char *argv[])
 		{
 			std::cout << e.what() << std::endl;
 		}
+	}
+
+	if (loopFlag == FALSE)
+    {
+        operation.serverClose();
 	}
 
 	return (0);

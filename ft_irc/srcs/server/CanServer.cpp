@@ -15,23 +15,39 @@ CanServer::CanServer() : socketFd(-1), maxFd(1000)
 
 CanServer::~CanServer()
 {
-    // Destuctor
-	std::map<int, CanClient*>::iterator it;
-	if (this->clientList.empty() == true)
-	{
-		return ;
-	}
+    // // Destuctor
+	// std::map<int, CanClient*>::iterator it;
+	// if (this->clientList.empty() == true)
+	// {
+	// 	return ;
+	// }
 
-	for (it = this->clientList.begin(); it != this->clientList.end(); it++)
-	{
-		close(it->first);
-		if (it->second != NULL)
-		{
-			delete it->second;
-		}
-	}
-	this->clientList.clear();
-	// channel clear
+	// for (it = this->clientList.begin(); it != this->clientList.end(); it++)
+	// {
+	// 	close(it->first);
+	// 	if (it->second != NULL)
+	// 	{
+	// 		delete it->second;
+	// 	}
+	// }
+	// this->clientList.clear();
+	// // channel clear
+
+	// Destuctor
+    CanClient *pClient;
+    CanChannel *pChannel;
+
+    while (clientList.empty() == false)
+    {
+        pClient = clientList.begin()->second;
+        deleteClientElement(pClient->getSockFd());
+    }
+
+    while (channelList.empty() == false)
+    {
+        pChannel = channelList.begin()->second;
+        deleteChannelElement(pChannel->getChannelName());
+    }
 }
 
 CanServer::CanServer(const CanServer& obj){
@@ -58,16 +74,16 @@ void 	CanServer::deleteChannelElement(const std::string channelName)
 {
 	CanChannel *pDel = this->getChannelList().find(channelName)->second;
 	this->getChannelList().erase(channelName);
-
 	delete pDel;
+
 }						// delete channel List
 
 void 	CanServer::deleteClientElement(const int fd)
 {
 	CanClient *pDel = this->getClientList().find(fd)->second;
 	this->getClientList().erase(fd);
-
 	delete pDel;
+
 	// 시그널 종료시 , quit명령어 사용시 호출되어야 함
 }						// delete CanClient => memory 해제 필요!
 
@@ -284,4 +300,15 @@ std::map<std::string, CanChannel*>& CanServer::getChannelList() {
 int CanServer::getCurrentMaxFd() const
 {
 	return (this->maxFd);
+}
+
+void CanServer::serverClose(void)
+{
+    std::string closeMsg = "CanServer Closed! \r\n";
+
+    std::map<int, CanClient*>::iterator it;
+    for (it = this->clientList.begin(); it != this->clientList.end(); it++)
+    {
+        send(it->second->getSockFd(), closeMsg.c_str(), closeMsg.length(), 0);
+    }
 }
