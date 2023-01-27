@@ -21,6 +21,7 @@ Operation::Operation()
 	this->cmdNotice = new Notice(this->server);
 	this->cmdNick = new Nick(this->server);
 	this->cmdJoin = new Join(this->server);
+	this->cmdKick = new Kick(this->server);
 }
 
 Operation::Operation(char *s1, char *s2)
@@ -40,6 +41,7 @@ Operation::Operation(char *s1, char *s2)
 	this->cmdNotice = new Notice(this->server);
 	this->cmdNick = new Nick(this->server);
 	this->cmdJoin = new Join(this->server);
+	this->cmdKick = new Kick(this->server);
 }
 
 
@@ -55,6 +57,7 @@ Operation::~Operation()
 	delete cmdNotice;
 	delete cmdNick;
 	delete cmdJoin;
+	delete cmdKick;
 }
 
 void Operation::Transmission()

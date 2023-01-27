@@ -25,6 +25,9 @@ void ACommand::setSize(void)
 
 void ACommand::setCmd(std::vector<std::string> cmd)
 {
+	std::vector<std::string>::iterator it;
+	for(it = cmd.begin(); it != cmd.end(); it++)
+		std::cout << "it : " << *it << std::endl;
 	this->cmd = cmd;
 	setFlag();
     setSize();
