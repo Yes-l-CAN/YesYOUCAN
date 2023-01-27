@@ -74,18 +74,20 @@ void Prvmsg::prvMSGOn(CanClient *client)
 void Prvmsg::executePrvmsg(CanClient *client)
 {
 	std::string targetName = this->cmd[2];
-	std::string message = "PRIVMSG " + targetName + " : " + this->cmd[3] + "\n";
+	std::string message = ":" + client->getNickname() + " PRIVMSG " + targetName + " :" + this->cmd[3] + "\r\n";
 	if (targetName[0] == '#')
 	{
 		channel = isExistChannelName(targetName);
 		if (isKicked(client, channel) == TRUE)
 			throw ERR_BANNEDFROMCHAN;
+		client->addSendBuff(message);
 		channel->broadcast(message, client);
 		bot->executeBot(message, channel);
 	}
 	else
 	{
 		CanClient *pClient = isExistNickname(targetName);
+		client->addSendBuff(message);
 		pClient->addSendBuff(message);
 		bot->executeBot(message, pClient);
 	}
