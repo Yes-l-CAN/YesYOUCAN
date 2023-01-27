@@ -23,15 +23,15 @@ public:
 	int checkClientLevel(CanClient *client);
 	int determineFlag(void);
 
-	class incorrectPassException : public std::exception
-	{
-		virtual const char *what() const throw();
-	};
+	// class incorrectPassException : public std::exception
+	// {
+	// 	virtual const char *what() const throw();
+	// };
 
-	class alreadyRegisteredException : public std::exception
-	{
-		virtual const char *what() const throw();
-	};
+	// class alreadyRegisteredException : public std::exception
+	// {
+	// 	virtual const char *what() const throw();
+	// };
 };
 
 #endif // COMMAND_PASS_HPP

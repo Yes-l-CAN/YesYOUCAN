@@ -2,9 +2,8 @@
 #include "Operation.hpp"
 
 User::User() {}
-User::User(CanServer *serv) : ACommand(serv){}
+User::User(CanServer *serv) : ACommand(serv) {}
 User::~User() {}
-
 
 void User::userOn(CanClient *client)
 {
@@ -14,38 +13,38 @@ void User::userOn(CanClient *client)
 		checkClientLevel(client);
 		validCheck();
 		setClientUser(client);
-		if((client->getMemberLevel() & CERTIFICATION_FIN) == CERTIFICATION_FIN)
-				welcome2CanServ(client);
+		if ((client->getMemberLevel() & CERTIFICATION_FIN) == CERTIFICATION_FIN)
+			welcome2CanServ(client);
 	}
-	catch(int numeric)
-  	{
+	catch (int numeric)
+	{
 		std::stringstream sstm;
 		sstm << numeric << " " << client->getSockFd();
 		std::string msgBuf = sstm.str();
-		switch(numeric)
+		switch (numeric)
 		{
-			case ERR_UNKNOWNERROR:
-				msgBuf += " USER :Invalid Format error !";
-				break;
-			case ERR_NOTREGISTERED:
-				msgBuf += " :You have not registered. Register PASS, USER, NICK !";
-				break;
+		case ERR_UNKNOWNERROR:
+			msgBuf += " USER :Invalid Format error !";
+			break;
+		case ERR_NOTREGISTERED:
+			msgBuf += " :You have not registered. Register PASS, USER, NICK !";
+			break;
 
-			case ERR_NEEDMOREPARAMS:
-				msgBuf += " USER :Invalid Format error !";
-				break;
+		case ERR_NEEDMOREPARAMS:
+			msgBuf += " USER :Invalid Format error !";
+			break;
 
-			case ERR_ALREADYREGISTERED:
-				msgBuf += " :You may not reregister";
-				break;
+		case ERR_ALREADYREGISTERED:
+			msgBuf += " :You may not reregister";
+			break;
 
-			default:
-				break;
+		default:
+			break;
 		}
 
 		msgBuf += "\r\n";
 		client->addSendBuff(msgBuf);
-  	}
+	}
 }
 
 int User::validCheck(void)
@@ -68,17 +67,17 @@ void User::setClientUser(CanClient *client)
 	client->setUsername(cmd[2]);
 	client->setRealname(cmd[5]);
 	client->setMemberLevel(USER_FIN);
-	if((client->getMemberLevel() & (PASS_FIN | NICK_FIN)) ==  (PASS_FIN | NICK_FIN))
-      	client->setMemberLevel(CERTIFICATION_FIN);
+	if ((client->getMemberLevel() & (PASS_FIN | NICK_FIN)) == (PASS_FIN | NICK_FIN))
+		client->setMemberLevel(CERTIFICATION_FIN);
 }
 
 void User::welcome2CanServ(CanClient *client)
 {
-    // 001 <client> :<msg>
+	// 001 <client> :<msg>
 	std::string userName = cmd[2];
 	std::string serverName = static_cast<std::string>(SERVERNAME);
-	std::string msgBuf = "001 " + userName + " :Welcome, " + userName + "! Your host is " + serverName + "\r\n"; 
-	client->addSendBuff(msgBuf);	
+	std::string msgBuf = "001 " + userName + " :Welcome, " + userName + "! Your host is " + serverName + "\r\n";
+	client->addSendBuff(msgBuf);
 }
 
 int User::isValidFormat(void)

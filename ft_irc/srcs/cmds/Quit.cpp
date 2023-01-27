@@ -3,9 +3,8 @@
 #include "Operation.hpp"
 
 Quit::Quit() {}
-Quit::Quit(CanServer *serv) : ACommand(serv){}
+Quit::Quit(CanServer *serv) : ACommand(serv) {}
 Quit::~Quit() {}
-
 
 void Quit::quitOn(CanClient *client)
 {
@@ -20,20 +19,20 @@ void Quit::quitOn(CanClient *client)
 		FD_CLR(clientFd, server->getWrites());
 		close(clientFd);
 	}
-	catch(int numeric)
+	catch (int numeric)
 	{
 		std::stringstream sstm;
-    	sstm << numeric << " " << client->getNickname();
-   		std::string msgBuf = sstm.str();
+		sstm << numeric << " " << client->getNickname();
+		std::string msgBuf = sstm.str();
 		switch (numeric)
 		{
-			case ERR_UNKNOWNERROR:
-				msgBuf += " QUIT :Invalid Format error !";
-				break;
-			default:
-				break;
+		case ERR_UNKNOWNERROR:
+			msgBuf += " QUIT :Invalid Format error !";
+			break;
+		default:
+			break;
 		}
-	
+
 		msgBuf += "\r\n";
 		client->addSendBuff(msgBuf);
 	}
@@ -44,12 +43,12 @@ void Quit::eraseFromList(CanClient *client)
 	int clientFd = client->getSockFd();
 
 	std::map<std::string, CanChannel *>::iterator it;
-	for(it = client->getChannelList().begin(); it != client->getChannelList().end(); it++)
-	{	
+	for (it = client->getChannelList().begin(); it != client->getChannelList().end(); it++)
+	{
 		it->second->deleteClientElement(clientFd);
 	}
 
-	for(it = server->getChannelList().begin(); it != server->getChannelList().end(); it++)
+	for (it = server->getChannelList().begin(); it != server->getChannelList().end(); it++)
 	{
 		if (it->second->getKickedList().find(clientFd) != it->second->getKickedList().end())
 		{
@@ -61,7 +60,7 @@ void Quit::eraseFromList(CanClient *client)
 
 void Quit::msgToAllJoinedChannel(CanClient *client)
 {
-	// 	:<source> QUIT :Quit: <reason>	
+	// 	:<source> QUIT :Quit: <reason>
 	std::string msgBuf = ":" + client->getNickname() + " QUIT :Quit";
 	if (getSize() == 2)
 	{
@@ -76,7 +75,7 @@ void Quit::msgToAllJoinedChannel(CanClient *client)
 	}
 }
 
-int Quit::isValidFormat(void) 
+int Quit::isValidFormat(void)
 {
 	// flag QUIT [reason]
 	if (getSize() > 2)
@@ -86,11 +85,11 @@ int Quit::isValidFormat(void)
 	return (TRUE);
 }
 
-int Quit::checkClientLevel(CanClient *client) 
+int Quit::checkClientLevel(CanClient *client)
 {
 	int clientFd = client->getSockFd();
 	(void)clientFd;
-  	return (TRUE);
+	return (TRUE);
 }
 
 int Quit::determineFlag(void) { return (1); }
