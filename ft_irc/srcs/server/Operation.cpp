@@ -178,7 +178,7 @@ void Operation::CommandChecker(std::vector<std::string> argv, CanClient *targetC
 void Operation::cRecv(int fd)
 {
 	int ret = recv(fd, buffer, bufferSize, 0);
-	std::cout << "you are in recv ~~ " << std::endl;
+	std::cout << "client to server : " << this->buffer << std::endl;
 	if (ret < 0)
 	{
 		FD_CLR(fd, server->getReads());

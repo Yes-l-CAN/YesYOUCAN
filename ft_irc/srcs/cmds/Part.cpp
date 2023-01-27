@@ -79,13 +79,14 @@ void Part::operatorChanged(CanClient *client)
   {
     throw ERR_NOTONCHANNEL;
   }
-  this->channel = client->getChannelList().find(cmd[2])->second;
-  std::string msgBuf = ":" + client->getUsername() + " PART " + channel->getChannelName();
+  this->channel = client->getChannelList().find(cmd[2])->second; 
+  std::string msgBuf = ":" + client->getNickname() + " PART " + channel->getChannelName() ;
   if (getFlag() == 1)
   {
     msgBuf += " :" + cmd[3];
   }
   msgBuf += "\r\n";
+  client->addSendBuff(msgBuf); 
   channel->broadcast(msgBuf, client);
 }
 

@@ -28,7 +28,8 @@ void Nick::nickOn(CanClient *client)
     } 
     else if ((client->getMemberLevel() & CERTIFICATION_FIN) == CERTIFICATION_FIN)
     {
-      std::string msg =  "NICK : " + client->getUsername() + " " + "changed NICK => " + cmd[2] + "\n";
+      std::string msg =  ":" + client->getNickname() + " NICK :" +  cmd[2] + "\r\n";
+      client->addSendBuff(msg);
       std::map<std::string, CanChannel *>::iterator it;
       for(it = client->getChannelList().begin() ; it != client->getChannelList().end(); it++)
       {
@@ -122,8 +123,9 @@ int Nick::isValidFormat(void)
 void Nick::setClientNick(CanClient *client) 
 {
   // flag NICK <nickname>
-
  	std::string nickName = cmd[2];
+  std::string msg =  ":" + client->getNickname() + " NICK :" + nickName + "\r\n";
+  client->addSendBuff(msg);
 	client->setNickname(nickName);
   client->setMemberLevel(NICK_FIN);
 

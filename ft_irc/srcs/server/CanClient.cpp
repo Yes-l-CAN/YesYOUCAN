@@ -115,7 +115,7 @@ void CanClient::sendToClient()
     {
 		if (this->sendBuff.length() == 0)
 			return ;
-
+		std::cout << "server to client : " << this->sendBuff << std::endl;
         int ret = send(socketFd, this->sendBuff.c_str(), this->sendBuff.length(), 0);
         if (ret < 0)
         {
