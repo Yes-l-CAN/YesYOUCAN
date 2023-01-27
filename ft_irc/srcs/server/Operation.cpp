@@ -187,6 +187,7 @@ void Operation::cRecv(int fd)
 		FD_CLR(fd, server->getReads());
 		FD_CLR(fd, server->getWrites());
         close(fd);
+		server->deleteClientElement(fd);
 		std::cout << "recv error ~~ " << std::endl;
 		throw(CanException::recvSocketErrorException());
 	}
@@ -195,23 +196,11 @@ void Operation::cRecv(int fd)
 		FD_CLR(fd, server->getReads());
 		FD_CLR(fd, server->getWrites());
         close(fd);
+		server->deleteClientElement(fd);
 		std::cout << "recv error ~~ " << std::endl;
 		throw(CanException::recvSocketClosedException());
 	}
 }
-
-#include <iostream> //FIXME: test
-#include <iomanip> //FIXME: test
-
-// static void _print_hex_dump(const std::string& str) //FIXME: test
-// {
-// 	std::vector<const char> vec(str.begin(), str.end());
-// 	for (std::size_t i = 0; i < vec.size(); i++)
-// 	{
-// 		std::cout << std::hex << std::uppercase << std::setw(2) << std::setfill('0') << (int)vec[i] << " ";
-// 	}
-// 	std::cout << std::endl;
-// }
 
 int Operation::getCommandFromRecvBuffer(char *cOriginBuf, std::string &sCmd)
 {
@@ -222,17 +211,11 @@ int Operation::getCommandFromRecvBuffer(char *cOriginBuf, std::string &sCmd)
     }
 
 	size_t	findIdx = sOriginBuf.find("\r\n");
-				// std::cout << std::endl << "s_cmd:" << std::endl;  //FIXME: test
-				// _print_hex_dump(sCmd);
-				// std::cout << std::endl << "origin_buf:" << std::endl;  //FIXME: test
-				// _print_hex_dump(sOriginBuf);
     if ( findIdx != std::string::npos)
     {
 		sCmd = sOriginBuf.substr(0, findIdx);
 		memmove(cOriginBuf, cOriginBuf + findIdx + 2, sOriginBuf.length() - (findIdx + 2));
 		cOriginBuf[sOriginBuf.length() - (findIdx + 2)] = '\0'; //FIXME: ):
-				// std::cout << findIdx << ", modified sCmd:" << std::endl;  //FIXME: test
-				// _print_hex_dump(sCmd);
 
 		// char reloadBuf[bufferSize];
         // char commandBuf[findIdx + 1];

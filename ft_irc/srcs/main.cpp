@@ -14,7 +14,7 @@ void sigintHandler(int signum)
     loopFlag = FALSE;
 }
 
-int main(int argc, char *argv[])
+int _main(int argc, char *argv[])
 {
 	static_cast<void>(argv);
 	if (argc != 3)
@@ -43,4 +43,11 @@ int main(int argc, char *argv[])
 	}
 
 	return (0);
+}
+
+int main(int argc, char *argv[])
+{
+	const int result = _main(argc, argv);
+	system("leaks $PPID");
+	return result;
 }

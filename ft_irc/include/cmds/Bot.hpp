@@ -17,7 +17,7 @@ public:
 	~Bot();
 	int	 findWord(std::string message);
 	void sendMessage(CanChannel *channel);
-	void executeBot(std::string message, CanClient *client);
+	void executeBot(std::string message, CanClient *dstClient, CanClient *sndClient);
 	void executeBot(std::string message, CanChannel *channel);
 };
 
