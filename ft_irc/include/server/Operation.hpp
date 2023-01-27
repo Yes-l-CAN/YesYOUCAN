@@ -7,7 +7,6 @@
 #include "CanClient.hpp"
 #include "CanException.hpp"
 #include "CanServer.hpp"
-#include "Parsing.hpp"
 
 #include "User.hpp"
 #include "Quit.hpp"
@@ -38,19 +37,18 @@ private:
 	int setFd;
 	int result;
 	CanServer *server;
-	Parsing parser;
 
 	// commands
-	User* cmdUser;
-	Quit* cmdQuit;
-	Prvmsg* cmdPrvmsg;
-	Ping* cmdPing;
-	Pass* cmdPass;
-	Part* cmdPart;
-	Notice* cmdNotice;
-	Nick* cmdNick;
-	Kick* cmdKick;
-	Join* cmdJoin;
+	User cmdUser;
+	Quit cmdQuit;
+	Prvmsg cmdPrvmsg;
+	Ping cmdPing;
+	Pass cmdPass;
+	Part cmdPart;
+	Notice cmdNotice;
+	Nick cmdNick;
+	Kick cmdKick;
+	Join cmdJoin;
 
 	Operation(const Operation &obj); // Deprecated.
 	Operation &operator=(const Operation &obj); // Deprecated.
@@ -58,6 +56,7 @@ private:
 protected:
 	static const int bufferSize = 512;
 	char buffer[bufferSize];
+	int offset;
 
 public:
 	// enum

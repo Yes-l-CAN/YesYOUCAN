@@ -13,7 +13,7 @@ public:
 	Ping();
 	Ping(CanServer *serv);
 	~Ping();
-	void pingOn(CanClient *client);
+	void onCommand(CanClient *client);
 	void pong(CanClient *client);
 
 	int isValidFormat(void);

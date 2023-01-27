@@ -18,7 +18,7 @@ public:
 	Nick();
 	Nick(CanServer *serv);
 	~Nick();
-	void nickOn(CanClient *client);
+	void onCommand(CanClient *client);
 	int validCheck(void);
 	int checkUsedNick(void);
 	void setClientNick(CanClient *client);

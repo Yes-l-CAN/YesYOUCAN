@@ -17,7 +17,7 @@ public:
 	Kick();
 	Kick(CanServer *serv);
 	~Kick();
-	void kickOn(CanClient *client);
+	void onCommand(CanClient *client);
 	// std::map<CanChannel *, int> getChannel(CanClient *client);
 
 	void isMemberInChannel(CanClient *client);

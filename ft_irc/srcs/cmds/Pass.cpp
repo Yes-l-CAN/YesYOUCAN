@@ -10,7 +10,7 @@ Pass::Pass(CanServer *serv) : ACommand(serv)
 
 Pass::~Pass() {}
 
-void Pass::passOn(CanClient *client)
+void Pass::onCommand(CanClient *client)
 {
 	try
 	{

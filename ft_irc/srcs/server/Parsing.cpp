@@ -20,37 +20,37 @@ void Parsing::parseClear(void)
 // main function
 std::vector<std::string> Parsing::parseOn(std::string bufferStr)
 {
-    v = new std::vector<std::string>;
+    // NOTE: 파싱 다시?
     if (bufferStr.empty())
-        return (*v); // nothing inside
-    this->buff = bufferStr;
+        return (std::vector<std::string>()); // nothing inside
+    
+    Parsing parse;
+    parse.buff = bufferStr;
   //  makeBuffString(bufferStr);
-    giveFlag();
+    parse.giveFlag();
 
-    for (size_t i = 0; i <= buff.size(); i++)
+    for (size_t i = 0; i <= parse.buff.size(); i++)
     {
-        i = checkSpaceAndComma(i);
+        i = parse.checkSpaceAndComma(i);
 
         // check colon
-        if (buff[i] == ':')
+        if (parse.buff[i] == ':')
         {
-            checkColon(i);
+            parse.checkColon(i);
             break;
         }
     }
-    std::string::iterator it = (*(v->end() - 1)).end() - 1;
-    if(*it == '\r')
-        (v->end() - 1)->erase(it); 
  
-    return (*v);
+    return (parse.v);
 }
 
 void Parsing::giveFlag()
 {
+    //NOTE: prefix 부분에서 나오는 콜론은 어떻게?
     if (buff.find(":") != std::string::npos)
-        (*v).push_back("1");
+        this->v.push_back("1");
     else
-        (*v).push_back("0");
+        this->v.push_back("0");
 }
 
 int Parsing::checkSpaceAndComma(size_t i)

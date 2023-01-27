@@ -15,7 +15,7 @@ public:
 	Join();
 	Join(CanServer *serv);
 	~Join();
-	void joinOn(CanClient *client);
+	void onCommand(CanClient *client);
 
 	int isKicked(CanClient *client);
 	int isExistChannel(std::string channelName);

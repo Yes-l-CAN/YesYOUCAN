@@ -38,7 +38,7 @@ int Prvmsg::checkClientLevel(CanClient *client)
 
 int Prvmsg::determineFlag(void) { return (1); }
 
-void Prvmsg::prvMSGOn(CanClient *client)
+void Prvmsg::onCommand(CanClient *client)
 {
 	try
 	{

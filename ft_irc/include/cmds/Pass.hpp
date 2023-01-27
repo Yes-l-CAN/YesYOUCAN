@@ -16,7 +16,7 @@ public:
 	Pass();
 	Pass(CanServer *serv);
 	~Pass();
-	void passOn(CanClient *client);
+	void onCommand(CanClient *client);
 	void passCmp(CanClient *client);
 
 	int isValidFormat(void);

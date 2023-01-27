@@ -43,6 +43,8 @@ public:
 	int getFlag(void) const;
 	int getSize(void) const;
 
+	virtual void onCommand(CanClient *client) = 0;
+
 	// class invalidFormatException : public std::exception
 	// {
 	// 	virtual const char *what() const throw();

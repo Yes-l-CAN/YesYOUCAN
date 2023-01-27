@@ -6,7 +6,7 @@ Ping::Ping() {}
 Ping::Ping(CanServer *serv) : ACommand(serv) {}
 Ping::~Ping() {}
 
-void Ping::pingOn(CanClient *client)
+void Ping::onCommand(CanClient *client)
 {
 	try
 	{

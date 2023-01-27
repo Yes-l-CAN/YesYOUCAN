@@ -13,7 +13,7 @@ public:
 	Part();
 	Part(CanServer *serv);
 	~Part();
-	void partOn(CanClient *client);
+	void onCommand(CanClient *client);
 
 	int isLastMember(void);
 	void eraseChannel(CanClient *client);

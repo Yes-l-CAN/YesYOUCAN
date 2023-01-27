@@ -11,7 +11,7 @@ Nick::Nick(CanServer *serv) : ACommand(serv)
 
 Nick::~Nick() {}
 
-void Nick::nickOn(CanClient *client)
+void Nick::onCommand(CanClient *client)
 {
 	try
 	{

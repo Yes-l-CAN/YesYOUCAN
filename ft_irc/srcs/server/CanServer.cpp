@@ -204,7 +204,7 @@ void CanServer::setFdSet()
     FD_SET(this->socketFd, reads_addr);
 }
 
-void CanServer::findFd(){
+void CanServer::findFd(){ // FIXME: Deprecated
 	//너무...너무... 안 이쁜.... 넣고나니 빼는게 나을 듯 한....
 	for(int i = 0; i < this->maxFd + 1; i++)
 	// for(int i = 3; i < this->maxFd + 1; i++)
@@ -223,7 +223,7 @@ void CanServer::findFd(){
 }
 
 // socket transmission
-int CanServer::Transmission()
+int CanServer::Transmission() // FIXME: Deprecated
 {
 	// for(int i = 0; i < this->maxFd; i++)
 	for(int i = 0; i < this->maxFd + 1; i++)

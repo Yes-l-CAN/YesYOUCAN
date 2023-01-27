@@ -5,7 +5,7 @@ User::User() {}
 User::User(CanServer *serv) : ACommand(serv) {}
 User::~User() {}
 
-void User::userOn(CanClient *client)
+void User::onCommand(CanClient *client)
 {
 	try
 	{

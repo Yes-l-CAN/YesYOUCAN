@@ -7,8 +7,11 @@
 
 class Parsing
 {
+public:
+    static std::vector<std::string> parseOn(std::string bufferStr);
+
   private:
-    std::vector<std::string> *v;
+    std::vector<std::string> v;
     std::string              buff;
     std::string              word;
     bool                     flag;
@@ -16,8 +19,6 @@ class Parsing
   public:
     Parsing();
     ~Parsing();
-
-    std::vector<std::string> parseOn(std::string bufferStr);
 
     void parseClear(void);
 

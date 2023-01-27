@@ -18,7 +18,7 @@ public:
 	User();
 	User(CanServer *serv);
 	~User();
-	void userOn(CanClient *client);
+	void onCommand(CanClient *client);
 	int validCheck(void);
 	void setClientUser(CanClient *client);
 	void welcome2CanServ(CanClient *client);

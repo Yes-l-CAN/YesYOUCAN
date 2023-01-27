@@ -14,7 +14,7 @@ public:
 	Notice();
 	Notice(CanServer *serv);
 	~Notice();
-	void noticeOn(CanClient *client);
+	void onCommand(CanClient *client);
 
 	void noticeToChannel(void);
 	CanChannel *isExistChannelName(std::string name);

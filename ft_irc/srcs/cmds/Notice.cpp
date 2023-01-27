@@ -8,7 +8,7 @@ Notice::Notice(CanServer *serv) : ACommand(serv) {}
 
 Notice::~Notice() {}
 
-void Notice::noticeOn(CanClient *client)
+void Notice::onCommand(CanClient *client)
 {
 	// flag NOTICE <target> <text to be sent>
 	try

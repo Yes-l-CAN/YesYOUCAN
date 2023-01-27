@@ -12,7 +12,7 @@ public:
 	Quit();
 	Quit(CanServer *serv);
 	~Quit();
-	void quitOn(CanClient *client);
+	void onCommand(CanClient *client);
 	void eraseFromList(CanClient *client);
 	void msgToAllJoinedChannel(CanClient *client);
 

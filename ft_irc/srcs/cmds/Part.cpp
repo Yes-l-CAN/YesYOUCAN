@@ -8,7 +8,7 @@ Part::Part(CanServer *serv) : ACommand(serv) {}
 
 Part::~Part() {}
 
-void Part::partOn(CanClient *client)
+void Part::onCommand(CanClient *client)
 {
 	try
 	{

@@ -1,4 +1,5 @@
 #include "Operation.hpp"
+#include "Parsing.hpp"
 #include <exception>
 #include <iostream>
 #include <string>
@@ -6,58 +7,42 @@
 #include <vector>
 
 Operation::Operation()
+	: server(new CanServer()),
+	  cmdUser(this->server),
+	  cmdQuit(this->server),
+	  cmdPrvmsg(this->server),
+	  cmdPing(this->server),
+	  cmdPass(this->server),
+	  cmdPart(this->server),
+	  cmdNotice(this->server),
+	  cmdNick(this->server),
+	  cmdKick(this->server),
+	  cmdJoin(this->server)
 {
-	this->server = new CanServer();
-	this->parser = Parsing();
 	this->server->s_On();
-
-	// new commands
-	this->cmdUser = new User(this->server);
-	this->cmdQuit = new Quit(this->server);
-	this->cmdPrvmsg = new Prvmsg(this->server);
-	this->cmdPing = new Ping(this->server);
-	this->cmdPass = new Pass(this->server);
-	this->cmdPart = new Part(this->server);
-	this->cmdNotice = new Notice(this->server);
-	this->cmdNick = new Nick(this->server);
-	this->cmdJoin = new Join(this->server);
-	this->cmdKick = new Kick(this->server);
 }
 
 Operation::Operation(char *s1, char *s2)
+	: server(new CanServer()),
+	  cmdUser(this->server),
+	  cmdQuit(this->server),
+	  cmdPrvmsg(this->server),
+	  cmdPing(this->server),
+	  cmdPass(this->server),
+	  cmdPart(this->server),
+	  cmdNotice(this->server),
+	  cmdNick(this->server),
+	  cmdKick(this->server),
+	  cmdJoin(this->server)
 {
-	this->server = new CanServer();
-	this->parser = Parsing();
 	this->server->setServer(s1, s2);
 	this->server->s_On();
-
-	// new commands
-	this->cmdUser = new User(this->server);
-	this->cmdQuit = new Quit(this->server);
-	this->cmdPrvmsg = new Prvmsg(this->server);
-	this->cmdPing = new Ping(this->server);
-	this->cmdPass = new Pass(this->server);
-	this->cmdPart = new Part(this->server);
-	this->cmdNotice = new Notice(this->server);
-	this->cmdNick = new Nick(this->server);
-	this->cmdJoin = new Join(this->server);
-	this->cmdKick = new Kick(this->server);
 }
 
 
 Operation::~Operation()
 {
-	delete server;
-	delete cmdUser;
-	delete cmdQuit;
-	delete cmdPrvmsg;
-	delete cmdPing;
-	delete cmdPass;
-	delete cmdPart;
-	delete cmdNotice;
-	delete cmdNick;
-	delete cmdJoin;
-	delete cmdKick;
+	delete this->server;
 }
 
 void Operation::Transmission()
@@ -83,8 +68,7 @@ void Operation::Transmission()
 				while (getCommandFromRecvBuffer(this->buffer, sCmd) == TRUE)
 				{
 
-					std::vector<std::string> cmd = parser.parseOn(sCmd);
-					parser.parseClear();
+					std::vector<std::string> cmd = Parsing::parseOn(sCmd);
 
 					// check command
 					CommandChecker(cmd, targetClient);
@@ -95,6 +79,7 @@ void Operation::Transmission()
     CanClient * pClient = NULL;
     for (int i = 0; i < MAX_FD;i++)
     {
+		// NOTE: 위에 read 검사 했을때랑 합쳐도 될 것 같은데?
         if (FD_ISSET(i, server->getCopyWrites()))
         {
             if(i == server->getSocketFd())
@@ -129,49 +114,57 @@ void Operation::CommandChecker(std::vector<std::string> argv, CanClient *targetC
 
 		if ((argv.size() >= 2) && (argv[1] == cmd[i]))
 		{
+			ACommand* cmd;
 			switch (i)
 			{
 			case 0:
-				this->cmdPass->setCmd(argv);
-				this->cmdPass->passOn(targetClient);
-				return;
+				cmd = &this->cmdPass;
+				break;
 			case 1:
-				this->cmdNick->setCmd(argv);
-				this->cmdNick->nickOn(targetClient);
-				return;
+				cmd = &this->cmdNick;
+				break;
 			case 2:
-				this->cmdUser->setCmd(argv);
-				this->cmdUser->userOn(targetClient);
-				return;
+				cmd = &this->cmdUser;
+				break;
 			case 3:
-				this->cmdPing->setCmd(argv);
-				this->cmdPing->pingOn(targetClient);
-				return;
+				cmd = &this->cmdPing;
+				break;
 			case 4:
-				this->cmdJoin->setCmd(argv);
-				this->cmdJoin->joinOn(targetClient);
-				return;
+				cmd = &this->cmdJoin;
+				break;
 			case 5:
-				this->cmdPart->setCmd(argv);
-				this->cmdPart->partOn(targetClient);
-				return;
+				cmd = &this->cmdPart;
+				break;
 			case 6:
-				this->cmdKick->setCmd(argv);
-				this->cmdKick->kickOn(targetClient);
-				return;
+				cmd = &this->cmdKick;
+				break;
 			case 7:
-				this->cmdNotice->setCmd(argv);
-				this->cmdNotice->noticeOn(targetClient);
-				return;
+				cmd = &this->cmdNotice;
+				break;
 			case 8:
-				this->cmdPrvmsg->setCmd(argv);
-				this->cmdPrvmsg->prvMSGOn(targetClient);
-				return;
+				cmd = &this->cmdPrvmsg;
+				break;
 			case 9:
-				this->cmdQuit->setCmd(argv);
-				this->cmdQuit->quitOn(targetClient);
-				return;
-			default:;
+				cmd = &this->cmdQuit;
+				break;
+			default:
+				cmd = NULL;
+				break;
+			}
+
+			if (cmd != NULL)
+			{
+				cmd->setCmd(argv);
+				try
+				{
+					cmd->isValidFormat();
+					cmd->checkClientLevel(targetClient);
+					cmd->onCommand(targetClient);
+				}
+				catch (const CanException& e)
+				{
+					// cmd->onError(e.getErrorNumber());
+				}
 			}
 		}
 	}
@@ -180,7 +173,7 @@ void Operation::CommandChecker(std::vector<std::string> argv, CanClient *targetC
 
 void Operation::cRecv(int fd)
 {
-	int ret = recv(fd, buffer, bufferSize, 0);
+	int ret = recv(fd, buffer + offset, bufferSize - offset, 0);
 	std::cout << "client to server : " << this->buffer << std::endl;
 	if (ret < 0)
 	{

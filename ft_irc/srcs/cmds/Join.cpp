@@ -7,14 +7,11 @@ Join::Join(CanServer *serv) : ACommand(serv) {}
 
 Join::~Join() {}
 
-void Join::joinOn(CanClient *client)
+void Join::onCommand(CanClient *client)
 {
 	// flag JOIN <channel>
 	try
 	{
-		isValidFormat();
-		checkClientLevel(client);
-
 		if (cmd[2] == "0")
 		{
 			leaveAll(client);

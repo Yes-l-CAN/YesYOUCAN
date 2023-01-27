@@ -8,7 +8,7 @@ Kick::Kick(CanServer *serv) : ACommand(serv) {}
 
 Kick::~Kick() {}
 
-void Kick::kickOn(CanClient *client)
+void Kick::onCommand(CanClient *client)
 {
 	try
 	{

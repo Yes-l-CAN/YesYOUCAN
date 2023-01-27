@@ -17,7 +17,7 @@ public:
 	Prvmsg();
 	Prvmsg(CanServer *serv);
 	~Prvmsg();
-	void prvMSGOn(CanClient *client);
+	void onCommand(CanClient *client);
 	int isValidFormat(void);
 	int checkClientLevel(CanClient *client);
 	int determineFlag(void);
