@@ -71,9 +71,23 @@ void Prvmsg::prvMSGOn(CanClient *client)
 	}
 }
 
+#include <iomanip> //FIXME: test
+
+static void _print_hex_dump(const std::string& str) //FIXME: test
+{
+	std::vector<const char> vec(str.begin(), str.end());
+	for (std::size_t i = 0; i < vec.size(); i++)
+	{
+		std::cout << std::hex << std::uppercase << std::setw(2) << (int)vec[i] << " ";
+	}
+	std::cout << std::endl;
+}
+
 void Prvmsg::executePrvmsg(CanClient *client)
 {
 	std::string targetName = this->cmd[2];
+	
+	_print_hex_dump(this->cmd[3]); //FIXME: test
 	std::string message = ":" + client->getNickname() + " PRIVMSG " + targetName + " :" + this->cmd[3] + "\r\n";
 	if (targetName[0] == '#')
 	{
