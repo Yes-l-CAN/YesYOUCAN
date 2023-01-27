@@ -94,13 +94,13 @@ void Kick::changeChannelStatus(CanClient *client)
 void Kick::sendMSG(CanClient *client)
 {
 	// flag KICK <channel> <user> [reason]
-	std::string msgBuf = ":" + client->getUsername() + " KICK " + cmd[2] + " " + cmd[3];
-	if (getFlag() == 1)
-	{
+	std::string msgBuf = ":" + client->getNickname() + " KICK " + this->channel->getChannelName() + " " + cmd[3];
+	if (getFlag() == 0)
 		msgBuf += " :" + cmd[4];
-	}
+	else
+		msgBuf += " " + cmd[4];
 	msgBuf += "\r\n";
-	channel->broadcast(msgBuf, client);
+	channel->broadcastWithMe(msgBuf, client);
 }
 
 int Kick::isValidFormat(void)

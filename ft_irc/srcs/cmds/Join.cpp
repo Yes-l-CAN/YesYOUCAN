@@ -154,7 +154,14 @@ void Join::sendMSG(CanClient *client)
 	*/
 	msgBuff = " JOIN " + channel->getChannelName() + "\r\n";
 	client->addSendBuff(msgBuff);
-	msgBuff = "353 " + client->getNickname() + " @ " + channel->getChannelName() + " :@" + client->getNickname() + "\r\n";
+	msgBuff = "353 " + client->getNickname() + " = " + channel->getChannelName() + " :@" + channel->getClientList().begin()->second->getNickname();
+	std::map<int, CanClient *>::iterator it;
+	for(it = channel->getClientList().begin(); it != channel->getClientList().end(); it++)
+	{
+		if(it != channel->getClientList().begin())
+			msgBuff += " " + it->second->getNickname(); 
+	}
+	msgBuff += "\r\n";
 	client->addSendBuff(msgBuff);
 	msgBuff = "366 " + client->getNickname() + " " + channel->getChannelName() + " :End of /NAMES list." + "\r\n";
 	client->addSendBuff(msgBuff);

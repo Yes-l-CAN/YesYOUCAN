@@ -80,14 +80,12 @@ void Prvmsg::executePrvmsg(CanClient *client)
 		channel = isExistChannelName(targetName);
 		if (isKicked(client, channel) == TRUE)
 			throw ERR_BANNEDFROMCHAN;
-		client->addSendBuff(message);
 		channel->broadcast(message, client);
 		bot->executeBot(message, channel);
 	}
 	else
 	{
 		CanClient *pClient = isExistNickname(targetName);
-		client->addSendBuff(message);
 		pClient->addSendBuff(message);
 		bot->executeBot(message, pClient);
 	}

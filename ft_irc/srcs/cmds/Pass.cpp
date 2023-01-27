@@ -64,7 +64,7 @@ void Pass::passCmp(CanClient *client)
 
 int Pass::isValidFormat(void)
 {
-	if (getSize() < 2)
+	if (getSize() != 2)
 		throw ERR_UNKNOWNERROR;
 	return (TRUE);
 }

@@ -34,6 +34,7 @@ class CanChannel
     void delKickedListElement(CanClient* client);
 
     void broadcast(const std::string& msg, CanClient *client);
+    void broadcastWithMe(const std::string& msg, CanClient *client);
 
     class addClientException : public std::exception
     {

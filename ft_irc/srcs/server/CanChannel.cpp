@@ -79,6 +79,20 @@ void CanChannel::broadcast(const std::string& msg, CanClient *client)
     }
 }
 
+void CanChannel::broadcastWithMe(const std::string& msg, CanClient *client)
+{
+    // 채널에서 바로 send를 사용하여 전송하면 안된다고 함
+    // 클라이언트가 write불가능한 상황일 수 있기 때문
+    // 클라이언트의 버퍼에 msg를 저장한 뒤
+    // select함수에서, write가능한 상황인지 확인 후 fd들을 순차적으로 전송
+    (void) client;
+    std::map<int, CanClient *>::iterator it;
+    for (it = this->getClientList().begin(); it != this->getClientList().end(); it++)
+    {
+       it->second->addSendBuff(msg);
+    }
+}
+
 
 const char* CanChannel::addClientException::what() const throw()
 {
