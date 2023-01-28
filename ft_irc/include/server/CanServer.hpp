@@ -10,12 +10,12 @@
 #include <iostream>
 #include <netinet/in.h>
 #include <string>
+#include <sys/ioctl.h>
 #include <sys/select.h>
 #include <sys/socket.h>
 #include <sys/types.h>
 #include <sys/wait.h>
 #include <unistd.h>
-#include <sys/ioctl.h>
 
 #include <map>
 #include <utility>
@@ -29,74 +29,75 @@
 
 class CanServer
 {
-private:
-	int inputPortNum;
-	std::string inputPassword;
-	int port;
-	std::string password;
+  private:
+    int         inputPortNum;
+    std::string inputPassword;
+    int         port;
+    std::string password;
 
-	int socketFd;
-	struct sockaddr_in addr;
+    int                socketFd;
+    struct sockaddr_in addr;
 
-	fd_set reads;
-	fd_set copyReads;
-	fd_set writes;
-	fd_set copyWrites;
+    fd_set reads;
+    fd_set copyReads;
+    fd_set writes;
+    fd_set copyWrites;
 
-	int maxFd;
+    int maxFd;
 
-	std::map<int, CanClient *> clientList;			 // current exist all clients list
-	std::map<std::string, CanChannel *> channelList; // current exist all channel list
+    std::map<int, CanClient*>          clientList;  // current exist all clients list
+    std::map<std::string, CanChannel*> channelList; // current exist all channel list
 
-	CanException except;
+    CanException except;
 
-public:
-	CanServer();
-	CanServer(const CanServer &obj);
-	CanServer &operator=(const CanServer &obj);
-	~CanServer();
+    CanServer(const CanServer& obj);
+    CanServer& operator=(const CanServer& obj);
 
-	void s_On();
+  public:
+    CanServer();
+    ~CanServer();
 
-	// socket transmission
-	int Transmission();
+    void s_On();
 
-	void s_Socket();
-	void s_Bind();
-	void s_Listen();
-	void s_Select();
-	void s_Accept();
+    // socket transmission
 
-	// utils
-	void findFd();
-	void addChannelElement(const std::string channelName, CanChannel *pNewChannel); // add channel List
-	void deleteChannelElement(const std::string channelName);						// delete channel List
-	void deleteClientElement(const int fd);
+    void s_Socket();
+    void s_Bind();
+    void s_Listen();
+    void s_Select();
+    void s_Accept();
 
-	// setter
-	void setServer(char *port, char *pw);
-	void setServAddr();
-	void setFdSet();
-	void setInputPortNum(char *str);
-	void setInputPassword(char *str);
+    // utils
+    void findFd();
+    void addChannelElement(const std::string channelName, CanChannel* pNewChannel); // add channel List
+    void deleteChannelElement(const std::string channelName);                       // delete channel List
+    void deleteClientElement(const int fd);
 
-	// getter
-	int getInputPortNum() const;
-	std::string getInputPasswordNum() const;
-	int getPort() const;
-	std::string getPassWord() const;
-	int getSocketFd() const;
-	struct sockaddr_in getAddr() const;
-	fd_set *getReads();
-	fd_set *getWrites();
-	fd_set *getCopyReads();
-	fd_set *getCopyWrites();
-	std::map<int, CanClient *> &getClientList();
-	std::map<std::string, CanChannel *> &getChannelList();
-	int getCurrentMaxFd(void) const;
+    // setter
+    void setServer(char* port, char* pw);
+    void setServAddr();
+    void setFdSet();
+    void setInputPortNum(char* str);
+    void setInputPassword(char* str);
 
-	void serverClose(void);
+    // getter
+    int                                 getInputPortNum() const;
+    std::string                         getInputPasswordNum() const;
+    int                                 getPort() const;
+    std::string                         getPassWord() const;
+    int                                 getSocketFd() const;
+    struct sockaddr_in                  getAddr() const;
+    fd_set*                             getReads();
+    fd_set*                             getWrites();
+    fd_set*                             getCopyReads();
+    fd_set*                             getCopyWrites();
+    std::map<int, CanClient*>&          getClientList();
+    std::map<std::string, CanChannel*>& getChannelList();
+    int                                 getCurrentMaxFd(void) const;
 
+    void leaveAll(int fd);
+
+    void serverClose(void);
 };
 
 #endif // CAN_SERVER_HPP

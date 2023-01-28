@@ -8,10 +8,10 @@
 class Parsing
 {
   private:
-    std::vector<std::string> *v;
-    std::string              buff;
-    std::string              word;
-    bool                     flag;
+    std::vector<std::string>* v;
+    std::string               buff;
+    std::string               word;
+    bool                      flag;
 
   public:
     Parsing();

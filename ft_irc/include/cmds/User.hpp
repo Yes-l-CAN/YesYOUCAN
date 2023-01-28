@@ -10,37 +10,22 @@
 
 class User : public ACommand
 {
-private:
-	User(const User &obj); // Deprecated.
-	User& operator=(const User &obj); // Deprecated.
-	
-public:
-	User();
-	User(CanServer *serv);
-	~User();
-	void userOn(CanClient *client);
-	int validCheck(void);
-	void setClientUser(CanClient *client);
-	void welcome2CanServ(CanClient *client);
+  private:
+    User(const User& obj);            // No use.
+    User& operator=(const User& obj); // No use.
 
-	int isValidFormat(void);
-	int checkClientLevel(CanClient *client);
-	int determineFlag(void);
+  public:
+    User();
+    User(CanServer* serv);
+    ~User();
+    void userOn(CanClient* client);
+    int  validCheck(void);
+    void setClientUser(CanClient* client);
+    void welcome2CanServ(CanClient* client);
 
-	// class alreadyRegisteredException : public std::exception
-	// {
-	// 	virtual const char *what() const throw();
-	// };
-
-	// class minUserLenException : public std::exception
-	// {
-	// 	virtual const char *what() const throw();
-	// };
-
-	// class spaceWithoutColonException : public std::exception
-	// {
-	// 	virtual const char *what() const throw();
-	// };
+    int isValidFormat(void);
+    int checkClientLevel(CanClient* client);
+    int determineFlag(void);
 };
 
 #endif // COMMAND_USER_HPP

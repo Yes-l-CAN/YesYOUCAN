@@ -22,16 +22,14 @@ std::vector<std::string> Parsing::parseOn(std::string bufferStr)
 {
     v = new std::vector<std::string>;
     if (bufferStr.empty())
-        return (*v); // nothing inside
+        return (*v);
     this->buff = bufferStr;
-  //  makeBuffString(bufferStr);
     giveFlag();
 
     for (size_t i = 0; i <= buff.size(); i++)
     {
         i = checkSpaceAndComma(i);
 
-        // check colon
         if (buff[i] == ':')
         {
             checkColon(i);
@@ -39,9 +37,9 @@ std::vector<std::string> Parsing::parseOn(std::string bufferStr)
         }
     }
     std::string::iterator it = (*(v->end() - 1)).end() - 1;
-    if(*it == '\r')
-        (v->end() - 1)->erase(it); 
- 
+    if (*it == '\r')
+        (v->end() - 1)->erase(it);
+
     return (*v);
 }
 

@@ -1,77 +1,80 @@
 #ifndef CAN_CLIENT_HPP
 #define CAN_CLIENT_HPP
 
+#include <iostream>
 #include <map>
 #include <netinet/in.h>
 #include <netinet/ip.h>
 #include <string>
 #include <sys/socket.h>
-#include <iostream>
 
 class CanChannel;
 
 class CanClient
 {
-private:
-	int socketFd;
-	std::string nickname;
-	std::string username;
-	std::string realname;
-	struct sockaddr_in addr;
-	int isMember;
+  private:
+    int                socketFd;
+    std::string        nickname;
+    std::string        username;
+    std::string        realname;
+    struct sockaddr_in addr;
+    int                isMember;
 
-	std::string sendBuff;
+    std::string sendBuff;
+    std::string recvBuff;
 
-	std::map<std::string, CanChannel *> channelList; // channelList which the client belongs
+    static const int bufferSize = 512;
+    char             buffer[bufferSize];
 
-public:
-	CanClient();
-	CanClient(int fd);
-	CanClient(const CanClient &ref);
-	CanClient(const struct sockaddr_in addr);
-	CanClient(const struct sockaddr_in addr, const int fd);
-	CanClient &operator=(const CanClient &ref);
-	~CanClient();
+    std::map<std::string, CanChannel*> channelList;
+	CanClient(const CanClient& ref);
+	CanClient& operator=(const CanClient& ref);
 
-	// setter
-	void setNickname(const std::string name);
-	void setUsername(const std::string name);
-	void setRealname(const std::string name);
-	void setMemberLevel(int lev);
-	void setSendBuff(const std::string &msg);
+  public:
+    CanClient();
+    CanClient(int fd);
+    CanClient(const struct sockaddr_in addr);
+    CanClient(const struct sockaddr_in addr, const int fd);
+    ~CanClient();
 
-	// getter
-	std::string getNickname(void) const;
-	std::string getUsername(void) const;
-	std::string getRealname(void) const;
-	int getSockFd(void) const;
-	int getMemberLevel(void) const;
-	int getisMember(void) const;
-	std::map<std::string, CanChannel *> &getChannelList(void);
-	std::string &getsendBuff(void);
+    // setter
+    void setNickname(const std::string name);
+    void setUsername(const std::string name);
+    void setRealname(const std::string name);
+    void setMemberLevel(int lev);
+    void setSendBuff(const std::string& msg);
+    void setRecvBuff(const std::string& msg);
 
-	void addChannelElement(const std::string &key, CanChannel *pNewChannel); // join channel
-	void deleteChannelElement(std::string key);								 // come outside channel
+    // getter
+    std::string                         getNickname(void) const;
+    std::string                         getUsername(void) const;
+    std::string                         getRealname(void) const;
+    int                                 getSockFd(void) const;
+    int                                 getMemberLevel(void) const;
+    int                                 getisMember(void) const;
+    std::map<std::string, CanChannel*>& getChannelList(void);
+    std::string&                        getsendBuff(void);
+    std::string&                        getRecvBuff(void);
+    char*                               getBuffer(void);
 
-	void sendToClient();
+    void addChannelElement(const std::string& key, CanChannel* pNewChannel);
+    void deleteChannelElement(std::string key);
 
-	void addSendBuff(std::string message);
+    void sendToClient();
+    int  recvClient(void);
 
-	class addChannelException : public std::exception
-	{
-		virtual const char *what() const throw();
-	};
+    void addSendBuff(std::string message);
+    void addRecvBuff(std::string& message);
 
-	class sendToClientException : public std::exception
-	{
-		virtual const char *what() const throw();
-	};
+    class addChannelException : public std::exception
+    {
+        virtual const char* what() const throw();
+    };
+
+    class sendToClientException : public std::exception
+    {
+        virtual const char* what() const throw();
+    };
 };
-
-// std::ostream    &operator<<(std::ostream &os, CanClient& client)
-// {
-//     os << "test!!" << std::endl;
-//     return (os);
-// }
 
 #endif // CAN_CLIENT_HPP

@@ -9,85 +9,70 @@
 #include "CanServer.hpp"
 #include "Parsing.hpp"
 
-#include "User.hpp"
-#include "Quit.hpp"
-#include "Prvmsg.hpp"
-#include "Ping.hpp"
-#include "Pass.hpp"
-#include "Part.hpp"
-#include "Notice.hpp"
-#include "Nick.hpp"
-#include "Nick.hpp"
-#include "Kick.hpp"
-#include "Join.hpp"
 #include "Bot.hpp"
+#include "Join.hpp"
+#include "Kick.hpp"
+#include "Nick.hpp"
+#include "Notice.hpp"
+#include "Part.hpp"
+#include "Pass.hpp"
+#include "Ping.hpp"
+#include "Prvmsg.hpp"
+#include "Quit.hpp"
+#include "User.hpp"
 
 #define SUCCESS (1)
 #define FAIL (0)
 #define ERROR (-1)
 
-#define CERTIFICATION_FIN (1 << 4)		// 00000000 00000000 00000000 00010000
-#define USER_FIN (1 << 3)				// 00000000 00000000 00000000 00001000
-#define NICK_FIN (1 << 2)				// 00000000 00000000 00000000 00000100
-#define PASS_FIN (1 << 1)				// 00000000 00000000 00000000 00000010
-#define UNCERTIFICATION (1 << 0)		// 00000000 00000000 00000000 00000001
+#define CERTIFICATION_FIN (1 << 4) // 00000000 00000000 00000000 00010000
+#define USER_FIN (1 << 3)          // 00000000 00000000 00000000 00001000
+#define NICK_FIN (1 << 2)          // 00000000 00000000 00000000 00000100
+#define PASS_FIN (1 << 1)          // 00000000 00000000 00000000 00000010
+#define UNCERTIFICATION (1 << 0)   // 00000000 00000000 00000000 00000001
 
 class Operation
 {
-private:
-	int setFd;
-	int result;
-	CanServer *server;
-	Parsing parser;
+  private:
+    int        setFd;
+    int        result;
+    CanServer* server;
+    Parsing    parser;
 
-	// commands
-	User* cmdUser;
-	Quit* cmdQuit;
-	Prvmsg* cmdPrvmsg;
-	Ping* cmdPing;
-	Pass* cmdPass;
-	Part* cmdPart;
-	Notice* cmdNotice;
-	Nick* cmdNick;
-	Kick* cmdKick;
-	Join* cmdJoin;
+    // commands
+    User*   cmdUser;
+    Quit*   cmdQuit;
+    Prvmsg* cmdPrvmsg;
+    Ping*   cmdPing;
+    Pass*   cmdPass;
+    Part*   cmdPart;
+    Notice* cmdNotice;
+    Nick*   cmdNick;
+    Kick*   cmdKick;
+    Join*   cmdJoin;
 
-	Operation(const Operation &obj); // Deprecated.
-	Operation &operator=(const Operation &obj); // Deprecated.
+    Operation(const Operation& obj);            // No use.
+    Operation& operator=(const Operation& obj); // No use.
 
-protected:
-	static const int bufferSize = 512;
-	char buffer[bufferSize];
+  public:
+    Operation();
+    Operation(char* s1, char* s2);
+    ~Operation();
 
-public:
-	// enum
-	// {
-	// 	PASS_FIN = 1,
-	// 	NICK_FIN,
-	// 	USER_FIN,
-	// 	CERTIFICATION_FIN
-	// };
+    // socket transmission
+    void Transmission();
 
-	Operation();
-	Operation(char *s1, char *s2);
-	~Operation();
+    // find sent Client
+    CanClient* findClient(int fd);
 
-	// socket transmission
-	void Transmission();
+    // check command after parsing
+    void CommandChecker(std::vector<std::string> argv, CanClient* targetClient);
 
-	// find sent Client
-	CanClient *findClient(int fd);
+    void cRecv(int fd);
 
-	// check command after parsing
-	void CommandChecker(std::vector<std::string> argv, CanClient *targetClient);
+    int getCommandFromRecvBuffer(CanClient* client, std::string& sCmd);
 
-	void cRecv(int fd);
-	void Client2ServSend(int fd);
-	void Serv2ClientSend(int fd);
-
-	int getCommandFromRecvBuffer(char *cOriginBuf, std::string &sCmd);
-
-	void serverClose(void);
+    void serverClose(void);
 };
 
 #endif // OPERATION_HPP

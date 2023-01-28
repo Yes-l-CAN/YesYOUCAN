@@ -5,30 +5,20 @@
 
 class Ping : public ACommand
 {
-private:
-	Ping(const Ping &obj);			  // Deprecated.
-	Ping &operator=(const Ping &obj); // Deprecated.
-	
-public:
-	Ping();
-	Ping(CanServer *serv);
-	~Ping();
-	void pingOn(CanClient *client);
-	void pong(CanClient *client);
+  private:
+    Ping(const Ping& obj);            // No use.
+    Ping& operator=(const Ping& obj); // No use.
 
-	int isValidFormat(void);
-	int checkClientLevel(CanClient *client);
-	int determineFlag(void);
+  public:
+    Ping();
+    Ping(CanServer* serv);
+    ~Ping();
+    void pingOn(CanClient* client);
+    void pong(CanClient* client);
 
-	// class noTokenException : public std::exception
-	// {
-	// 	virtual const char *what() const throw();
-	// };
-
-	// class maxLenException : public std::exception
-	// {
-	// 	virtual const char *what() const throw();
-	// };
+    int isValidFormat(void);
+    int checkClientLevel(CanClient* client);
+    int determineFlag(void);
 };
 
 #endif // COMMAND_PING_HPP

@@ -6,46 +6,26 @@
 
 class Notice : public ACommand
 {
-protected:
-	Notice(const Notice &obj); // Deprecated.
-	Notice& operator=(const Notice &obj); // Deprecated.
+  protected:
+    Notice(const Notice& obj);            // No use.
+    Notice& operator=(const Notice& obj); // No use.
 
-public:
-	Notice();
-	Notice(CanServer *serv);
-	~Notice();
-	void noticeOn(CanClient *client);
+  public:
+    Notice();
+    Notice(CanServer* serv);
+    ~Notice();
+    void noticeOn(CanClient* client);
 
-	void noticeToChannel(void);
-	CanChannel *isExistChannelName(std::string name);
-	CanClient *isExistNickname(std::string name);
-	int isKicked(CanClient *clinet, CanChannel *channel);
+    void        noticeToChannel(void);
+    CanChannel* isExistChannelName(std::string name);
+    CanClient*  isExistNickname(std::string name);
+    int         isKicked(CanClient* clinet, CanChannel* channel);
 
-	void executeNotice(CanClient *client);
+    void executeNotice(CanClient* client);
 
-	int isValidFormat(void);
-	int checkClientLevel(CanClient *client);
-	int determineFlag(void);
-
-	// class noSuchNickException : public std::exception
-	// {
-	// 	virtual const char *what() const throw();
-	// };
-
-	// class noSuchChannelException : public std::exception
-	// {
-	// 	virtual const char *what() const throw();
-	// };
-
-	// // class replyAnywayException : public std::exception
-	// // {
-	// // 	virtual const char *what() const throw();
-	// // };
-
-	// class kickedUserException : public std::exception
-	// {
-	// 	virtual const char *what() const throw();
-	// };
+    int isValidFormat(void);
+    int checkClientLevel(CanClient* client);
+    int determineFlag(void);
 };
 
 #endif // COMMAND_NOTICE_HPP
